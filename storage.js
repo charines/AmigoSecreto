@@ -254,32 +254,40 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = decryptData(code);
         if (data) {
             document.querySelector('.max-w-3xl').innerHTML = `
-                <div class="p-10 text-center space-y-8 animate-in fade-in zoom-in duration-700">
+                <div class="p-6 md:p-10 text-center space-y-8">
                     <div class="space-y-1">
-                        <p class="text-zinc-500 text-[10px] uppercase tracking-widest">Protocolo de Revelação</p>
+                        <p class="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">Protocolo de Revelação</p>
                         <h2 class="text-terminal-green text-2xl font-bold tracking-tighter uppercase">OLÁ, ${helloName || 'PARTICIPANTE'}</h2>
                     </div>
 
                     <div class="space-y-4">
-                        <p class="uppercase text-[9px] opacity-40">O seu Amigo Secreto é:</p>
-                        <div class="bg-zinc-900 py-8 border-y border-terminal-green/20 shadow-[0_0_30px_rgba(16,185,129,0.05)]">
-                            <span class="text-white font-black text-4xl tracking-tighter uppercase">${data.friend}</span>
+                        <p class="text-zinc-500 text-[10px] uppercase tracking-widest">O seu Amigo Secreto é:</p>
+                        <div class="bg-zinc-900 py-10 border-y border-terminal-green/20 shadow-[0_0_40px_rgba(16,185,129,0.1)]">
+                            <span class="text-white font-black text-4xl sm:text-5xl tracking-tighter uppercase">${data.friend}</span>
                         </div>
                     </div>
 
-                    <div class="text-[8px] text-left border border-terminal-border p-4 space-y-1 opacity-30 font-mono bg-black">
-                        <p>ID_SORTEIO: ${data.drawId}</p>
-                        <p>DATA_REF: ${data.date}</p>
-                        <p>OWNER: ${data.owner}</p>
-                        <p>MODE: OFFLINE_FREE_V1</p>
+                    <div class="border border-red-900/30 bg-red-950/10 p-4 text-[11px] text-zinc-500 space-y-2 leading-relaxed italic text-left">
+                        <p class="text-red-500/50 not-italic font-bold uppercase tracking-widest text-[9px] mb-1">Aviso de Integridade</p>
+                        <p>
+                            Este sorteio foi processado via <span class="text-zinc-300">VERSÃO GRATUITA</span>.
+                            O sistema é um processador local e não armazena dados em nuvem. A gestão e a exatidão da lista de nomes são de inteira
+                            responsabilidade do <span class="text-zinc-300">${data.owner}</span>.
+                        </p>
                     </div>
 
-                    <button onclick="window.location.href=window.location.pathname" class="text-[10px] border border-terminal-green px-10 py-3 text-terminal-green hover:bg-terminal-green hover:text-black transition-all font-bold uppercase tracking-widest">Fechar Terminal</button>
+                    <div class="text-[9px] text-left border border-terminal-border p-4 space-y-1 opacity-30 font-mono bg-black/50">
+                        <p>ID: ${data.drawId}</p>
+                        <p>DATA: ${data.date}</p>
+                        <p>ORGANIZADOR: ${data.owner}</p>
+                        <p>STATUS: DADOS_LOCAIS_GERIDOS_PELO_USUARIO</p>
+                    </div>
+
+                    <button onclick="window.location.href=window.location.pathname" class="w-full sm:w-auto text-[10px] border border-terminal-green px-10 py-4 text-terminal-green hover:bg-terminal-green hover:text-black transition-all font-bold uppercase tracking-widest">Sair do Terminal</button>
                 </div>`;
             return;
         }
     }
-
     loadMovies();
     const ownerInput = document.getElementById('owner-input');
     if (ownerInput) {
