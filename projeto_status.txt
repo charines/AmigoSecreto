@@ -1,0 +1,2067 @@
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  node_modules
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  src
+.rw-rw-r--   43k dsktop-cwmlq04 26 Dec 00:11  package-lock.json
+.rw-rw-r--   848 dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   288 dsktop-cwmlq04 26 Dec 00:11  postcss.config.js
+.rw-rw-r--     0 dsktop-cwmlq04 26 Dec 02:00  projeto_status.txt
+.rw-rw-r--  3.0k dsktop-cwmlq04 26 Dec 01:51  README.md
+.rw-rw-r--   288 dsktop-cwmlq04 26 Dec 00:11  tailwind.config.js
+
+./node_modules:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  @jridgewell
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  @parcel
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  @tailwindcss
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  autoprefixer
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  baseline-browser-mapping
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  braces
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  browserslist
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  caniuse-lite
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  detect-libc
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  electron-to-chromium
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  enhanced-resolve
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  escalade
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  fill-range
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  fraction.js
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  graceful-fs
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  is-extglob
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  is-glob
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  is-number
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  jiti
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lightningcss
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lightningcss-linux-x64-gnu
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  magic-string
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  micromatch
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  mri
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  nanoid
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  node-addon-api
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  node-releases
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  picocolors
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  picomatch
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  postcss
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  postcss-value-parser
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  source-map-js
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  tailwindcss
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  tapable
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  to-regex-range
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  update-browserslist-db
+
+./node_modules/@jridgewell:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  gen-mapping
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  remapping
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  resolve-uri
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  sourcemap-codec
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  trace-mapping
+
+./node_modules/@jridgewell/gen-mapping:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  src
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  types
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  2.2k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  7.5k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/@jridgewell/gen-mapping/dist:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  types
+.rw-rw-r--  8.0k dsktop-cwmlq04 26 Dec 00:11  gen-mapping.mjs
+.rw-rw-r--  5.9k dsktop-cwmlq04 26 Dec 00:11  gen-mapping.mjs.map
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  gen-mapping.umd.js
+.rw-rw-r--  6.2k dsktop-cwmlq04 26 Dec 00:11  gen-mapping.umd.js.map
+
+./node_modules/@jridgewell/gen-mapping/dist/types:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  3.8k dsktop-cwmlq04 26 Dec 00:11  gen-mapping.d.ts
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  set-array.d.ts
+.rw-rw-r--   521 dsktop-cwmlq04 26 Dec 00:11  sourcemap-segment.d.ts
+.rw-rw-r--   997 dsktop-cwmlq04 26 Dec 00:11  types.d.ts
+
+./node_modules/@jridgewell/gen-mapping/src:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   17k dsktop-cwmlq04 26 Dec 00:11  gen-mapping.ts
+.rw-rw-r--  2.4k dsktop-cwmlq04 26 Dec 00:11  set-array.ts
+.rw-rw-r--   480 dsktop-cwmlq04 26 Dec 00:11  sourcemap-segment.ts
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  types.ts
+
+./node_modules/@jridgewell/gen-mapping/types:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  3.9k dsktop-cwmlq04 26 Dec 00:11  gen-mapping.d.cts
+.rw-rw-r--  2.6k dsktop-cwmlq04 26 Dec 00:11  gen-mapping.d.cts.map
+.rw-rw-r--  3.9k dsktop-cwmlq04 26 Dec 00:11  gen-mapping.d.mts
+.rw-rw-r--  2.6k dsktop-cwmlq04 26 Dec 00:11  gen-mapping.d.mts.map
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  set-array.d.cts
+.rw-rw-r--   757 dsktop-cwmlq04 26 Dec 00:11  set-array.d.cts.map
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  set-array.d.mts
+.rw-rw-r--   757 dsktop-cwmlq04 26 Dec 00:11  set-array.d.mts.map
+.rw-rw-r--   568 dsktop-cwmlq04 26 Dec 00:11  sourcemap-segment.d.cts
+.rw-rw-r--   597 dsktop-cwmlq04 26 Dec 00:11  sourcemap-segment.d.cts.map
+.rw-rw-r--   568 dsktop-cwmlq04 26 Dec 00:11  sourcemap-segment.d.mts
+.rw-rw-r--   597 dsktop-cwmlq04 26 Dec 00:11  sourcemap-segment.d.mts.map
+.rw-rw-r--  1.0k dsktop-cwmlq04 26 Dec 00:11  types.d.cts
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  types.d.cts.map
+.rw-rw-r--  1.0k dsktop-cwmlq04 26 Dec 00:11  types.d.mts
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  types.d.mts.map
+
+./node_modules/@jridgewell/remapping:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  src
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  types
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  2.3k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  7.3k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/@jridgewell/remapping/dist:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  remapping.mjs
+.rw-rw-r--  3.6k dsktop-cwmlq04 26 Dec 00:11  remapping.mjs.map
+.rw-rw-r--  7.9k dsktop-cwmlq04 26 Dec 00:11  remapping.umd.js
+.rw-rw-r--  3.8k dsktop-cwmlq04 26 Dec 00:11  remapping.umd.js.map
+
+./node_modules/@jridgewell/remapping/src:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  3.4k dsktop-cwmlq04 26 Dec 00:11  build-source-map-tree.ts
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  remapping.ts
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  source-map-tree.ts
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  source-map.ts
+.rw-rw-r--   588 dsktop-cwmlq04 26 Dec 00:11  types.ts
+
+./node_modules/@jridgewell/remapping/types:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   858 dsktop-cwmlq04 26 Dec 00:11  build-source-map-tree.d.cts
+.rw-rw-r--   375 dsktop-cwmlq04 26 Dec 00:11  build-source-map-tree.d.cts.map
+.rw-rw-r--   858 dsktop-cwmlq04 26 Dec 00:11  build-source-map-tree.d.mts
+.rw-rw-r--   375 dsktop-cwmlq04 26 Dec 00:11  build-source-map-tree.d.mts.map
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  remapping.d.cts
+.rw-rw-r--   534 dsktop-cwmlq04 26 Dec 00:11  remapping.d.cts.map
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  remapping.d.mts
+.rw-rw-r--   534 dsktop-cwmlq04 26 Dec 00:11  remapping.d.mts.map
+.rw-rw-r--  1.7k dsktop-cwmlq04 26 Dec 00:11  source-map-tree.d.cts
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  source-map-tree.d.cts.map
+.rw-rw-r--  1.7k dsktop-cwmlq04 26 Dec 00:11  source-map-tree.d.mts
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  source-map-tree.d.mts.map
+.rw-rw-r--   667 dsktop-cwmlq04 26 Dec 00:11  source-map.d.cts
+.rw-rw-r--   688 dsktop-cwmlq04 26 Dec 00:11  source-map.d.cts.map
+.rw-rw-r--   667 dsktop-cwmlq04 26 Dec 00:11  source-map.d.mts
+.rw-rw-r--   688 dsktop-cwmlq04 26 Dec 00:11  source-map.d.mts.map
+.rw-rw-r--   619 dsktop-cwmlq04 26 Dec 00:11  types.d.cts
+.rw-rw-r--   679 dsktop-cwmlq04 26 Dec 00:11  types.d.cts.map
+.rw-rw-r--   619 dsktop-cwmlq04 26 Dec 00:11  types.d.mts
+.rw-rw-r--   679 dsktop-cwmlq04 26 Dec 00:11  types.d.mts.map
+
+./node_modules/@jridgewell/resolve-uri:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  2.8k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/@jridgewell/resolve-uri/dist:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  types
+.rw-rw-r--  8.6k dsktop-cwmlq04 26 Dec 00:11  resolve-uri.mjs
+.rw-rw-r--   14k dsktop-cwmlq04 26 Dec 00:11  resolve-uri.mjs.map
+.rw-rw-r--  9.9k dsktop-cwmlq04 26 Dec 00:11  resolve-uri.umd.js
+.rw-rw-r--   14k dsktop-cwmlq04 26 Dec 00:11  resolve-uri.umd.js.map
+
+./node_modules/@jridgewell/resolve-uri/dist/types:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   150 dsktop-cwmlq04 26 Dec 00:11  resolve-uri.d.ts
+
+./node_modules/@jridgewell/sourcemap-codec:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  src
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  types
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   10k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/@jridgewell/sourcemap-codec/dist:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   13k dsktop-cwmlq04 26 Dec 00:11  sourcemap-codec.mjs
+.rw-rw-r--  9.6k dsktop-cwmlq04 26 Dec 00:11  sourcemap-codec.mjs.map
+.rw-rw-r--   15k dsktop-cwmlq04 26 Dec 00:11  sourcemap-codec.umd.js
+.rw-rw-r--  9.7k dsktop-cwmlq04 26 Dec 00:11  sourcemap-codec.umd.js.map
+
+./node_modules/@jridgewell/sourcemap-codec/src:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  9.7k dsktop-cwmlq04 26 Dec 00:11  scopes.ts
+.rw-rw-r--  3.2k dsktop-cwmlq04 26 Dec 00:11  sourcemap-codec.ts
+.rw-rw-r--  1.5k dsktop-cwmlq04 26 Dec 00:11  strings.ts
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  vlq.ts
+
+./node_modules/@jridgewell/sourcemap-codec/types:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  scopes.d.cts
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  scopes.d.cts.map
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  scopes.d.mts
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  scopes.d.mts.map
+.rw-rw-r--   699 dsktop-cwmlq04 26 Dec 00:11  sourcemap-codec.d.cts
+.rw-rw-r--   705 dsktop-cwmlq04 26 Dec 00:11  sourcemap-codec.d.cts.map
+.rw-rw-r--   699 dsktop-cwmlq04 26 Dec 00:11  sourcemap-codec.d.mts
+.rw-rw-r--   705 dsktop-cwmlq04 26 Dec 00:11  sourcemap-codec.d.mts.map
+.rw-rw-r--   361 dsktop-cwmlq04 26 Dec 00:11  strings.d.cts
+.rw-rw-r--   422 dsktop-cwmlq04 26 Dec 00:11  strings.d.cts.map
+.rw-rw-r--   361 dsktop-cwmlq04 26 Dec 00:11  strings.d.mts
+.rw-rw-r--   422 dsktop-cwmlq04 26 Dec 00:11  strings.d.mts.map
+.rw-rw-r--   442 dsktop-cwmlq04 26 Dec 00:11  vlq.d.cts
+.rw-rw-r--   449 dsktop-cwmlq04 26 Dec 00:11  vlq.d.cts.map
+.rw-rw-r--   442 dsktop-cwmlq04 26 Dec 00:11  vlq.d.mts
+.rw-rw-r--   449 dsktop-cwmlq04 26 Dec 00:11  vlq.d.mts.map
+
+./node_modules/@jridgewell/trace-mapping:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  src
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  types
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  2.3k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   14k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/@jridgewell/trace-mapping/dist:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   15k dsktop-cwmlq04 26 Dec 00:11  trace-mapping.mjs
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  trace-mapping.mjs.map
+.rw-rw-r--   19k dsktop-cwmlq04 26 Dec 00:11  trace-mapping.umd.js
+.rw-rw-r--   12k dsktop-cwmlq04 26 Dec 00:11  trace-mapping.umd.js.map
+
+./node_modules/@jridgewell/trace-mapping/src:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  2.8k dsktop-cwmlq04 26 Dec 00:11  binary-search.ts
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  by-source.ts
+.rw-rw-r--  5.4k dsktop-cwmlq04 26 Dec 00:11  flatten-map.ts
+.rw-rw-r--   699 dsktop-cwmlq04 26 Dec 00:11  resolve.ts
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  sort.ts
+.rw-rw-r--   665 dsktop-cwmlq04 26 Dec 00:11  sourcemap-segment.ts
+.rw-rw-r--   253 dsktop-cwmlq04 26 Dec 00:11  strip-filename.ts
+.rw-rw-r--   15k dsktop-cwmlq04 26 Dec 00:11  trace-mapping.ts
+.rw-rw-r--  3.2k dsktop-cwmlq04 26 Dec 00:11  types.ts
+
+./node_modules/@jridgewell/trace-mapping/types:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  binary-search.d.cts
+.rw-rw-r--   902 dsktop-cwmlq04 26 Dec 00:11  binary-search.d.cts.map
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  binary-search.d.mts
+.rw-rw-r--   902 dsktop-cwmlq04 26 Dec 00:11  binary-search.d.mts.map
+.rw-rw-r--   269 dsktop-cwmlq04 26 Dec 00:11  by-source.d.cts
+.rw-rw-r--   332 dsktop-cwmlq04 26 Dec 00:11  by-source.d.cts.map
+.rw-rw-r--   269 dsktop-cwmlq04 26 Dec 00:11  by-source.d.mts
+.rw-rw-r--   332 dsktop-cwmlq04 26 Dec 00:11  by-source.d.mts.map
+.rw-rw-r--   384 dsktop-cwmlq04 26 Dec 00:11  flatten-map.d.cts
+.rw-rw-r--   471 dsktop-cwmlq04 26 Dec 00:11  flatten-map.d.cts.map
+.rw-rw-r--   384 dsktop-cwmlq04 26 Dec 00:11  flatten-map.d.mts
+.rw-rw-r--   471 dsktop-cwmlq04 26 Dec 00:11  flatten-map.d.mts.map
+.rw-rw-r--   208 dsktop-cwmlq04 26 Dec 00:11  resolve.d.cts
+.rw-rw-r--   291 dsktop-cwmlq04 26 Dec 00:11  resolve.d.cts.map
+.rw-rw-r--   208 dsktop-cwmlq04 26 Dec 00:11  resolve.d.mts
+.rw-rw-r--   291 dsktop-cwmlq04 26 Dec 00:11  resolve.d.mts.map
+.rw-rw-r--   325 dsktop-cwmlq04 26 Dec 00:11  sort.d.cts
+.rw-rw-r--   379 dsktop-cwmlq04 26 Dec 00:11  sort.d.cts.map
+.rw-rw-r--   325 dsktop-cwmlq04 26 Dec 00:11  sort.d.mts
+.rw-rw-r--   379 dsktop-cwmlq04 26 Dec 00:11  sort.d.mts.map
+.rw-rw-r--   766 dsktop-cwmlq04 26 Dec 00:11  sourcemap-segment.d.cts
+.rw-rw-r--   760 dsktop-cwmlq04 26 Dec 00:11  sourcemap-segment.d.cts.map
+.rw-rw-r--   766 dsktop-cwmlq04 26 Dec 00:11  sourcemap-segment.d.mts
+.rw-rw-r--   760 dsktop-cwmlq04 26 Dec 00:11  sourcemap-segment.d.mts.map
+.rw-rw-r--   196 dsktop-cwmlq04 26 Dec 00:11  strip-filename.d.cts
+.rw-rw-r--   218 dsktop-cwmlq04 26 Dec 00:11  strip-filename.d.cts.map
+.rw-rw-r--   196 dsktop-cwmlq04 26 Dec 00:11  strip-filename.d.mts
+.rw-rw-r--   218 dsktop-cwmlq04 26 Dec 00:11  strip-filename.d.mts.map
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  trace-mapping.d.cts
+.rw-rw-r--  2.6k dsktop-cwmlq04 26 Dec 00:11  trace-mapping.d.cts.map
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  trace-mapping.d.mts
+.rw-rw-r--  2.6k dsktop-cwmlq04 26 Dec 00:11  trace-mapping.d.mts.map
+.rw-rw-r--  3.1k dsktop-cwmlq04 26 Dec 00:11  types.d.cts
+.rw-rw-r--  3.6k dsktop-cwmlq04 26 Dec 00:11  types.d.cts.map
+.rw-rw-r--  3.1k dsktop-cwmlq04 26 Dec 00:11  types.d.mts
+.rw-rw-r--  3.6k dsktop-cwmlq04 26 Dec 00:11  types.d.mts.map
+
+./node_modules/@parcel:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  watcher
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  watcher-linux-x64-glibc
+
+./node_modules/@parcel/watcher:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  scripts
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  src
+.rw-rw-r--  2.7k dsktop-cwmlq04 26 Dec 00:11  binding.gyp
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--   998 dsktop-cwmlq04 26 Dec 00:11  index.js.flow
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  2.2k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  7.7k dsktop-cwmlq04 26 Dec 00:11  README.md
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wrapper.js
+
+./node_modules/@parcel/watcher/scripts:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   285 dsktop-cwmlq04 26 Dec 00:11  build-from-source.js
+
+./node_modules/@parcel/watcher/src:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  kqueue
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  linux
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  macos
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  shared
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  unix
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  wasm
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  watchman
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  windows
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  Backend.cc
+.rw-rw-r--   874 dsktop-cwmlq04 26 Dec 00:11  Backend.hh
+.rw-rw-r--  7.0k dsktop-cwmlq04 26 Dec 00:11  binding.cc
+.rw-rw-r--  2.6k dsktop-cwmlq04 26 Dec 00:11  Debounce.cc
+.rw-rw-r--   883 dsktop-cwmlq04 26 Dec 00:11  Debounce.hh
+.rw-rw-r--  3.8k dsktop-cwmlq04 26 Dec 00:11  DirTree.cc
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  DirTree.hh
+.rw-rw-r--  2.6k dsktop-cwmlq04 26 Dec 00:11  Event.hh
+.rw-rw-r--   539 dsktop-cwmlq04 26 Dec 00:11  Glob.cc
+.rw-rw-r--   487 dsktop-cwmlq04 26 Dec 00:11  Glob.hh
+.rw-rw-r--  2.5k dsktop-cwmlq04 26 Dec 00:11  PromiseRunner.hh
+.rw-rw-r--   816 dsktop-cwmlq04 26 Dec 00:11  Signal.hh
+.rw-rw-r--  6.2k dsktop-cwmlq04 26 Dec 00:11  Watcher.cc
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  Watcher.hh
+
+./node_modules/@parcel/watcher/src/kqueue:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  8.6k dsktop-cwmlq04 26 Dec 00:11  KqueueBackend.cc
+.rw-rw-r--   937 dsktop-cwmlq04 26 Dec 00:11  KqueueBackend.hh
+
+./node_modules/@parcel/watcher/src/linux:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  6.9k dsktop-cwmlq04 26 Dec 00:11  InotifyBackend.cc
+.rw-rw-r--   946 dsktop-cwmlq04 26 Dec 00:11  InotifyBackend.hh
+
+./node_modules/@parcel/watcher/src/macos:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  FSEventsBackend.cc
+.rw-rw-r--   565 dsktop-cwmlq04 26 Dec 00:11  FSEventsBackend.hh
+
+./node_modules/@parcel/watcher/src/shared:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  BruteForceBackend.cc
+.rw-rw-r--   733 dsktop-cwmlq04 26 Dec 00:11  BruteForceBackend.hh
+
+./node_modules/@parcel/watcher/src/unix:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  fts.cc
+.rw-rw-r--  2.2k dsktop-cwmlq04 26 Dec 00:11  legacy.cc
+
+./node_modules/@parcel/watcher/src/wasm:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  3.6k dsktop-cwmlq04 26 Dec 00:11  include.h
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  WasmBackend.cc
+.rw-rw-r--   963 dsktop-cwmlq04 26 Dec 00:11  WasmBackend.hh
+
+./node_modules/@parcel/watcher/src/watchman:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  8.0k dsktop-cwmlq04 26 Dec 00:11  BSER.cc
+.rw-rw-r--  1.5k dsktop-cwmlq04 26 Dec 00:11  BSER.hh
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  IPC.hh
+.rw-rw-r--  8.5k dsktop-cwmlq04 26 Dec 00:11  WatchmanBackend.cc
+.rw-rw-r--   971 dsktop-cwmlq04 26 Dec 00:11  WatchmanBackend.hh
+
+./node_modules/@parcel/watcher/src/windows:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  win_utils.cc
+.rw-rw-r--   239 dsktop-cwmlq04 26 Dec 00:11  win_utils.hh
+.rw-rw-r--  8.1k dsktop-cwmlq04 26 Dec 00:11  WindowsBackend.cc
+.rw-rw-r--   360 dsktop-cwmlq04 26 Dec 00:11  WindowsBackend.hh
+
+./node_modules/@parcel/watcher-linux-x64-glibc:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--   640 dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   112 dsktop-cwmlq04 26 Dec 00:11  README.md
+.rw-rw-r--  515k dsktop-cwmlq04 26 Dec 00:11  watcher.node
+
+./node_modules/@tailwindcss:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  cli
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  node
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  oxide
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  oxide-linux-x64-gnu
+
+./node_modules/@tailwindcss/cli:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--   993 dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/@tailwindcss/cli/dist:
+Permissions Size User           Date Modified Name
+.rwxrwxr-x   12k dsktop-cwmlq04 26 Dec 00:11  index.mjs
+
+./node_modules/@tailwindcss/node:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/@tailwindcss/node/dist:
+Permissions Size User           Date Modified Name
+.rw-rw-r--    99 dsktop-cwmlq04 26 Dec 00:11  esm-cache.loader.d.mts
+.rw-rw-r--   302 dsktop-cwmlq04 26 Dec 00:11  esm-cache.loader.mjs
+.rw-rw-r--  7.1k dsktop-cwmlq04 26 Dec 00:11  index.d.mts
+.rw-rw-r--  7.1k dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--   52k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--   51k dsktop-cwmlq04 26 Dec 00:11  index.mjs
+.rw-rw-r--    90 dsktop-cwmlq04 26 Dec 00:11  require-cache.d.ts
+.rw-rw-r--   579 dsktop-cwmlq04 26 Dec 00:11  require-cache.js
+
+./node_modules/@tailwindcss/oxide:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--   24k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  2.2k dsktop-cwmlq04 26 Dec 00:11  package.json
+
+./node_modules/@tailwindcss/oxide-linux-x64-gnu:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--   554 dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   111 dsktop-cwmlq04 26 Dec 00:11  README.md
+.rw-rw-r--  3.0M dsktop-cwmlq04 26 Dec 00:11  tailwindcss-oxide.linux-x64-gnu.node
+
+./node_modules/autoprefixer:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  bin
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  data
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/autoprefixer/bin:
+Permissions Size User           Date Modified Name
+.rwxrwxr-x   554 dsktop-cwmlq04 26 Dec 00:11  autoprefixer
+
+./node_modules/autoprefixer/data:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   24k dsktop-cwmlq04 26 Dec 00:11  prefixes.js
+
+./node_modules/autoprefixer/lib:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  hacks
+.rw-rw-r--   702 dsktop-cwmlq04 26 Dec 00:11  at-rule.js
+.rw-rw-r--  2.4k dsktop-cwmlq04 26 Dec 00:11  autoprefixer.d.ts
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  autoprefixer.js
+.rw-rw-r--   849 dsktop-cwmlq04 26 Dec 00:11  brackets.js
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  browsers.js
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  declaration.js
+.rw-rw-r--  3.2k dsktop-cwmlq04 26 Dec 00:11  info.js
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  old-selector.js
+.rw-rw-r--   463 dsktop-cwmlq04 26 Dec 00:11  old-value.js
+.rw-rw-r--  3.1k dsktop-cwmlq04 26 Dec 00:11  prefixer.js
+.rw-rw-r--   13k dsktop-cwmlq04 26 Dec 00:11  prefixes.js
+.rw-rw-r--   22k dsktop-cwmlq04 26 Dec 00:11  processor.js
+.rw-rw-r--  2.3k dsktop-cwmlq04 26 Dec 00:11  resolution.js
+.rw-rw-r--  3.2k dsktop-cwmlq04 26 Dec 00:11  selector.js
+.rw-rw-r--  6.4k dsktop-cwmlq04 26 Dec 00:11  supports.js
+.rw-rw-r--  8.2k dsktop-cwmlq04 26 Dec 00:11  transition.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  utils.js
+.rw-rw-r--  2.6k dsktop-cwmlq04 26 Dec 00:11  value.js
+.rw-rw-r--   206 dsktop-cwmlq04 26 Dec 00:11  vendor.js
+
+./node_modules/autoprefixer/lib/hacks:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  align-content.js
+.rw-rw-r--   968 dsktop-cwmlq04 26 Dec 00:11  align-items.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  align-self.js
+.rw-rw-r--   401 dsktop-cwmlq04 26 Dec 00:11  animation.js
+.rw-rw-r--   463 dsktop-cwmlq04 26 Dec 00:11  appearance.js
+.rw-rw-r--   531 dsktop-cwmlq04 26 Dec 00:11  autofill.js
+.rw-rw-r--   436 dsktop-cwmlq04 26 Dec 00:11  backdrop-filter.js
+.rw-rw-r--   504 dsktop-cwmlq04 26 Dec 00:11  background-clip.js
+.rw-rw-r--   516 dsktop-cwmlq04 26 Dec 00:11  background-size.js
+.rw-rw-r--   857 dsktop-cwmlq04 26 Dec 00:11  block-logical.js
+.rw-rw-r--   338 dsktop-cwmlq04 26 Dec 00:11  border-image.js
+.rw-rw-r--   907 dsktop-cwmlq04 26 Dec 00:11  border-radius.js
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  break-props.js
+.rw-rw-r--   863 dsktop-cwmlq04 26 Dec 00:11  cross-fade.js
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  display-flex.js
+.rw-rw-r--   409 dsktop-cwmlq04 26 Dec 00:11  display-grid.js
+.rw-rw-r--   598 dsktop-cwmlq04 26 Dec 00:11  file-selector-button.js
+.rw-rw-r--   283 dsktop-cwmlq04 26 Dec 00:11  filter-value.js
+.rw-rw-r--   386 dsktop-cwmlq04 26 Dec 00:11  filter.js
+.rw-rw-r--   808 dsktop-cwmlq04 26 Dec 00:11  flex-basis.js
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  flex-direction.js
+.rw-rw-r--  1.5k dsktop-cwmlq04 26 Dec 00:11  flex-flow.js
+.rw-rw-r--   595 dsktop-cwmlq04 26 Dec 00:11  flex-grow.js
+.rw-rw-r--   801 dsktop-cwmlq04 26 Dec 00:11  flex-shrink.js
+.rw-rw-r--   375 dsktop-cwmlq04 26 Dec 00:11  flex-spec.js
+.rw-rw-r--   379 dsktop-cwmlq04 26 Dec 00:11  flex-wrap.js
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  flex.js
+.rw-rw-r--   406 dsktop-cwmlq04 26 Dec 00:11  fullscreen.js
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  gradient.js
+.rw-rw-r--   891 dsktop-cwmlq04 26 Dec 00:11  grid-area.js
+.rw-rw-r--   513 dsktop-cwmlq04 26 Dec 00:11  grid-column-align.js
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  grid-end.js
+.rw-rw-r--   496 dsktop-cwmlq04 26 Dec 00:11  grid-row-align.js
+.rw-rw-r--   825 dsktop-cwmlq04 26 Dec 00:11  grid-row-column.js
+.rw-rw-r--  3.1k dsktop-cwmlq04 26 Dec 00:11  grid-rows-columns.js
+.rw-rw-r--   670 dsktop-cwmlq04 26 Dec 00:11  grid-start.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  grid-template-areas.js
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  grid-template.js
+.rw-rw-r--   29k dsktop-cwmlq04 26 Dec 00:11  grid-utils.js
+.rw-rw-r--   913 dsktop-cwmlq04 26 Dec 00:11  image-rendering.js
+.rw-rw-r--   395 dsktop-cwmlq04 26 Dec 00:11  image-set.js
+.rw-rw-r--   681 dsktop-cwmlq04 26 Dec 00:11  inline-logical.js
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  intrinsic.js
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  justify-content.js
+.rw-rw-r--   790 dsktop-cwmlq04 26 Dec 00:11  mask-border.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  mask-composite.js
+.rw-rw-r--   907 dsktop-cwmlq04 26 Dec 00:11  order.js
+.rw-rw-r--   677 dsktop-cwmlq04 26 Dec 00:11  overscroll-behavior.js
+.rw-rw-r--   819 dsktop-cwmlq04 26 Dec 00:11  pixelated.js
+.rw-rw-r--   830 dsktop-cwmlq04 26 Dec 00:11  place-self.js
+.rw-rw-r--   437 dsktop-cwmlq04 26 Dec 00:11  placeholder-shown.js
+.rw-rw-r--   711 dsktop-cwmlq04 26 Dec 00:11  placeholder.js
+.rw-rw-r--   506 dsktop-cwmlq04 26 Dec 00:11  print-color-adjust.js
+.rw-rw-r--   524 dsktop-cwmlq04 26 Dec 00:11  text-decoration-skip-ink.js
+.rw-rw-r--   430 dsktop-cwmlq04 26 Dec 00:11  text-decoration.js
+.rw-rw-r--   357 dsktop-cwmlq04 26 Dec 00:11  text-emphasis-position.js
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  transform-decl.js
+.rw-rw-r--   711 dsktop-cwmlq04 26 Dec 00:11  user-select.js
+.rw-rw-r--  1.0k dsktop-cwmlq04 26 Dec 00:11  writing-mode.js
+
+./node_modules/baseline-browser-mapping:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  LICENSE.txt
+.rw-rw-r--  2.7k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   21k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/baseline-browser-mapping/dist:
+Permissions Size User           Date Modified Name
+.rwxrwxr-x  2.5k dsktop-cwmlq04 26 Dec 00:11  cli.js
+.rw-rw-r--  117k dsktop-cwmlq04 26 Dec 00:11  index.cjs
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--  117k dsktop-cwmlq04 26 Dec 00:11  index.js
+
+./node_modules/braces:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   22k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/braces/lib:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.5k dsktop-cwmlq04 26 Dec 00:11  compile.js
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  constants.js
+.rw-rw-r--  2.8k dsktop-cwmlq04 26 Dec 00:11  expand.js
+.rw-rw-r--  6.9k dsktop-cwmlq04 26 Dec 00:11  parse.js
+.rw-rw-r--   708 dsktop-cwmlq04 26 Dec 00:11  stringify.js
+.rw-rw-r--  2.5k dsktop-cwmlq04 26 Dec 00:11  utils.js
+
+./node_modules/browserslist:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  browser.js
+.rwxrwxr-x  4.3k dsktop-cwmlq04 26 Dec 00:11  cli.js
+.rw-rw-r--   155 dsktop-cwmlq04 26 Dec 00:11  error.d.ts
+.rw-rw-r--   299 dsktop-cwmlq04 26 Dec 00:11  error.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--   38k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--   13k dsktop-cwmlq04 26 Dec 00:11  node.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  parse.js
+.rw-rw-r--  2.8k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/caniuse-lite:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  data
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+.rw-rw-r--   19k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--   742 dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   164 dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/caniuse-lite/data:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  features
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  regions
+.rw-rw-r--   24k dsktop-cwmlq04 26 Dec 00:11  agents.js
+.rw-rw-r--   220 dsktop-cwmlq04 26 Dec 00:11  browsers.js
+.rw-rw-r--  2.3k dsktop-cwmlq04 26 Dec 00:11  browserVersions.js
+.rw-rw-r--   31k dsktop-cwmlq04 26 Dec 00:11  features.js
+
+./node_modules/caniuse-lite/data/features:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  aac.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  abortcontroller.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  ac3-ec3.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  accelerometer.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  addeventlistener.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  alternate-stylesheet.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  ambient-light.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  apng.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  array-find-index.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  array-find.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  array-flat.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  array-includes.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  arrow-functions.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  asmjs.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  async-clipboard.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  async-functions.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  atob-btoa.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  audio-api.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  audio.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  audiotracks.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  autofocus.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  auxclick.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  av1.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  avif.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  background-attachment.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  background-clip-text.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  background-img-opts.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  background-position-x-y.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  background-repeat-round-space.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  background-sync.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  battery-status.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  beacon.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  beforeafterprint.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  bigint.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  blobbuilder.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  bloburls.js
+.rw-rw-r--  2.2k dsktop-cwmlq04 26 Dec 00:11  border-image.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  border-radius.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  broadcastchannel.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  brotli.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  calc.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  canvas-blending.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  canvas-text.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  canvas.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  ch-unit.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  chacha20-poly1305.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  channel-messaging.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  childnode-remove.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  classlist.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  client-hints-dpr-width-viewport.js
+.rw-rw-r--  2.2k dsktop-cwmlq04 26 Dec 00:11  clipboard.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  colr-v1.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  colr.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  comparedocumentposition.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  console-basic.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  console-time.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  const.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  constraint-validation.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  contenteditable.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  contentsecuritypolicy.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  contentsecuritypolicy2.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  cookie-store-api.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  cors.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  createimagebitmap.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  credential-management.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  cross-document-view-transitions.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  cryptography.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-all.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-anchor-positioning.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-animation.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-any-link.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-appearance.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-at-counter-style.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css-autofill.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-backdrop-filter.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-background-offsets.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-backgroundblendmode.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-boxdecorationbreak.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-boxshadow.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-canvas.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-caret-color.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-cascade-layers.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-cascade-scope.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-case-insensitive.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-clip-path.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-color-adjust.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-color-function.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-conic-gradients.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-container-queries-style.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-container-queries.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-container-query-units.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-containment.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-content-visibility.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css-counters.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-crisp-edges.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-cross-fade.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-default-pseudo.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-descendant-gtgt.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-deviceadaptation.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-dir-pseudo.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-display-contents.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css-element-function.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-env-function.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css-exclusions.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-featurequeries.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css-file-selector-button.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-filter-function.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-filters.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-first-letter.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css-first-line.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-fixed.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-focus-visible.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-focus-within.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-font-palette.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-font-rendering-controls.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-font-stretch.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-gencontent.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-gradients.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-grid-animation.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-grid.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-hanging-punctuation.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-has.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-hyphens.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-if.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-image-orientation.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-image-set.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-in-out-of-range.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-indeterminate-pseudo.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-initial-letter.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-initial-value.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-lch-lab.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-letter-spacing.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-line-clamp.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-logical-props.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-marker-pseudo.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-masks.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-matches-pseudo.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-math-functions.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-media-interaction.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-media-range-syntax.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-media-resolution.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-media-scripting.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-mediaqueries.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-mixblendmode.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-module-scripts.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-motion-paths.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css-namespaces.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-nesting.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-not-sel-list.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-nth-child-of.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css-opacity.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-optional-pseudo.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-overflow-anchor.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-overflow-overlay.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-overflow.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-overscroll-behavior.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-page-break.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-paged-media.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-paint-api.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-placeholder-shown.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-placeholder.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-print-color-adjust.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-read-only-write.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-rebeccapurple.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-reflections.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-regions.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-relative-colors.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-repeating-gradients.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-resize.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-revert-value.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-rrggbbaa.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-scroll-behavior.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-scrollbar.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css-sel2.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-sel3.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-selection.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-shapes.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-snappoints.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  css-sticky.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-subgrid.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-supports-api.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css-table.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-text-align-last.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-text-box-trim.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-text-indent.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-text-justify.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-text-orientation.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-text-spacing.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-text-wrap-balance.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-textshadow.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-touch-action.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-transitions.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-unicode-bidi.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-unset-value.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-variables.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css-when-else.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-widows-orphans.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css-width-stretch.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-writing-mode.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css-zoom.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css3-attr.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css3-boxsizing.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  css3-colors.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css3-cursors-grab.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css3-cursors-newer.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css3-cursors.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  css3-tabsize.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  currentcolor.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  custom-elements.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  custom-elementsv1.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  customevent.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  datalist.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  dataset.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  datauri.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  date-tolocaledatestring.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  declarative-shadow-dom.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  decorators.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  details.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  deviceorientation.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  devicepixelratio.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  dialog.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  dispatchevent.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  dnssec.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  do-not-track.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  document-currentscript.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  document-evaluate-xpath.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  document-execcommand.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  document-policy.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  document-scrollingelement.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  documenthead.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  dom-manip-convenience.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  dom-range.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  domcontentloaded.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  dommatrix.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  download.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  dragndrop.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  element-closest.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  element-from-point.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  element-scroll-methods.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  eme.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  eot.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  es5.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  es6-class.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  es6-generators.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  es6-module-dynamic-import.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  es6-module.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  es6-number.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  es6-string-includes.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  es6.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  eventsource.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  extended-system-fonts.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  feature-policy.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  fetch.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  fieldset-disabled.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  fileapi.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  filereader.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  filereadersync.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  filesystem.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  flac.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  flexbox-gap.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  flexbox.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  flow-root.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  focusin-focusout-events.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  font-family-system-ui.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  font-feature.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  font-kerning.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  font-loading.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  font-size-adjust.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  font-smooth.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  font-unicode-range.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  font-variant-alternates.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  font-variant-numeric.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  fontface.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  form-attribute.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  form-submit-attributes.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  form-validation.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  forms.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  fullscreen.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  gamepad.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  geolocation.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  getboundingclientrect.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  getcomputedstyle.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  getelementsbyclassname.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  getrandomvalues.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  gyroscope.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  hardwareconcurrency.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  hashchange.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  heif.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  hevc.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  hidden.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  high-resolution-time.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  history.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  html-media-capture.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  html5semantic.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  http-live-streaming.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  http2.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  http3.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  iframe-sandbox.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  iframe-seamless.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  iframe-srcdoc.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  imagecapture.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  ime.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  img-naturalwidth-naturalheight.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  import-maps.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  imports.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  indeterminate-checkbox.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  indexeddb.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  indexeddb2.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  inline-block.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  innertext.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-autocomplete-onoff.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-color.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-datetime.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-email-tel-url.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  input-event.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  input-file-accept.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-file-directory.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-file-multiple.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-inputmode.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-minlength.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-number.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-pattern.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-placeholder.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-range.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-search.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  input-selection.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  insert-adjacent.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  insertadjacenthtml.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  internationalization.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  intersectionobserver-v2.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  intersectionobserver.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  intl-pluralrules.js
+.rw-rw-r--  2.2k dsktop-cwmlq04 26 Dec 00:11  intrinsic-width.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  jpeg2000.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  jpegxl.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  jpegxr.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  js-regexp-lookbehind.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  json.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  justify-content-space-evenly.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  kerning-pairs-ligatures.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  keyboardevent-charcode.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  keyboardevent-code.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  keyboardevent-getmodifierstate.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  keyboardevent-key.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  keyboardevent-location.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  keyboardevent-which.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  lazyload.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  let.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  link-icon-png.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  link-icon-svg.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  link-rel-dns-prefetch.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  link-rel-modulepreload.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  link-rel-preconnect.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  link-rel-prefetch.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  link-rel-preload.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  link-rel-prerender.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  loading-lazy-attr.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  localecompare.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  magnetometer.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  matchesselector.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  matchmedia.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  mathml.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  maxlength.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  mdn-css-backdrop-pseudo-element.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  mdn-css-unicode-bidi-isolate-override.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  mdn-css-unicode-bidi-isolate.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  mdn-css-unicode-bidi-plaintext.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  mdn-text-decoration-color.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  mdn-text-decoration-line.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  mdn-text-decoration-shorthand.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  mdn-text-decoration-style.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  media-fragments.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  mediacapture-fromelement.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  mediarecorder.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  mediasource.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  menu.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  meta-theme-color.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  meter.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  midi.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  minmaxwh.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  mp3.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  mpeg-dash.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  mpeg4.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  multibackgrounds.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  multicolumn.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  mutation-events.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  mutationobserver.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  namevalue-storage.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  native-filesystem-api.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  nav-timing.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  netinfo.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  notifications.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  object-entries.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  object-fit.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  object-observe.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  object-values.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  objectrtc.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  offline-apps.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  offscreencanvas.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  ogg-vorbis.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  ogv.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  ol-reversed.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  once-event-listener.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  online-status.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  opus.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  orientation-sensor.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  outline.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  pad-start-end.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  page-transition-events.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  pagevisibility.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  passive-event-listener.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  passkeys.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  passwordrules.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  path2d.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  payment-request.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  pdf-viewer.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  permissions-api.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  permissions-policy.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  picture-in-picture.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  picture.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  ping.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  png-alpha.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  pointer-events.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  pointer.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  pointerlock.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  portals.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  prefers-color-scheme.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  prefers-reduced-motion.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  progress.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  promise-finally.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  promises.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  proximity.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  proxy.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  publickeypinning.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  push-api.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  queryselector.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  readonly-attr.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  referrer-policy.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  registerprotocolhandler.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  rel-noopener.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  rel-noreferrer.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  rellist.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  rem.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  requestanimationframe.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  requestidlecallback.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  resizeobserver.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  resource-timing.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  rest-parameters.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  rtcpeerconnection.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  ruby.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  run-in.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  same-site-cookie-attribute.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  screen-orientation.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  script-async.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  script-defer.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  scrollintoview.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  scrollintoviewifneeded.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  sdch.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  selection-api.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  selectlist.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  server-timing.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  serviceworkers.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  setimmediate.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  shadowdom.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  shadowdomv1.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  sharedarraybuffer.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  sharedworkers.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  sni.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  spdy.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  speech-recognition.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  speech-synthesis.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  spellcheck-attribute.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  sql-storage.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  srcset.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  stream.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  streams.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  stricttransportsecurity.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  style-scoped.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  subresource-bundling.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  subresource-integrity.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  svg-css.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  svg-filters.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  svg-fonts.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  svg-fragment.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  svg-html.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  svg-html5.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  svg-img.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  svg-smil.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  svg.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  sxg.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  tabindex-attr.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  template-literals.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  template.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  temporal.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  testfeat.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  text-decoration.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  text-emphasis.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  text-overflow.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  text-size-adjust.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  text-stroke.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  textcontent.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  textencoder.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  tls1-1.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  tls1-2.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  tls1-3.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  touch.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  transforms2d.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  transforms3d.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  trusted-types.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  ttf.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  typedarrays.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  u2f.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  unhandledrejection.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  upgradeinsecurerequests.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  url-scroll-to-text-fragment.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  url.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  urlsearchparams.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  use-strict.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  user-select-none.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  user-timing.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  variable-fonts.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  vector-effect.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  vibration.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  video.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  videotracks.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  view-transitions.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  viewport-unit-variants.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  viewport-units.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wai-aria.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wake-lock.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-bigint.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-bulk-memory.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-extended-const.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-gc.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-multi-memory.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-multi-value.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-mutable-globals.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-nontrapping-fptoint.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-reference-types.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-relaxed-simd.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-signext.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-simd.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-tail-calls.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm-threads.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wasm.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wav.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wbr-element.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  web-animation.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  web-app-manifest.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  web-bluetooth.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  web-serial.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  web-share.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  webauthn.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  webcodecs.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  webgl.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  webgl2.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  webgpu.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  webhid.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  webkit-user-drag.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  webm.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  webnfc.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  webp.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  websockets.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  webtransport.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  webusb.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  webvr.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  webvtt.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  webworkers.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  webxr.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  will-change.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  woff.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  woff2.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  word-break.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  wordwrap.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  x-doc-messaging.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  x-frame-options.js
+.rw-rw-r--  2.2k dsktop-cwmlq04 26 Dec 00:11  xhr2.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  xhtml.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  xhtmlsmil.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  xml-serializer.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  zstd.js
+
+./node_modules/caniuse-lite/data/regions:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  AD.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  AE.js
+.rw-rw-r--  5.1k dsktop-cwmlq04 26 Dec 00:11  AF.js
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  AG.js
+.rw-rw-r--  3.8k dsktop-cwmlq04 26 Dec 00:11  AI.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  AL.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  alt-af.js
+.rw-rw-r--  3.4k dsktop-cwmlq04 26 Dec 00:11  alt-an.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  alt-as.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  alt-eu.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  alt-na.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  alt-oc.js
+.rw-rw-r--  4.0k dsktop-cwmlq04 26 Dec 00:11  alt-sa.js
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  alt-ww.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  AM.js
+.rw-rw-r--  5.1k dsktop-cwmlq04 26 Dec 00:11  AO.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  AR.js
+.rw-rw-r--  3.7k dsktop-cwmlq04 26 Dec 00:11  AS.js
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  AT.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  AU.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  AW.js
+.rw-rw-r--  3.8k dsktop-cwmlq04 26 Dec 00:11  AX.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  AZ.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  BA.js
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  BB.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  BD.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  BE.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  BF.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  BG.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  BH.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  BI.js
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  BJ.js
+.rw-rw-r--  3.5k dsktop-cwmlq04 26 Dec 00:11  BM.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  BN.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  BO.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  BR.js
+.rw-rw-r--  4.0k dsktop-cwmlq04 26 Dec 00:11  BS.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  BT.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  BW.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  BY.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  BZ.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  CA.js
+.rw-rw-r--  5.1k dsktop-cwmlq04 26 Dec 00:11  CD.js
+.rw-rw-r--  3.9k dsktop-cwmlq04 26 Dec 00:11  CF.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  CG.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  CH.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  CI.js
+.rw-rw-r--  3.7k dsktop-cwmlq04 26 Dec 00:11  CK.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  CL.js
+.rw-rw-r--  5.5k dsktop-cwmlq04 26 Dec 00:11  CM.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  CN.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  CO.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  CR.js
+.rw-rw-r--  5.7k dsktop-cwmlq04 26 Dec 00:11  CU.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  CV.js
+.rw-rw-r--  2.8k dsktop-cwmlq04 26 Dec 00:11  CX.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  CY.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  CZ.js
+.rw-rw-r--  5.2k dsktop-cwmlq04 26 Dec 00:11  DE.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  DJ.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  DK.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  DM.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  DO.js
+.rw-rw-r--  5.1k dsktop-cwmlq04 26 Dec 00:11  DZ.js
+.rw-rw-r--  4.0k dsktop-cwmlq04 26 Dec 00:11  EC.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  EE.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  EG.js
+.rw-rw-r--  3.7k dsktop-cwmlq04 26 Dec 00:11  ER.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  ES.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  ET.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  FI.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  FJ.js
+.rw-rw-r--  3.4k dsktop-cwmlq04 26 Dec 00:11  FK.js
+.rw-rw-r--  3.7k dsktop-cwmlq04 26 Dec 00:11  FM.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  FO.js
+.rw-rw-r--  5.2k dsktop-cwmlq04 26 Dec 00:11  FR.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  GA.js
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  GB.js
+.rw-rw-r--  4.0k dsktop-cwmlq04 26 Dec 00:11  GD.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  GE.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  GF.js
+.rw-rw-r--  3.9k dsktop-cwmlq04 26 Dec 00:11  GG.js
+.rw-rw-r--  5.2k dsktop-cwmlq04 26 Dec 00:11  GH.js
+.rw-rw-r--  4.0k dsktop-cwmlq04 26 Dec 00:11  GI.js
+.rw-rw-r--  3.9k dsktop-cwmlq04 26 Dec 00:11  GL.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  GM.js
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  GN.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  GP.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  GQ.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  GR.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  GT.js
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  GU.js
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  GW.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  GY.js
+.rw-rw-r--  5.2k dsktop-cwmlq04 26 Dec 00:11  HK.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  HN.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  HR.js
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  HT.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  HU.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  ID.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  IE.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  IL.js
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  IM.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  IN.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  IQ.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  IR.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  IS.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  IT.js
+.rw-rw-r--  4.0k dsktop-cwmlq04 26 Dec 00:11  JE.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  JM.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  JO.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  JP.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  KE.js
+.rw-rw-r--  3.9k dsktop-cwmlq04 26 Dec 00:11  KG.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  KH.js
+.rw-rw-r--  3.5k dsktop-cwmlq04 26 Dec 00:11  KI.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  KM.js
+.rw-rw-r--  4.0k dsktop-cwmlq04 26 Dec 00:11  KN.js
+.rw-rw-r--  3.2k dsktop-cwmlq04 26 Dec 00:11  KP.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  KR.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  KW.js
+.rw-rw-r--  4.0k dsktop-cwmlq04 26 Dec 00:11  KY.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  KZ.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  LA.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  LB.js
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  LC.js
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  LI.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  LK.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  LR.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  LS.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  LT.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  LU.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  LV.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  LY.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  MA.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  MC.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  MD.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  ME.js
+.rw-rw-r--  5.2k dsktop-cwmlq04 26 Dec 00:11  MG.js
+.rw-rw-r--  3.6k dsktop-cwmlq04 26 Dec 00:11  MH.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  MK.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  ML.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  MM.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  MN.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  MO.js
+.rw-rw-r--  3.7k dsktop-cwmlq04 26 Dec 00:11  MP.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  MQ.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  MR.js
+.rw-rw-r--  3.4k dsktop-cwmlq04 26 Dec 00:11  MS.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  MT.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  MU.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  MV.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  MW.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  MX.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  MY.js
+.rw-rw-r--  5.1k dsktop-cwmlq04 26 Dec 00:11  MZ.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  NA.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  NC.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  NE.js
+.rw-rw-r--  3.2k dsktop-cwmlq04 26 Dec 00:11  NF.js
+.rw-rw-r--  5.1k dsktop-cwmlq04 26 Dec 00:11  NG.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  NI.js
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  NL.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  NO.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  NP.js
+.rw-rw-r--  3.3k dsktop-cwmlq04 26 Dec 00:11  NR.js
+.rw-rw-r--  3.1k dsktop-cwmlq04 26 Dec 00:11  NU.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  NZ.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  OM.js
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  PA.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  PE.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  PF.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  PG.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  PH.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  PK.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  PL.js
+.rw-rw-r--  3.6k dsktop-cwmlq04 26 Dec 00:11  PM.js
+.rw-rw-r--  3.1k dsktop-cwmlq04 26 Dec 00:11  PN.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  PR.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  PS.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  PT.js
+.rw-rw-r--  3.6k dsktop-cwmlq04 26 Dec 00:11  PW.js
+.rw-rw-r--  3.9k dsktop-cwmlq04 26 Dec 00:11  PY.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  QA.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  RE.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  RO.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  RS.js
+.rw-rw-r--  5.1k dsktop-cwmlq04 26 Dec 00:11  RU.js
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  RW.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  SA.js
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  SB.js
+.rw-rw-r--  5.2k dsktop-cwmlq04 26 Dec 00:11  SC.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  SD.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  SE.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  SG.js
+.rw-rw-r--  3.2k dsktop-cwmlq04 26 Dec 00:11  SH.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  SI.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  SK.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  SL.js
+.rw-rw-r--  3.9k dsktop-cwmlq04 26 Dec 00:11  SM.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  SN.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  SO.js
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  SR.js
+.rw-rw-r--  3.8k dsktop-cwmlq04 26 Dec 00:11  ST.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  SV.js
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  SY.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  SZ.js
+.rw-rw-r--  3.9k dsktop-cwmlq04 26 Dec 00:11  TC.js
+.rw-rw-r--  4.5k dsktop-cwmlq04 26 Dec 00:11  TD.js
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  TG.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  TH.js
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  TJ.js
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  TL.js
+.rw-rw-r--  3.7k dsktop-cwmlq04 26 Dec 00:11  TM.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  TN.js
+.rw-rw-r--  3.7k dsktop-cwmlq04 26 Dec 00:11  TO.js
+.rw-rw-r--  5.2k dsktop-cwmlq04 26 Dec 00:11  TR.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  TT.js
+.rw-rw-r--  3.3k dsktop-cwmlq04 26 Dec 00:11  TV.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  TW.js
+.rw-rw-r--  5.1k dsktop-cwmlq04 26 Dec 00:11  TZ.js
+.rw-rw-r--  5.1k dsktop-cwmlq04 26 Dec 00:11  UA.js
+.rw-rw-r--  5.1k dsktop-cwmlq04 26 Dec 00:11  UG.js
+.rw-rw-r--  5.1k dsktop-cwmlq04 26 Dec 00:11  US.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  UY.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  UZ.js
+.rw-rw-r--  3.5k dsktop-cwmlq04 26 Dec 00:11  VA.js
+.rw-rw-r--  4.0k dsktop-cwmlq04 26 Dec 00:11  VC.js
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  VE.js
+.rw-rw-r--  3.6k dsktop-cwmlq04 26 Dec 00:11  VG.js
+.rw-rw-r--  3.9k dsktop-cwmlq04 26 Dec 00:11  VI.js
+.rw-rw-r--  5.3k dsktop-cwmlq04 26 Dec 00:11  VN.js
+.rw-rw-r--  3.9k dsktop-cwmlq04 26 Dec 00:11  VU.js
+.rw-rw-r--  3.3k dsktop-cwmlq04 26 Dec 00:11  WF.js
+.rw-rw-r--  4.0k dsktop-cwmlq04 26 Dec 00:11  WS.js
+.rw-rw-r--  4.6k dsktop-cwmlq04 26 Dec 00:11  YE.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  YT.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  ZA.js
+.rw-rw-r--  4.8k dsktop-cwmlq04 26 Dec 00:11  ZM.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  ZW.js
+
+./node_modules/caniuse-lite/dist:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  unpacker
+
+./node_modules/caniuse-lite/dist/lib:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   306 dsktop-cwmlq04 26 Dec 00:11  statuses.js
+.rw-rw-r--   111 dsktop-cwmlq04 26 Dec 00:11  supported.js
+
+./node_modules/caniuse-lite/dist/unpacker:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  agents.js
+.rw-rw-r--    57 dsktop-cwmlq04 26 Dec 00:11  browsers.js
+.rw-rw-r--    71 dsktop-cwmlq04 26 Dec 00:11  browserVersions.js
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  feature.js
+.rw-rw-r--   141 dsktop-cwmlq04 26 Dec 00:11  features.js
+.rw-rw-r--   198 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--   550 dsktop-cwmlq04 26 Dec 00:11  region.js
+
+./node_modules/detect-libc:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  bin
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--   787 dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  2.4k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/detect-libc/bin:
+Permissions Size User           Date Modified Name
+.rwxrwxr-x   371 dsktop-cwmlq04 26 Dec 00:11  detect-libc.js
+
+./node_modules/detect-libc/lib:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  2.2k dsktop-cwmlq04 26 Dec 00:11  detect-libc.js
+
+./node_modules/electron-to-chromium:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  chromium-versions.js
+.rw-rw-r--  1.0k dsktop-cwmlq04 26 Dec 00:11  chromium-versions.json
+.rw-rw-r--   36k dsktop-cwmlq04 26 Dec 00:11  full-chromium-versions.js
+.rw-rw-r--   28k dsktop-cwmlq04 26 Dec 00:11  full-chromium-versions.json
+.rw-rw-r--   51k dsktop-cwmlq04 26 Dec 00:11  full-versions.js
+.rw-rw-r--   46k dsktop-cwmlq04 26 Dec 00:11  full-versions.json
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--   728 dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  6.5k dsktop-cwmlq04 26 Dec 00:11  README.md
+.rw-rw-r--  3.4k dsktop-cwmlq04 26 Dec 00:11  versions.js
+.rw-rw-r--  2.8k dsktop-cwmlq04 26 Dec 00:11  versions.json
+
+./node_modules/enhanced-resolve:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  3.0k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  README.md
+.rw-rw-r--   29k dsktop-cwmlq04 26 Dec 00:11  types.d.ts
+
+./node_modules/enhanced-resolve/lib:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  util
+.rw-rw-r--  3.0k dsktop-cwmlq04 26 Dec 00:11  AliasFieldPlugin.js
+.rw-rw-r--  5.2k dsktop-cwmlq04 26 Dec 00:11  AliasPlugin.js
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  AppendPlugin.js
+.rw-rw-r--   19k dsktop-cwmlq04 26 Dec 00:11  CachedInputFileSystem.js
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  CloneBasenamePlugin.js
+.rw-rw-r--  1.7k dsktop-cwmlq04 26 Dec 00:11  ConditionalPlugin.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  createInnerContext.js
+.rw-rw-r--  2.7k dsktop-cwmlq04 26 Dec 00:11  DescriptionFilePlugin.js
+.rw-rw-r--  5.4k dsktop-cwmlq04 26 Dec 00:11  DescriptionFileUtils.js
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  DirectoryExistsPlugin.js
+.rw-rw-r--  6.4k dsktop-cwmlq04 26 Dec 00:11  ExportsFieldPlugin.js
+.rw-rw-r--  3.1k dsktop-cwmlq04 26 Dec 00:11  ExtensionAliasPlugin.js
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  FileExistsPlugin.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  forEachBail.js
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  getInnerRequest.js
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  getPaths.js
+.rw-rw-r--  6.6k dsktop-cwmlq04 26 Dec 00:11  ImportsFieldPlugin.js
+.rw-rw-r--  6.5k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  JoinRequestPartPlugin.js
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  JoinRequestPlugin.js
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  LogInfoPlugin.js
+.rw-rw-r--  2.5k dsktop-cwmlq04 26 Dec 00:11  MainFieldPlugin.js
+.rw-rw-r--   215 dsktop-cwmlq04 26 Dec 00:11  ModulesInHierachicDirectoriesPlugin.js
+.rw-rw-r--  2.5k dsktop-cwmlq04 26 Dec 00:11  ModulesInHierarchicalDirectoriesPlugin.js
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  ModulesInRootPlugin.js
+.rw-rw-r--   803 dsktop-cwmlq04 26 Dec 00:11  NextPlugin.js
+.rw-rw-r--  2.3k dsktop-cwmlq04 26 Dec 00:11  ParsePlugin.js
+.rw-rw-r--  4.0k dsktop-cwmlq04 26 Dec 00:11  PnpPlugin.js
+.rw-rw-r--   26k dsktop-cwmlq04 26 Dec 00:11  Resolver.js
+.rw-rw-r--   22k dsktop-cwmlq04 26 Dec 00:11  ResolverFactory.js
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  RestrictionsPlugin.js
+.rw-rw-r--   982 dsktop-cwmlq04 26 Dec 00:11  ResultPlugin.js
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  RootsPlugin.js
+.rw-rw-r--  2.2k dsktop-cwmlq04 26 Dec 00:11  SelfReferencePlugin.js
+.rw-rw-r--  2.7k dsktop-cwmlq04 26 Dec 00:11  SymlinkPlugin.js
+.rw-rw-r--  6.1k dsktop-cwmlq04 26 Dec 00:11  SyncAsyncFileSystemDecorator.js
+.rw-rw-r--   920 dsktop-cwmlq04 26 Dec 00:11  TryNextPlugin.js
+.rw-rw-r--  3.3k dsktop-cwmlq04 26 Dec 00:11  UnsafeCachePlugin.js
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  UseFilePlugin.js
+
+./node_modules/enhanced-resolve/lib/util:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   14k dsktop-cwmlq04 26 Dec 00:11  entrypoints.js
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  identifier.js
+.rw-rw-r--   711 dsktop-cwmlq04 26 Dec 00:11  memoize.js
+.rw-rw-r--   137 dsktop-cwmlq04 26 Dec 00:11  module-browser.js
+.rw-rw-r--  5.3k dsktop-cwmlq04 26 Dec 00:11  path.js
+.rw-rw-r--   533 dsktop-cwmlq04 26 Dec 00:11  process-browser.js
+
+./node_modules/escalade:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  sync
+.rw-rw-r--   236 dsktop-cwmlq04 26 Dec 00:11  index.d.mts
+.rw-rw-r--   301 dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  license
+.rw-rw-r--  1.5k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  7.0k dsktop-cwmlq04 26 Dec 00:11  readme.md
+
+./node_modules/escalade/dist:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   534 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--   517 dsktop-cwmlq04 26 Dec 00:11  index.mjs
+
+./node_modules/escalade/sync:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   177 dsktop-cwmlq04 26 Dec 00:11  index.d.mts
+.rw-rw-r--   242 dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--   416 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--   404 dsktop-cwmlq04 26 Dec 00:11  index.mjs
+
+./node_modules/fill-range:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  6.4k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  7.5k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/fraction.js:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  examples
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  src
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  tests
+.rw-rw-r--  1.0k dsktop-cwmlq04 26 Dec 00:11  CHANGELOG.md
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  fraction.d.mts
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  fraction.d.ts
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   17k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/fraction.js/dist:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   25k dsktop-cwmlq04 26 Dec 00:11  fraction.js
+.rw-rw-r--  7.1k dsktop-cwmlq04 26 Dec 00:11  fraction.min.js
+.rw-rw-r--   24k dsktop-cwmlq04 26 Dec 00:11  fraction.mjs
+
+./node_modules/fraction.js/examples:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   569 dsktop-cwmlq04 26 Dec 00:11  angles.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  approx.js
+.rw-rw-r--   585 dsktop-cwmlq04 26 Dec 00:11  egyptian.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  hesse-convergence.js
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  integrate.js
+.rw-rw-r--   869 dsktop-cwmlq04 26 Dec 00:11  ratio-chain.js
+.rw-rw-r--   704 dsktop-cwmlq04 26 Dec 00:11  rational-pow.js
+.rw-rw-r--   408 dsktop-cwmlq04 26 Dec 00:11  tape-measure.js
+.rw-rw-r--   701 dsktop-cwmlq04 26 Dec 00:11  toFraction.js
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  valueOfPi.js
+
+./node_modules/fraction.js/src:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   25k dsktop-cwmlq04 26 Dec 00:11  fraction.js
+
+./node_modules/fraction.js/tests:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   33k dsktop-cwmlq04 26 Dec 00:11  fraction.test.js
+
+./node_modules/graceful-fs:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   496 dsktop-cwmlq04 26 Dec 00:11  clone.js
+.rw-rw-r--   13k dsktop-cwmlq04 26 Dec 00:11  graceful-fs.js
+.rw-rw-r--  2.7k dsktop-cwmlq04 26 Dec 00:11  legacy-streams.js
+.rw-rw-r--   791 dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.0k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   10k dsktop-cwmlq04 26 Dec 00:11  polyfills.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/is-extglob:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   441 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  3.5k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/is-glob:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  3.6k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.7k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  7.1k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/is-number:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   411 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  6.5k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/jiti:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  7.8k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/jiti/dist:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.5M dsktop-cwmlq04 26 Dec 00:11  babel.cjs
+.rw-rw-r--  161k dsktop-cwmlq04 26 Dec 00:11  jiti.cjs
+
+./node_modules/jiti/lib:
+Permissions Size User           Date Modified Name
+.rwxrwxr-x   794 dsktop-cwmlq04 26 Dec 00:11  jiti-cli.mjs
+.rw-rw-r--  3.6k dsktop-cwmlq04 26 Dec 00:11  jiti-hooks.mjs
+.rw-rw-r--  3.1k dsktop-cwmlq04 26 Dec 00:11  jiti-native.mjs
+.rw-rw-r--    50 dsktop-cwmlq04 26 Dec 00:11  jiti-register.d.mts
+.rw-rw-r--   172 dsktop-cwmlq04 26 Dec 00:11  jiti-register.mjs
+.rw-rw-r--   646 dsktop-cwmlq04 26 Dec 00:11  jiti.cjs
+.rw-rw-r--   266 dsktop-cwmlq04 26 Dec 00:11  jiti.d.cts
+.rw-rw-r--   168 dsktop-cwmlq04 26 Dec 00:11  jiti.d.mts
+.rw-rw-r--   624 dsktop-cwmlq04 26 Dec 00:11  jiti.mjs
+.rw-rw-r--  8.3k dsktop-cwmlq04 26 Dec 00:11  types.d.ts
+
+./node_modules/lightningcss:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  node
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  node_modules
+.rw-rw-r--   16k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  3.8k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  6.1k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/lightningcss/node:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  209k dsktop-cwmlq04 26 Dec 00:11  ast.d.ts
+.rw-rw-r--  213k dsktop-cwmlq04 26 Dec 00:11  ast.js.flow
+.rw-rw-r--   929 dsktop-cwmlq04 26 Dec 00:11  browserslistToTargets.js
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  composeVisitors.js
+.rw-rw-r--   666 dsktop-cwmlq04 26 Dec 00:11  flags.js
+.rw-rw-r--   18k dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--   842 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--   20k dsktop-cwmlq04 26 Dec 00:11  index.js.flow
+.rw-rw-r--   276 dsktop-cwmlq04 26 Dec 00:11  index.mjs
+.rw-rw-r--   867 dsktop-cwmlq04 26 Dec 00:11  targets.d.ts
+.rw-rw-r--   819 dsktop-cwmlq04 26 Dec 00:11  targets.js.flow
+
+./node_modules/lightningcss/node_modules:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  detect-libc
+
+./node_modules/lightningcss/node_modules/detect-libc:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+.rw-rw-r--   436 dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  3.2k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/lightningcss/node_modules/detect-libc/lib:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  7.5k dsktop-cwmlq04 26 Dec 00:11  detect-libc.js
+.rw-rw-r--   982 dsktop-cwmlq04 26 Dec 00:11  elf.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  filesystem.js
+.rw-rw-r--   569 dsktop-cwmlq04 26 Dec 00:11  process.js
+
+./node_modules/lightningcss-linux-x64-gnu:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   16k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  9.5M dsktop-cwmlq04 26 Dec 00:11  lightningcss.linux-x64-gnu.node
+.rw-rw-r--   745 dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   123 dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/magic-string:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   13k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/magic-string/dist:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   10k dsktop-cwmlq04 26 Dec 00:11  magic-string.cjs.d.ts
+.rw-rw-r--   39k dsktop-cwmlq04 26 Dec 00:11  magic-string.cjs.js
+.rw-rw-r--   96k dsktop-cwmlq04 26 Dec 00:11  magic-string.cjs.js.map
+.rw-rw-r--   10k dsktop-cwmlq04 26 Dec 00:11  magic-string.es.d.mts
+.rw-rw-r--   39k dsktop-cwmlq04 26 Dec 00:11  magic-string.es.mjs
+.rw-rw-r--   95k dsktop-cwmlq04 26 Dec 00:11  magic-string.es.mjs.map
+.rw-rw-r--   43k dsktop-cwmlq04 26 Dec 00:11  magic-string.umd.js
+.rw-rw-r--  113k dsktop-cwmlq04 26 Dec 00:11  magic-string.umd.js.map
+
+./node_modules/micromatch:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   14k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rwxrwxr-x  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  2.6k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   39k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/mri:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+.rw-rw-r--   456 dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  license.md
+.rw-rw-r--   803 dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  5.1k dsktop-cwmlq04 26 Dec 00:11  readme.md
+
+./node_modules/mri/lib:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  2.9k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  2.9k dsktop-cwmlq04 26 Dec 00:11  index.mjs
+
+./node_modules/nanoid:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  async
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  bin
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  non-secure
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  url-alphabet
+.rw-rw-r--  2.8k dsktop-cwmlq04 26 Dec 00:11  index.browser.cjs
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  index.browser.js
+.rw-rw-r--  3.4k dsktop-cwmlq04 26 Dec 00:11  index.cjs
+.rw-rw-r--  2.3k dsktop-cwmlq04 26 Dec 00:11  index.d.cts
+.rw-rw-r--  2.3k dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--   169 dsktop-cwmlq04 26 Dec 00:11  nanoid.js
+.rw-rw-r--  2.3k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/nanoid/async:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  2.7k dsktop-cwmlq04 26 Dec 00:11  index.browser.cjs
+.rw-rw-r--   984 dsktop-cwmlq04 26 Dec 00:11  index.browser.js
+.rw-rw-r--  2.9k dsktop-cwmlq04 26 Dec 00:11  index.cjs
+.rw-rw-r--  1.5k dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--   982 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--   820 dsktop-cwmlq04 26 Dec 00:11  index.native.js
+.rw-rw-r--   233 dsktop-cwmlq04 26 Dec 00:11  package.json
+
+./node_modules/nanoid/bin:
+Permissions Size User           Date Modified Name
+.rwxrwxr-x  1.1k dsktop-cwmlq04 26 Dec 00:11  nanoid.cjs
+
+./node_modules/nanoid/non-secure:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  index.cjs
+.rw-rw-r--   983 dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--   497 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--    99 dsktop-cwmlq04 26 Dec 00:11  package.json
+
+./node_modules/nanoid/url-alphabet:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   280 dsktop-cwmlq04 26 Dec 00:11  index.cjs
+.rw-rw-r--   110 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--    99 dsktop-cwmlq04 26 Dec 00:11  package.json
+
+./node_modules/node-addon-api:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  tools
+.rw-rw-r--   724 dsktop-cwmlq04 26 Dec 00:11  common.gypi
+.rw-rw-r--   560 dsktop-cwmlq04 26 Dec 00:11  except.gypi
+.rw-rw-r--   377 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE.md
+.rw-rw-r--  6.3k dsktop-cwmlq04 26 Dec 00:11  napi-inl.deprecated.h
+.rw-rw-r--  219k dsktop-cwmlq04 26 Dec 00:11  napi-inl.h
+.rw-rw-r--  115k dsktop-cwmlq04 26 Dec 00:11  napi.h
+.rw-rw-r--   793 dsktop-cwmlq04 26 Dec 00:11  node_addon_api.gyp
+.rw-rw-r--   132 dsktop-cwmlq04 26 Dec 00:11  node_api.gyp
+.rw-rw-r--   639 dsktop-cwmlq04 26 Dec 00:11  noexcept.gypi
+.rw-rw-r--     0 dsktop-cwmlq04 26 Dec 00:11  nothing.c
+.rw-rw-r--   467 dsktop-cwmlq04 26 Dec 00:11  package-support.json
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   14k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/node-addon-api/tools:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  3.2k dsktop-cwmlq04 26 Dec 00:11  check-napi.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  clang-format.js
+.rwxrwxr-x   15k dsktop-cwmlq04 26 Dec 00:11  conversion.js
+.rw-rw-r--  2.1k dsktop-cwmlq04 26 Dec 00:11  eslint-format.js
+.rw-rw-r--  3.2k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/node-releases:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  data
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--   449 dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   505 dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/node-releases/data:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  processed
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  release-schedule
+
+./node_modules/node-releases/data/processed:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   36k dsktop-cwmlq04 26 Dec 00:11  envs.json
+
+./node_modules/node-releases/data/release-schedule:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  2.3k dsktop-cwmlq04 26 Dec 00:11  release-schedule.json
+
+./node_modules/picocolors:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   787 dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--   552 dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   598 dsktop-cwmlq04 26 Dec 00:11  picocolors.browser.js
+.rw-rw-r--   138 dsktop-cwmlq04 26 Dec 00:11  picocolors.d.ts
+.rw-rw-r--  2.7k dsktop-cwmlq04 26 Dec 00:11  picocolors.js
+.rw-rw-r--   622 dsktop-cwmlq04 26 Dec 00:11  README.md
+.rw-rw-r--  1.0k dsktop-cwmlq04 26 Dec 00:11  types.d.ts
+
+./node_modules/picomatch:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+.rw-rw-r--  6.2k dsktop-cwmlq04 26 Dec 00:11  CHANGELOG.md
+.rw-rw-r--    60 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.9k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   27k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/picomatch/lib:
+Permissions  Size User           Date Modified Name
+.rw-rw-r--   4.4k dsktop-cwmlq04 26 Dec 00:11  constants.js
+.rw-rw-r--    28k dsktop-cwmlq04 26 Dec 00:11  parse.js
+.rw-rw-r--  10.0k dsktop-cwmlq04 26 Dec 00:11  picomatch.js
+.rw-rw-r--   9.2k dsktop-cwmlq04 26 Dec 00:11  scan.js
+.rw-rw-r--   1.9k dsktop-cwmlq04 26 Dec 00:11  utils.js
+
+./node_modules/postcss:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  2.5k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/postcss/lib:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  3.4k dsktop-cwmlq04 26 Dec 00:11  at-rule.d.ts
+.rw-rw-r--   471 dsktop-cwmlq04 26 Dec 00:11  at-rule.js
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  comment.d.ts
+.rw-rw-r--   203 dsktop-cwmlq04 26 Dec 00:11  comment.js
+.rw-rw-r--   14k dsktop-cwmlq04 26 Dec 00:11  container.d.ts
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  container.js
+.rw-rw-r--  6.5k dsktop-cwmlq04 26 Dec 00:11  css-syntax-error.d.ts
+.rw-rw-r--  3.4k dsktop-cwmlq04 26 Dec 00:11  css-syntax-error.js
+.rw-rw-r--  3.9k dsktop-cwmlq04 26 Dec 00:11  declaration.d.ts
+.rw-rw-r--   495 dsktop-cwmlq04 26 Dec 00:11  declaration.js
+.rw-rw-r--  2.0k dsktop-cwmlq04 26 Dec 00:11  document.d.ts
+.rw-rw-r--   654 dsktop-cwmlq04 26 Dec 00:11  document.js
+.rw-rw-r--   162 dsktop-cwmlq04 26 Dec 00:11  fromJSON.d.ts
+.rw-rw-r--  1.5k dsktop-cwmlq04 26 Dec 00:11  fromJSON.js
+.rw-rw-r--  5.2k dsktop-cwmlq04 26 Dec 00:11  input.d.ts
+.rw-rw-r--  6.8k dsktop-cwmlq04 26 Dec 00:11  input.js
+.rw-rw-r--  5.0k dsktop-cwmlq04 26 Dec 00:11  lazy-result.d.ts
+.rw-rw-r--   14k dsktop-cwmlq04 26 Dec 00:11  lazy-result.js
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  list.d.ts
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  list.js
+.rw-rw-r--  9.7k dsktop-cwmlq04 26 Dec 00:11  map-generator.js
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  no-work-result.d.ts
+.rw-rw-r--  2.6k dsktop-cwmlq04 26 Dec 00:11  no-work-result.js
+.rw-rw-r--   15k dsktop-cwmlq04 26 Dec 00:11  node.d.ts
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  node.js
+.rw-rw-r--   135 dsktop-cwmlq04 26 Dec 00:11  parse.d.ts
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  parse.js
+.rw-rw-r--   15k dsktop-cwmlq04 26 Dec 00:11  parser.js
+.rw-rw-r--  1.0k dsktop-cwmlq04 26 Dec 00:11  postcss.d.mts
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  postcss.d.ts
+.rw-rw-r--  2.9k dsktop-cwmlq04 26 Dec 00:11  postcss.js
+.rw-rw-r--   980 dsktop-cwmlq04 26 Dec 00:11  postcss.mjs
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  previous-map.d.ts
+.rw-rw-r--  4.0k dsktop-cwmlq04 26 Dec 00:11  previous-map.js
+.rw-rw-r--  3.4k dsktop-cwmlq04 26 Dec 00:11  processor.d.ts
+.rw-rw-r--  1.7k dsktop-cwmlq04 26 Dec 00:11  processor.js
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  result.d.ts
+.rw-rw-r--   738 dsktop-cwmlq04 26 Dec 00:11  result.js
+.rw-rw-r--  2.3k dsktop-cwmlq04 26 Dec 00:11  root.d.ts
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  root.js
+.rw-rw-r--  3.0k dsktop-cwmlq04 26 Dec 00:11  rule.d.ts
+.rw-rw-r--   569 dsktop-cwmlq04 26 Dec 00:11  rule.js
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  stringifier.d.ts
+.rw-rw-r--  8.2k dsktop-cwmlq04 26 Dec 00:11  stringifier.js
+.rw-rw-r--   165 dsktop-cwmlq04 26 Dec 00:11  stringify.d.ts
+.rw-rw-r--   213 dsktop-cwmlq04 26 Dec 00:11  stringify.js
+.rw-rw-r--    91 dsktop-cwmlq04 26 Dec 00:11  symbols.js
+.rw-rw-r--  1.4k dsktop-cwmlq04 26 Dec 00:11  terminal-highlight.js
+.rw-rw-r--  6.5k dsktop-cwmlq04 26 Dec 00:11  tokenize.js
+.rw-rw-r--   256 dsktop-cwmlq04 26 Dec 00:11  warn-once.js
+.rw-rw-r--  3.0k dsktop-cwmlq04 26 Dec 00:11  warning.d.ts
+.rw-rw-r--   739 dsktop-cwmlq04 26 Dec 00:11  warning.js
+
+./node_modules/postcss-value-parser:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  7.7k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/postcss-value-parser/lib:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  4.3k dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--   607 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  8.3k dsktop-cwmlq04 26 Dec 00:11  parse.js
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  stringify.js
+.rw-rw-r--  2.3k dsktop-cwmlq04 26 Dec 00:11  unit.js
+.rw-rw-r--   425 dsktop-cwmlq04 26 Dec 00:11  walk.js
+
+./node_modules/source-map-js:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+.rw-rw-r--  1.5k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  2.5k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   26k dsktop-cwmlq04 26 Dec 00:11  README.md
+.rw-rw-r--  3.4k dsktop-cwmlq04 26 Dec 00:11  source-map.d.ts
+.rw-rw-r--   405 dsktop-cwmlq04 26 Dec 00:11  source-map.js
+
+./node_modules/source-map-js/lib:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  3.2k dsktop-cwmlq04 26 Dec 00:11  array-set.js
+.rw-rw-r--  4.7k dsktop-cwmlq04 26 Dec 00:11  base64-vlq.js
+.rw-rw-r--  1.5k dsktop-cwmlq04 26 Dec 00:11  base64.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  binary-search.js
+.rw-rw-r--  2.3k dsktop-cwmlq04 26 Dec 00:11  mapping-list.js
+.rw-rw-r--  4.1k dsktop-cwmlq04 26 Dec 00:11  quick-sort.js
+.rw-rw-r--    40 dsktop-cwmlq04 26 Dec 00:11  source-map-consumer.d.ts
+.rw-rw-r--   42k dsktop-cwmlq04 26 Dec 00:11  source-map-consumer.js
+.rw-rw-r--    41 dsktop-cwmlq04 26 Dec 00:11  source-map-generator.d.ts
+.rw-rw-r--   15k dsktop-cwmlq04 26 Dec 00:11  source-map-generator.js
+.rw-rw-r--    33 dsktop-cwmlq04 26 Dec 00:11  source-node.d.ts
+.rw-rw-r--   14k dsktop-cwmlq04 26 Dec 00:11  source-node.js
+.rw-rw-r--   15k dsktop-cwmlq04 26 Dec 00:11  util.js
+
+./node_modules/tailwindcss:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+.rw-rw-r--   27k dsktop-cwmlq04 26 Dec 00:11  index.css
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  2.5k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  8.4k dsktop-cwmlq04 26 Dec 00:11  preflight.css
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  README.md
+.rw-rw-r--   17k dsktop-cwmlq04 26 Dec 00:11  theme.css
+.rw-rw-r--    21 dsktop-cwmlq04 26 Dec 00:11  utilities.css
+
+./node_modules/tailwindcss/dist:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  232k dsktop-cwmlq04 26 Dec 00:11  chunk-CT46QCH7.mjs
+.rw-rw-r--   23k dsktop-cwmlq04 26 Dec 00:11  chunk-GFBUASX3.mjs
+.rw-rw-r--  8.0k dsktop-cwmlq04 26 Dec 00:11  chunk-HTB5LLOP.mjs
+.rw-rw-r--  6.1k dsktop-cwmlq04 26 Dec 00:11  colors-b_6i0Oi7.d.ts
+.rw-rw-r--  6.2k dsktop-cwmlq04 26 Dec 00:11  colors.d.mts
+.rw-rw-r--    89 dsktop-cwmlq04 26 Dec 00:11  colors.d.ts
+.rw-rw-r--  8.0k dsktop-cwmlq04 26 Dec 00:11  colors.js
+.rw-rw-r--    58 dsktop-cwmlq04 26 Dec 00:11  colors.mjs
+.rw-rw-r--   28k dsktop-cwmlq04 26 Dec 00:11  default-theme.d.mts
+.rw-rw-r--   28k dsktop-cwmlq04 26 Dec 00:11  default-theme.d.ts
+.rw-rw-r--   26k dsktop-cwmlq04 26 Dec 00:11  default-theme.js
+.rw-rw-r--    92 dsktop-cwmlq04 26 Dec 00:11  default-theme.mjs
+.rw-rw-r--   186 dsktop-cwmlq04 26 Dec 00:11  flatten-color-palette.d.mts
+.rw-rw-r--   186 dsktop-cwmlq04 26 Dec 00:11  flatten-color-palette.d.ts
+.rw-rw-r--   34k dsktop-cwmlq04 26 Dec 00:11  flatten-color-palette.js
+.rw-rw-r--   424 dsktop-cwmlq04 26 Dec 00:11  flatten-color-palette.mjs
+.rw-rw-r--   11k dsktop-cwmlq04 26 Dec 00:11  lib.d.mts
+.rw-rw-r--    92 dsktop-cwmlq04 26 Dec 00:11  lib.d.ts
+.rw-rw-r--  264k dsktop-cwmlq04 26 Dec 00:11  lib.js
+.rw-rw-r--   218 dsktop-cwmlq04 26 Dec 00:11  lib.mjs
+.rw-rw-r--   642 dsktop-cwmlq04 26 Dec 00:11  plugin.d.mts
+.rw-rw-r--  4.4k dsktop-cwmlq04 26 Dec 00:11  plugin.d.ts
+.rw-rw-r--   201 dsktop-cwmlq04 26 Dec 00:11  plugin.js
+.rw-rw-r--   192 dsktop-cwmlq04 26 Dec 00:11  plugin.mjs
+.rw-rw-r--   491 dsktop-cwmlq04 26 Dec 00:11  resolve-config-BIFUA2FY.d.ts
+.rw-rw-r--  3.6k dsktop-cwmlq04 26 Dec 00:11  resolve-config-QUZ9b-Gn.d.mts
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  types-CJYAW1ql.d.mts
+
+./node_modules/tapable:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  lib
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.7k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--  8.8k dsktop-cwmlq04 26 Dec 00:11  README.md
+.rw-rw-r--  4.9k dsktop-cwmlq04 26 Dec 00:11  tapable.d.ts
+
+./node_modules/tapable/lib:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  2.4k dsktop-cwmlq04 26 Dec 00:11  AsyncParallelBailHook.js
+.rw-rw-r--   868 dsktop-cwmlq04 26 Dec 00:11  AsyncParallelHook.js
+.rw-rw-r--  1.0k dsktop-cwmlq04 26 Dec 00:11  AsyncSeriesBailHook.js
+.rw-rw-r--   854 dsktop-cwmlq04 26 Dec 00:11  AsyncSeriesHook.js
+.rw-rw-r--   879 dsktop-cwmlq04 26 Dec 00:11  AsyncSeriesLoopHook.js
+.rw-rw-r--  1.3k dsktop-cwmlq04 26 Dec 00:11  AsyncSeriesWaterfallHook.js
+.rw-rw-r--  4.2k dsktop-cwmlq04 26 Dec 00:11  Hook.js
+.rw-rw-r--   12k dsktop-cwmlq04 26 Dec 00:11  HookCodeFactory.js
+.rw-rw-r--  1.6k dsktop-cwmlq04 26 Dec 00:11  HookMap.js
+.rw-rw-r--   905 dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--   873 dsktop-cwmlq04 26 Dec 00:11  MultiHook.js
+.rw-rw-r--  1.2k dsktop-cwmlq04 26 Dec 00:11  SyncBailHook.js
+.rw-rw-r--  1.0k dsktop-cwmlq04 26 Dec 00:11  SyncHook.js
+.rw-rw-r--  1.0k dsktop-cwmlq04 26 Dec 00:11  SyncLoopHook.js
+.rw-rw-r--  1.5k dsktop-cwmlq04 26 Dec 00:11  SyncWaterfallHook.js
+.rw-rw-r--   422 dsktop-cwmlq04 26 Dec 00:11  util-browser.js
+
+./node_modules/to-regex-range:
+Permissions Size User           Date Modified Name
+.rw-rw-r--  6.5k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--  1.8k dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   14k dsktop-cwmlq04 26 Dec 00:11  README.md
+
+./node_modules/update-browserslist-db:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   401 dsktop-cwmlq04 26 Dec 00:11  check-npm-version.js
+.rwxrwxr-x   912 dsktop-cwmlq04 26 Dec 00:11  cli.js
+.rw-rw-r--   134 dsktop-cwmlq04 26 Dec 00:11  index.d.ts
+.rw-rw-r--   10k dsktop-cwmlq04 26 Dec 00:11  index.js
+.rw-rw-r--  1.1k dsktop-cwmlq04 26 Dec 00:11  LICENSE
+.rw-rw-r--   916 dsktop-cwmlq04 26 Dec 00:11  package.json
+.rw-rw-r--   856 dsktop-cwmlq04 26 Dec 00:11  README.md
+.rw-rw-r--   712 dsktop-cwmlq04 26 Dec 00:11  utils.js
+
+./src:
+Permissions Size User           Date Modified Name
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  dist
+drwxrwxr-x     - dsktop-cwmlq04 26 Dec 00:11  js
+.rw-rw-r--  1.7k dsktop-cwmlq04 26 Dec 00:11  index.html
+.rw-rw-r--   467 dsktop-cwmlq04 26 Dec 00:11  movieslist.json
+.rw-rw-r--   873 dsktop-cwmlq04 26 Dec 00:11  styles.css
+
+./src/dist:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   25k dsktop-cwmlq04 26 Dec 01:31  output.css
+
+./src/js:
+Permissions Size User           Date Modified Name
+.rw-rw-r--   13k dsktop-cwmlq04 26 Dec 01:31  storage.js
