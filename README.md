@@ -27,7 +27,7 @@ Certifique-se de estar na pasta raiz do projeto e que a pasta `src` contenha o `
 Para processar os estilos e monitorar alterações, execute:
 ```bash
 npm run dev
-npx @tailwindcss/cli -i ./src/styles.css -o ./src/dist/output.css --watch
+npx @tailwindcss/cli -i ./styles.css -o ./dist/output.css --watch
 ```
 
 ### 3. Iniciar o Servidor Local
