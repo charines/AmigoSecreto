@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL | Amigo Secreto</title>
+    <link rel="stylesheet" href="./dist/output.css">
+</head>
+<body class="p-4 md:p-10">
+
+    <div class="max-w-3xl mx-auto border border-terminal-border bg-black shadow-2xl p-6 min-h-[70vh] flex flex-col">
+        <div class="border-b border-terminal-border pb-4 mb-6 text-[10px] flex justify-between items-center opacity-40">
+            <span>SYS.VER: 1.0.0-FREE</span>
+            <span>[PATROCÍNIO: DIV_TOP_ADS]</span>
+        </div>
+
+        <div id="terminal-logs" class="flex-grow text-sm space-y-2 mb-6">
+            <p class="text-terminal-green font-bold">CONEXÃO ESTABELECIDA...</p>
+            <p>AVISO: Versão gratuita ativa. Dados armazenados localmente no dispositivo.</p>
+        </div>
+
+        <div id="input-zone" class="border-t border-terminal-border pt-6">
+            <div id="step-email" class="flex flex-col">
+                <label class="text-xs uppercase mb-2 opacity-50">Informe e-mail do Owner para iniciar:</label>
+                <div class="flex items-center">
+                    <span class="text-terminal-green mr-2">owner@auth:~$</span>
+                    <input type="email" id="owner-input" class="bg-transparent border-none outline-none text-terminal-green w-full" autofocus autocomplete="off">
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-terminal-border pt-4 mt-6 text-[10px] text-center opacity-40">
+            [PATROCÍNIO: DIV_BOTTOM_ADS]
+        </div>
+    </div>
+
+    <script src="./js/storage.js" type="module"></script>
+</body>
+</html>
