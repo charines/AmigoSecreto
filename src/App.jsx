@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react' // 1. Adicionado useRef
 import { performSecretSanta, encryptData, decryptData } from './utils/secretSanta'
 
 function App() {
@@ -8,6 +8,9 @@ function App() {
   const [participants, setParticipants] = useState('');
   const [results, setResults] = useState([]);
   const [revealedFriend, setRevealedFriend] = useState(null);
+
+  // 2. Referência para o textarea
+  const textareaRef = useRef(null);
 
   // Efeito para detectar se é um link de revelação
   useEffect(() => {
@@ -21,6 +24,14 @@ function App() {
       }
     }
   }, []);
+
+  // 3. Efeito para focar e selecionar o conteúdo quando entrar em 'members'
+  useEffect(() => {
+    if (step === 'members' && textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.select(); // Seleciona o texto se houver algo
+    }
+  }, [step]);
 
   const handleEmail = (e) => {
     if (e.key === 'Enter' && inputVal.includes('@')) {
@@ -55,10 +66,10 @@ function App() {
     setStep('results');
   };
 
+
   return (
-    <div className="min-h-screen bg-black text-zinc-400 font-mono p-4 flex flex-col items-center relative overflow-hidden">
-      <div className="scanline"></div>
-      
+    <div className="min-h-screen bg-black text-terminal-green font-mono p-10 flex items-start justify-start">      
+      <div className="scanline"></div>      
       <div className="w-full max-w-3xl border border-terminal-border p-6 bg-black shadow-2xl min-h-[70vh] flex flex-col z-10">
         
         {/* Header */}
@@ -95,6 +106,7 @@ function App() {
               <p className="text-terminal-green text-xs uppercase">Conectado como: {owner}</p>
               <label className="text-[10px] opacity-40 italic">Cole os nomes dos participantes (um por linha):</label>
               <textarea 
+                ref={textareaRef} // 4. Conectado a referência aqui
                 className="flex-grow bg-zinc-900/30 border border-terminal-border p-4 text-terminal-green outline-none focus:border-terminal-green min-h-[300px]"
                 value={participants}
                 onChange={e => setParticipants(e.target.value)}
@@ -163,4 +175,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
