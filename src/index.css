@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
 @theme {
+  --color-primary: #28bda4;
+  --color-background-light: #f9fafa;
+  --color-background-dark: #181c20;
+  --color-charcoal: #333333;
+  --font-display: "Manrope", sans-serif;
   --color-terminal-bg: #09090b;
   --color-terminal-green: #10b981;
   --color-terminal-border: #27272a;

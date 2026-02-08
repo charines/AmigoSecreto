@@ -1,0 +1,238 @@
+--- ESTRUTURA DE PASTAS ---
+.
+./README.md
+./node_modules
+./node_modules/esrecurse
+./node_modules/globals
+./node_modules/p-limit
+./node_modules/find-up
+./node_modules/esquery
+./node_modules/eslint-scope
+./node_modules/rollup
+./node_modules/@jridgewell
+./node_modules/@babel
+./node_modules/@humanwhocodes
+./node_modules/p-locate
+./node_modules/is-glob
+./node_modules/file-entry-cache
+./node_modules/lodash.merge
+./node_modules/brace-expansion
+./node_modules/nanoid
+./node_modules/baseline-browser-mapping
+./node_modules/flat-cache
+./node_modules/ajv
+./node_modules/@vitejs
+./node_modules/@eslint-community
+./node_modules/ansi-styles
+./node_modules/json-schema-traverse
+./node_modules/parent-module
+./node_modules/vite
+./node_modules/esutils
+./node_modules/shebang-regex
+./node_modules/browserslist
+./node_modules/tailwindcss
+./node_modules/path-key
+./node_modules/lightningcss
+./node_modules/csstype
+./node_modules/eslint
+./node_modules/hermes-estree
+./node_modules/ms
+./node_modules/lightningcss-linux-x64-gnu
+./node_modules/resolve-from
+./node_modules/@rollup
+./node_modules/path-exists
+./node_modules/minimatch
+./node_modules/json-buffer
+./node_modules/yallist
+./node_modules/postcss
+./node_modules/levn
+./node_modules/imurmurhash
+./node_modules/ignore
+./node_modules/supports-color
+./node_modules/isexe
+./node_modules/callsites
+./node_modules/update-browserslist-db
+./node_modules/esbuild
+./node_modules/concat-map
+./node_modules/semver
+./node_modules/prelude-ls
+./node_modules/@types
+./node_modules/acorn-jsx
+./node_modules/debug
+./node_modules/@rolldown
+./node_modules/eslint-visitor-keys
+./node_modules/color-convert
+./node_modules/@eslint
+./node_modules/import-fresh
+./node_modules/lru-cache
+./node_modules/@humanfs
+./node_modules/react-refresh
+./node_modules/fast-levenshtein
+./node_modules/chalk
+./node_modules/react-dom
+./node_modules/@alloc
+./node_modules/hermes-parser
+./node_modules/punycode
+./node_modules/graceful-fs
+./node_modules/json-stable-stringify-without-jsonify
+./node_modules/acorn
+./node_modules/cross-spawn
+./node_modules/scheduler
+./node_modules/escape-string-regexp
+./node_modules/fast-deep-equal
+./node_modules/optionator
+./node_modules/enhanced-resolve
+./node_modules/natural-compare
+./node_modules/convert-source-map
+./node_modules/which
+./node_modules/fast-json-stable-stringify
+./node_modules/uri-js
+./node_modules/keyv
+./node_modules/@tailwindcss
+./node_modules/color-name
+./node_modules/glob-parent
+./node_modules/tinyglobby
+./node_modules/eslint-plugin-react-hooks
+./node_modules/strip-json-comments
+./node_modules/lightningcss-linux-x64-musl
+./node_modules/yocto-queue
+./node_modules/word-wrap
+./node_modules/json5
+./node_modules/picocolors
+./node_modules/jiti
+./node_modules/deep-is
+./node_modules/balanced-match
+./node_modules/argparse
+./node_modules/node-releases
+./node_modules/shebang-command
+./node_modules/@esbuild
+./node_modules/jsesc
+./node_modules/flatted
+./node_modules/espree
+./node_modules/type-check
+./node_modules/is-extglob
+./node_modules/estraverse
+./node_modules/electron-to-chromium
+./node_modules/gensync
+./node_modules/zod-validation-error
+./node_modules/eslint-plugin-react-refresh
+./node_modules/magic-string
+./node_modules/tapable
+./node_modules/has-flag
+./node_modules/zod
+./node_modules/react
+./node_modules/escalade
+./node_modules/caniuse-lite
+./node_modules/source-map-js
+./node_modules/js-tokens
+./node_modules/locate-path
+./node_modules/js-yaml
+./public
+./public/movieslist.json
+./eslint.config.js
+./out.txt
+./vite.config.js
+./src
+./src/App.jsx
+./src/index.css
+./src/utils
+./src/assets
+./src/main.jsx
+./dist
+./dist/output.css
+./index.html
+./package-lock.json
+./favicon.ico
+./package.json
+
+--- PACKAGE.JSON ---
+{
+  "name": "amigosecreto",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "@tailwindcss/vite": "^4.1.18",
+    "postcss": "^8.5.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "vite": "^7.2.4"
+  }
+}
+
+--- VITE.CONFIG.JS ---
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite' // Importe o plugin
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(), // Adicione o plugin aqui
+  ],
+})
+--- INDEX.HTML ---
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartCart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+--- SRC/MAIN.JSX ---
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.jsx'
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+
+--- SRC/INDEX.CSS ---
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #28bda4;
+  --color-background-light: #f9fafa;
+  --color-background-dark: #181c20;
+  --color-charcoal: #333333;
+  --font-display: "Manrope", sans-serif;
+  --color-terminal-bg: #09090b;
+  --color-terminal-green: #10b981;
+  --color-terminal-border: #27272a;
+}
+
+@layer base {
+  body {
