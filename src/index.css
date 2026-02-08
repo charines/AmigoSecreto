@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --color-terminal-bg: #09090b;
+  --color-terminal-green: #10b981;
+  --color-terminal-border: #27272a;
+}
+
+@layer base {
+  body {
+    @apply bg-black text-zinc-400;
+    font-family: 'JetBrains Mono', monospace;
+    overflow-x: hidden;
+  }
+}
+
+/* Efeito de Scanline de TV antiga */
+.scanline {
+  width: 100%;
+  height: 20px;
+  z-index: 5;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(16, 185, 129, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
+  position: absolute;
+  bottom: 100%;
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanline {
+  0% { bottom: 100%; }
+  100% { bottom: -100%; }
+}
