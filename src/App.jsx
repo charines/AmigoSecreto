@@ -110,10 +110,16 @@ function App() {
               <p className="text-terminal-green text-xs uppercase">Conectado como: {owner}</p>
               <label className="text-[10px] opacity-40 italic">Cole os nomes dos participantes (um por linha):</label>
               <textarea 
-                ref={textareaRef} // 4. Conectado a referência aqui
-                className="flex-grow bg-zinc-900/30 border border-terminal-border p-4 text-terminal-green outline-none focus:border-terminal-green min-h-[300px]"
+                ref={textareaRef}
+                className="flex-grow bg-zinc-900/30 border border-terminal-border p-4 text-terminal-green outline-none focus:border-terminal-green min-h-[300px] leading-tight"
+                // Garantimos que o value comece sem espaços acidentais
                 value={participants}
-                onChange={e => setParticipants(e.target.value)}
+                onChange={e => {
+                  const val = e.target.value;
+                  // Se o usuário tentar começar com um "Enter", nós limpamos para manter no topo
+                  setParticipants(val.startsWith('\n') ? val.trim() : val);
+                }}
+                placeholder="NOME_01&#10;NOME_02&#10;NOME_03"
               />
               <button onClick={startDraw} className="border border-terminal-green text-terminal-green py-3 hover:bg-terminal-green hover:text-black transition-all font-bold uppercase tracking-widest">
                 [ EXECUTAR_SORTEIO ]
