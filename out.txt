@@ -1,151 +1,150 @@
---- ESTRUTURA DE PASTAS ---
-.
-./README.md
-./node_modules
-./node_modules/esrecurse
-./node_modules/globals
-./node_modules/p-limit
-./node_modules/find-up
-./node_modules/esquery
-./node_modules/eslint-scope
-./node_modules/rollup
-./node_modules/@jridgewell
-./node_modules/@babel
-./node_modules/@humanwhocodes
-./node_modules/p-locate
-./node_modules/is-glob
-./node_modules/file-entry-cache
-./node_modules/lodash.merge
-./node_modules/brace-expansion
-./node_modules/nanoid
-./node_modules/baseline-browser-mapping
-./node_modules/flat-cache
-./node_modules/ajv
-./node_modules/@vitejs
-./node_modules/@eslint-community
-./node_modules/ansi-styles
-./node_modules/json-schema-traverse
-./node_modules/parent-module
-./node_modules/vite
-./node_modules/esutils
-./node_modules/shebang-regex
-./node_modules/browserslist
-./node_modules/tailwindcss
-./node_modules/path-key
-./node_modules/lightningcss
-./node_modules/csstype
-./node_modules/eslint
-./node_modules/hermes-estree
-./node_modules/ms
-./node_modules/lightningcss-linux-x64-gnu
-./node_modules/resolve-from
-./node_modules/@rollup
-./node_modules/path-exists
-./node_modules/minimatch
-./node_modules/json-buffer
-./node_modules/yallist
-./node_modules/postcss
-./node_modules/levn
-./node_modules/imurmurhash
-./node_modules/ignore
-./node_modules/supports-color
-./node_modules/isexe
-./node_modules/callsites
-./node_modules/update-browserslist-db
-./node_modules/esbuild
-./node_modules/concat-map
-./node_modules/semver
-./node_modules/prelude-ls
-./node_modules/@types
-./node_modules/acorn-jsx
-./node_modules/debug
-./node_modules/@rolldown
-./node_modules/eslint-visitor-keys
-./node_modules/color-convert
-./node_modules/@eslint
-./node_modules/import-fresh
-./node_modules/lru-cache
-./node_modules/@humanfs
-./node_modules/react-refresh
-./node_modules/fast-levenshtein
-./node_modules/chalk
-./node_modules/react-dom
-./node_modules/@alloc
-./node_modules/hermes-parser
-./node_modules/punycode
-./node_modules/graceful-fs
-./node_modules/json-stable-stringify-without-jsonify
-./node_modules/acorn
-./node_modules/cross-spawn
-./node_modules/scheduler
-./node_modules/escape-string-regexp
-./node_modules/fast-deep-equal
-./node_modules/optionator
-./node_modules/enhanced-resolve
-./node_modules/natural-compare
-./node_modules/convert-source-map
-./node_modules/which
-./node_modules/fast-json-stable-stringify
-./node_modules/uri-js
-./node_modules/keyv
-./node_modules/@tailwindcss
-./node_modules/color-name
-./node_modules/glob-parent
-./node_modules/tinyglobby
-./node_modules/eslint-plugin-react-hooks
-./node_modules/strip-json-comments
-./node_modules/lightningcss-linux-x64-musl
-./node_modules/yocto-queue
-./node_modules/word-wrap
-./node_modules/json5
-./node_modules/picocolors
-./node_modules/jiti
-./node_modules/deep-is
-./node_modules/balanced-match
-./node_modules/argparse
-./node_modules/node-releases
-./node_modules/shebang-command
-./node_modules/@esbuild
-./node_modules/jsesc
-./node_modules/flatted
-./node_modules/espree
-./node_modules/type-check
-./node_modules/is-extglob
-./node_modules/estraverse
-./node_modules/electron-to-chromium
-./node_modules/gensync
-./node_modules/zod-validation-error
-./node_modules/eslint-plugin-react-refresh
-./node_modules/magic-string
-./node_modules/tapable
-./node_modules/has-flag
-./node_modules/zod
-./node_modules/react
-./node_modules/escalade
-./node_modules/caniuse-lite
-./node_modules/source-map-js
-./node_modules/js-tokens
-./node_modules/locate-path
-./node_modules/js-yaml
-./public
-./public/movieslist.json
-./eslint.config.js
-./out.txt
-./vite.config.js
-./src
-./src/App.jsx
-./src/index.css
-./src/utils
-./src/assets
-./src/main.jsx
-./dist
-./dist/output.css
-./index.html
-./package-lock.json
-./favicon.ico
-./package.json
+./
+    --- ARQUIVO: README.md ---
+# React + Vite
 
---- PACKAGE.JSON ---
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+    --- FIM DO ARQUIVO ---
+
+    --- ARQUIVO: eslint.config.js ---
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import { defineConfig, globalIgnores } from 'eslint/config'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{js,jsx}'],
+    extends: [
+      js.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
+    },
+    rules: {
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+    },
+  },
+])
+
+    --- FIM DO ARQUIVO ---
+
+    --- ARQUIVO: netlify.toml ---
+[build]
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22.22.0"
+  NPM_FLAGS = "--force"
+    --- FIM DO ARQUIVO ---
+
+    --- ARQUIVO: vite.config.js ---
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite' // Importe o plugin
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(), // Adicione o plugin aqui
+  ],
+})
+    --- FIM DO ARQUIVO ---
+
+    --- ARQUIVO: .env ---
+VITE_SUPABASE_URL=https://ftgflarrebvojkhknbfy.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ0Z2ZsYXJyZWJ2b2praGtuYmZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1OTM2NTAsImV4cCI6MjA4NjE2OTY1MH0.i1rvRZPUI_obPk6urwTzaWDjKqg-fLaFiCKF2FuQHTU
+    --- FIM DO ARQUIVO ---
+
+    --- ARQUIVO: index.html ---
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Secret Santa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+    --- FIM DO ARQUIVO ---
+
+    --- ARQUIVO: gera_contexto.py ---
+import os
+
+# Configurações: pastas e arquivos para ignorar
+IGNORE_DIRS = {'node_modules', '.git', 'build', 'dist', 'public'}
+IGNORE_FILES = {'package-lock.json', 'yarn.lock', 'out.txt', '.gitignore'}
+
+def gerar_contexto(diretorio_raiz, arquivo_saida):
+    with open(arquivo_saida, 'w', encoding='utf-8') as f:
+        for root, dirs, files in os.walk(diretorio_raiz):
+            # Filtra pastas ignoradas
+            dirs[:] = [d for d in dirs if d not in IGNORE_DIRS]
+            
+            level = root.replace(diretorio_raiz, '').count(os.sep)
+            indent = ' ' * 4 * level
+            f.write(f'{indent}{os.path.basename(root)}/\n')
+            
+            sub_indent = ' ' * 4 * (level + 1)
+            for file in files:
+                if file in IGNORE_FILES:
+                    continue
+                
+                caminho_completo = os.path.join(root, file)
+                f.write(f'{sub_indent}--- ARQUIVO: {file} ---\n')
+                
+                try:
+                    with open(caminho_completo, 'r', encoding='utf-8') as conteudo:
+                        f.write(conteudo.read())
+                except Exception as e:
+                    f.write(f'[Erro ao ler arquivo: {e}]\n')
+                
+                f.write(f'\n{sub_indent}--- FIM DO ARQUIVO ---\n\n')
+
+if __name__ == "__main__":
+    gerar_contexto('.', 'out.txt')
+    print("Arquivo out.txt gerado com sucesso!")
+    --- FIM DO ARQUIVO ---
+
+    --- ARQUIVO: favicon.ico ---
+[Erro ao ler arquivo: 'utf-8' codec can't decode byte 0xa8 in position 14: invalid start byte]
+
+    --- FIM DO ARQUIVO ---
+
+    --- ARQUIVO: package.json ---
 {
   "name": "amigosecreto",
   "private": true,
@@ -158,6 +157,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.95.3",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/vite": "^4.1.18",
     "postcss": "^8.5.6",
@@ -178,37 +178,370 @@
   }
 }
 
---- VITE.CONFIG.JS ---
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite' // Importe o plugin
+    --- FIM DO ARQUIVO ---
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(), // Adicione o plugin aqui
-  ],
-})
---- INDEX.HTML ---
-<!doctype html>
-<html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SmartCart</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
---- SRC/MAIN.JSX ---
+    src/
+        --- ARQUIVO: App.jsx ---
+import { useState, useEffect, useRef } from 'react'
+import { supabase } from './lib/supabase' // Importa o cliente configurado
+import { performSecretSanta } from './utils/secretSanta'
+import RetroTyping from './RetroTyping';
+
+function App() {
+  const [step, setStep] = useState('email');
+  const [owner, setOwner] = useState('');
+  const [inputVal, setInputVal] = useState('');
+  const [participants, setParticipants] = useState('');
+  const [results, setResults] = useState([]);
+  const [revealedFriend, setRevealedFriend] = useState(null);
+  const textareaRef = useRef(null);
+
+  // 1. Persistência de Sessão: Verifica se o utilizador já está logado ao carregar
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setOwner(session.user.email);
+        setStep('members');
+      }
+    };
+    checkSession();
+
+    // Validação do Link de Revelação via ID do Banco
+    const params = new URLSearchParams(window.location.search);
+    const participantId = params.get('id');
+
+    if (participantId) {
+      const checkValidation = async () => {
+        const { data, error } = await supabase
+          .from('participants')
+          .select('name, secret_friend_name, groups(status)')
+          .eq('id', participantId)
+          .single();
+
+        if (data && data.groups.status === 'active') {
+          setRevealedFriend({ from: data.name, to: data.secret_friend_name });
+          setStep('reveal');
+        } else {
+          alert("ACESSO NEGADO: Sorteio inválido ou expirado.");
+        }
+      };
+      checkValidation();
+    }
+  }, []);
+
+  const handleEmail = async (e) => {
+    if (e.key === 'Enter' && inputVal.includes('@')) {
+      const email = inputVal.trim();
+      setOwner(email);
+      
+      const { error } = await supabase.auth.signInWithOtp({ email });
+      
+      if (error) {
+        alert("Erro ao enviar código: " + error.message);
+      } else {
+        setStep('auth');
+        setInputVal('');
+      }
+    }
+  };
+
+  const handleAuth = async (e) => {
+    if (e.key === 'Enter') {
+      const { data, error } = await supabase.auth.verifyOtp({
+        email: owner,
+        token: inputVal,
+        type: 'magiclink'
+      });
+
+      if (!error) {
+        // O login foi guardado no localStorage, useEffect mudará o step para 'members'
+        setInputVal('');
+      } else {
+        alert("CÓDIGO INVÁLIDO OU EXPIRADO");
+      }
+    }
+  };
+
+  // 2. Lógica de Sorteio Ajustada para o Banco de Dados 
+  const startDraw = async () => {
+    const lines = participants.split('\n').map(n => n.trim()).filter(n => n !== '');
+    if (lines.length < 2) return alert("ERRO: MÍNIMO DE 2 PARTICIPANTES");
+
+    try {
+      // Cria o grupo conforme colunas do db.sql 
+      const { data: group, error: gError } = await supabase
+        .from('groups')
+        .insert([{ owner_email: owner, status: 'active' }])
+        .select()
+        .single();
+
+      if (gError) throw gError;
+
+      const shuffled = performSecretSanta(lines);
+
+      // Mapeia payload para as colunas: group_id, name, secret_friend_name, viewed 
+      const payload = lines.map((name, i) => ({
+        group_id: group.id,
+        name: name,
+        secret_friend_name: shuffled[i],
+        viewed: false 
+      }));
+
+      const { data: createdParts, error: pError } = await supabase
+        .from('participants')
+        .insert(payload)
+        .select();
+
+      if (pError) throw pError;
+
+      const drawData = createdParts.map(p => ({
+        from: p.name,
+        link: `${window.location.origin}/?id=${p.id}`
+      }));
+
+      setResults(drawData);
+      setStep('results');
+
+    } catch (err) {
+      console.error("Erro detalhado:", err);
+      alert(`FALHA NO SISTEMA: ${err.message}`);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-black text-terminal-green font-mono p-10 flex items-start justify-start">      
+      <div className="scanline"></div>      
+      <div className="w-full max-w-3xl border border-terminal-border p-6 bg-black shadow-2xl min-h-[70vh] flex flex-col z-10">
+        
+        <div className="border-b border-terminal-border pb-4 mb-6 flex justify-between items-center">
+          <span className="text-terminal-green font-bold tracking-tighter">TERMINAL v4.0_DB_SECURE</span>
+          <span className="text-[10px] opacity-30 uppercase">Status: {step}</span>
+        </div>
+
+        <RetroTyping />
+
+        <div className="flex-grow">
+          {step === 'email' && (
+            <div className="space-y-4">
+              <p className="text-terminal-green">{">>>"} AGUARDANDO E-MAIL DO ORGANIZADOR...</p>
+              <div className="flex items-center">
+                <span className="text-terminal-green mr-2">root@auth:~$</span>
+                <input autoFocus className="bg-transparent outline-none text-terminal-green w-full" 
+                  value={inputVal} onChange={e => setInputVal(e.target.value)} onKeyDown={handleEmail} placeholder="email + enter" />
+              </div>
+            </div>
+          )}
+
+          {step === 'auth' && (
+            <div className="space-y-4">
+              <p className="text-yellow-600 font-bold tracking-widest uppercase italic">VERIFICAÇÃO DE IDENTIDADE</p>
+              <p className="text-[10px] text-zinc-500">Insira o código enviado para {owner}</p>
+              <div className="flex items-center">
+                <span className="mr-2 text-zinc-600">OTP_TOKEN:</span>
+                <input autoFocus className="bg-transparent outline-none text-yellow-500 w-full" 
+                  value={inputVal} onChange={e => setInputVal(e.target.value)} onKeyDown={handleAuth} placeholder="6 dígitos" />
+              </div>
+            </div>
+          )}
+
+          {step === 'members' && (
+            <div className="flex flex-col h-full space-y-4">
+              <p className="text-terminal-green text-xs uppercase">Sessão Ativa: {owner}</p>
+              <textarea 
+                ref={textareaRef}
+                className="flex-grow bg-zinc-900/30 border border-terminal-border p-4 text-terminal-green outline-none focus:border-terminal-green min-h-[300px]"
+                value={participants}
+                onChange={e => setParticipants(e.target.value)}
+                placeholder="NOME_01&#10;NOME_02&#10;NOME_03"
+              />
+              <button onClick={startDraw} className="border border-terminal-green text-terminal-green py-3 hover:bg-terminal-green hover:text-black font-bold uppercase transition-all">
+                [ EXECUTAR_SORTEIO_DB ]
+              </button>
+            </div>
+          )}
+
+          {step === 'results' && (
+            <div className="space-y-4">
+              <p className="text-terminal-green text-center">--- LINKS GERADOS COM SUCESSO ---</p>
+              <div className="max-h-[400px] overflow-y-auto">
+                <table className="w-full text-left text-xs">
+                  <tbody>
+                    {results.map((res, i) => (
+                      <tr key={i} className="border-b border-zinc-900">
+                        <td className="py-3">{res.from}</td>
+                        <td className="py-3 text-right">
+                          <button onClick={() => {
+                            navigator.clipboard.writeText(res.link);
+                            alert("Link copiado!");
+                          }} className="text-terminal-green border border-terminal-green/30 px-2 py-1 text-[10px] hover:bg-terminal-green hover:text-black">
+                            COPIAR_URL
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {step === 'reveal' && revealedFriend && (
+            <div className="text-center py-12 space-y-8 animate-in zoom-in">
+              <p className="text-terminal-green tracking-[0.4em] text-sm uppercase">Resultado Localizado</p>
+              <div className="inline-block border-2 border-terminal-green p-8 bg-terminal-green/5">
+                <span className="text-xs opacity-50 block mb-2">{revealedFriend.from.toUpperCase()}, VOCÊ TIROU:</span>
+                <span className="text-4xl text-terminal-green font-black uppercase">{revealedFriend.to}</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-terminal-border flex justify-between items-center opacity-30 text-[9px]">
+          <span>© 1994-2026 AMIGOSECRETO_OS</span>
+          <span>DB_AUTH: SUPABASE_ENABLED</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default App;
+        --- FIM DO ARQUIVO ---
+
+        --- ARQUIVO: db.sql ---
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.groups (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  owner_email text NOT NULL,
+  status text DEFAULT 'active'::text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT groups_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.participants (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  group_id uuid,
+  name text NOT NULL,
+  secret_friend_name text NOT NULL,
+  viewed boolean DEFAULT false,
+  CONSTRAINT participants_pkey PRIMARY KEY (id),
+  CONSTRAINT participants_group_id_fkey FOREIGN KEY (group_id) REFERENCES public.groups(id)
+);
+        --- FIM DO ARQUIVO ---
+
+        --- ARQUIVO: index.css ---
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #28bda4;
+  --color-background-light: #f9fafa;
+  --color-background-dark: #181c20;
+  --color-charcoal: #333333;
+  --font-display: "Manrope", sans-serif;
+  --color-terminal-bg: #09090b;
+  --color-terminal-green: #10b981;
+  --color-terminal-border: #000;
+}
+
+@layer base {
+  body {
+    @apply bg-black text-zinc-400;
+    font-family: 'JetBrains Mono', monospace;
+    overflow-x: hidden;
+  }
+}
+
+/* Efeito de Scanline de TV antiga */
+.scanline {
+  width: 100%;
+  height: 20px;
+  z-index: 5;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(16, 185, 129, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
+  position: absolute;
+  bottom: 100%;
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanline {
+  0% { bottom: 100%; }
+  100% { bottom: -100%; }
+}
+        --- FIM DO ARQUIVO ---
+
+        --- ARQUIVO: RetroTyping.jsx ---
+import { useState, useEffect } from 'react';
+
+const RetroTyping = () => {
+  const [quotes, setQuotes] = useState([]);
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [loopNum, setLoopNum] = useState(0);
+  const [typingSpeed, setTypingSpeed] = useState(100);
+
+  // Carrega as frases do arquivo JSON na pasta public
+  useEffect(() => {
+    fetch('/quotes.json')
+      .then(res => {
+        if (!res.ok) throw new Error("Erro ao carregar banco de frases");
+        return res.json();
+      })
+      .then(data => {
+        // Embaralha para que cada sessão comece com uma frase diferente
+        const shuffled = [...data].sort(() => Math.random() - 0.5);
+        setQuotes(shuffled);
+      })
+      .catch(err => {
+        console.error(err);
+        setQuotes(["C:\\> SYSTEM READY..."]);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (quotes.length === 0) return;
+
+    const handleTyping = () => {
+      const i = loopNum % quotes.length;
+      const fullText = quotes[i];
+
+      setDisplayText(
+        isDeleting 
+          ? fullText.substring(0, displayText.length - 1) 
+          : fullText.substring(0, displayText.length + 1)
+      );
+
+      // Velocidade: apagar (delete) é mais rápido que escrever
+      setTypingSpeed(isDeleting ? 40 : 100);
+
+      if (!isDeleting && displayText === fullText) {
+        setTimeout(() => setIsDeleting(true), 2500); // Pausa ao terminar frase
+      } else if (isDeleting && displayText === '') {
+        setIsDeleting(false);
+        setLoopNum(loopNum + 1); // Próxima frase
+      }
+    };
+
+    const timer = setTimeout(handleTyping, typingSpeed);
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, loopNum, typingSpeed, quotes]);
+
+  return (
+    <div className="mb-6 h-6 flex items-center text-[10px] text-terminal-green font-mono">
+      {/* Prompt estilo DOS */}
+      <span className="mr-2 text-terminal-green font-bold">C:\&gt;</span>
+      <span className="tracking-widest">{displayText}</span>
+      {/* Cursor clássico do DOS */}
+      <span className="w-2 h-4 bg-terminal-green ml-1 animate-pulse shadow-[0_0_5px_#4ade80]"></span>
+    </div>
+  );
+};
+
+export default RetroTyping;
+        --- FIM DO ARQUIVO ---
+
+        --- ARQUIVO: main.jsx ---
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
@@ -220,19 +553,56 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
---- SRC/INDEX.CSS ---
-@import "tailwindcss";
+        --- FIM DO ARQUIVO ---
 
-@theme {
-  --color-primary: #28bda4;
-  --color-background-light: #f9fafa;
-  --color-background-dark: #181c20;
-  --color-charcoal: #333333;
-  --font-display: "Manrope", sans-serif;
-  --color-terminal-bg: #09090b;
-  --color-terminal-green: #10b981;
-  --color-terminal-border: #27272a;
+        lib/
+            --- ARQUIVO: supabase.js ---
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error("ERRO: Variáveis de ambiente do Supabase não encontradas!");
 }
 
-@layer base {
-  body {
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+            --- FIM DO ARQUIVO ---
+
+        utils/
+            --- ARQUIVO: secretSanta.js ---
+export function performSecretSanta(names) {
+    let shuffled = [...names];
+    let valid = false;
+    let attempts = 0;
+
+    while (!valid && attempts < 500) {
+        attempts++;
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        valid = names.every((name, i) => name !== shuffled[i]);
+    }
+    return shuffled;
+}
+
+export function encryptData(data) {
+    const salt = Math.random().toString(36).substring(2, 7);
+    const stringToEncode = `${salt}|${JSON.stringify(data)}`;
+    return btoa(stringToEncode);
+}
+
+export function decryptData(code) {
+    try {
+        const decoded = atob(code);
+        const [salt, jsonStr] = decoded.split('|');
+        return JSON.parse(jsonStr);
+    } catch (e) {
+        console.error("Erro na descriptografia:", e);
+        return null;
+    }
+}
+            --- FIM DO ARQUIVO ---
+
+        assets/
