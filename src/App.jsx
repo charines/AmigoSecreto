@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react' // 1. Adicionado useRef
 import { performSecretSanta, encryptData, decryptData } from './utils/secretSanta'
+import RetroTyping from './RetroTyping'; // Importe o novo componente
 
 function App() {
   const [step, setStep] = useState('email'); // email, auth, members, results, reveal
@@ -77,6 +78,9 @@ function App() {
           <span className="text-terminal-green font-bold tracking-tighter">TERMINAL v3.0_REACT</span>
           <span className="text-[10px] opacity-30 uppercase">Status: {step}</span>
         </div>
+
+        {/* ADICIONE AQUI: */}
+        <RetroTyping />
 
         <div className="flex-grow">
           {step === 'email' && (
