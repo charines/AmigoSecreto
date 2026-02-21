@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
-import { supabase } from './lib/supabase' // Importa o cliente configurado
 import { performSecretSanta } from './utils/secretSanta'
 import RetroTyping from './RetroTyping';
+
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
 
 function App() {
   const [step, setStep] = useState('email');
@@ -12,16 +13,12 @@ function App() {
   const [revealedFriend, setRevealedFriend] = useState(null);
   const textareaRef = useRef(null);
 
-  // 1. Persistência de Sessão: Verifica se o utilizador já está logado ao carregar
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        setOwner(session.user.email);
-        setStep('members');
-      }
-    };
-    checkSession();
+    const storedOwner = localStorage.getItem('owner_email');
+    if (storedOwner) {
+      setOwner(storedOwner);
+      setStep('members');
+    }
 
     // Validação do Link de Revelação via ID do Banco
     const params = new URLSearchParams(window.location.search);
@@ -29,53 +26,35 @@ function App() {
 
     if (participantId) {
       const checkValidation = async () => {
-        const { data, error } = await supabase
-          .from('participants')
-          .select('name, secret_friend_name, groups(status)')
-          .eq('id', participantId)
-          .single();
-
-        if (data && data.groups.status === 'active') {
-          setRevealedFriend({ from: data.name, to: data.secret_friend_name });
-          setStep('reveal');
-        } else {
-          alert("ACESSO NEGADO: Sorteio inválido ou expirado.");
+        try {
+          if (!API_BASE_URL) {
+            alert("ERRO: API não configurada.");
+            return;
+          }
+          const res = await fetch(`${API_BASE_URL}/reveal.php?id=${encodeURIComponent(participantId)}`);
+          const data = await res.json();
+          if (res.ok && data.ok) {
+            setRevealedFriend({ from: data.from, to: data.to });
+            setStep('reveal');
+          } else {
+            alert("ACESSO NEGADO: Sorteio inválido ou expirado.");
+          }
+        } catch (err) {
+          console.error("Erro detalhado:", err);
+          alert("FALHA NO SISTEMA: Não foi possível validar o link.");
         }
       };
       checkValidation();
     }
   }, []);
 
-  const handleEmail = async (e) => {
+  const handleEmail = (e) => {
     if (e.key === 'Enter' && inputVal.includes('@')) {
       const email = inputVal.trim();
       setOwner(email);
-      
-      const { error } = await supabase.auth.signInWithOtp({ email });
-      
-      if (error) {
-        alert("Erro ao enviar código: " + error.message);
-      } else {
-        setStep('auth');
-        setInputVal('');
-      }
-    }
-  };
-
-  const handleAuth = async (e) => {
-    if (e.key === 'Enter') {
-      const { data, error } = await supabase.auth.verifyOtp({
-        email: owner,
-        token: inputVal,
-        type: 'magiclink'
-      });
-
-      if (!error) {
-        // O login foi guardado no localStorage, useEffect mudará o step para 'members'
-        setInputVal('');
-      } else {
-        alert("CÓDIGO INVÁLIDO OU EXPIRADO");
-      }
+      localStorage.setItem('owner_email', email);
+      setStep('members');
+      setInputVal('');
     }
   };
 
@@ -83,35 +62,26 @@ function App() {
   const startDraw = async () => {
     const lines = participants.split('\n').map(n => n.trim()).filter(n => n !== '');
     if (lines.length < 2) return alert("ERRO: MÍNIMO DE 2 PARTICIPANTES");
+    if (!API_BASE_URL) return alert("ERRO: API não configurada.");
+    if (!owner || !owner.includes('@')) return alert("ERRO: E-MAIL DO ORGANIZADOR INVÁLIDO");
 
     try {
-      // Cria o grupo conforme colunas do db.sql 
-      const { data: group, error: gError } = await supabase
-        .from('groups')
-        .insert([{ owner_email: owner, status: 'active' }])
-        .select()
-        .single();
-
-      if (gError) throw gError;
-
       const shuffled = performSecretSanta(lines);
 
-      // Mapeia payload para as colunas: group_id, name, secret_friend_name, viewed 
       const payload = lines.map((name, i) => ({
-        group_id: group.id,
         name: name,
-        secret_friend_name: shuffled[i],
-        viewed: false 
+        secret_friend_name: shuffled[i]
       }));
 
-      const { data: createdParts, error: pError } = await supabase
-        .from('participants')
-        .insert(payload)
-        .select();
+      const res = await fetch(`${API_BASE_URL}/draw.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ owner_email: owner, participants: payload })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data?.error || 'Erro ao salvar o sorteio');
 
-      if (pError) throw pError;
-
-      const drawData = createdParts.map(p => ({
+      const drawData = data.participants.map(p => ({
         from: p.name,
         link: `${window.location.origin}/?id=${p.id}`
       }));
@@ -145,18 +115,6 @@ function App() {
                 <span className="text-terminal-green mr-2">root@auth:~$</span>
                 <input autoFocus className="bg-transparent outline-none text-terminal-green w-full" 
                   value={inputVal} onChange={e => setInputVal(e.target.value)} onKeyDown={handleEmail} placeholder="email + enter" />
-              </div>
-            </div>
-          )}
-
-          {step === 'auth' && (
-            <div className="space-y-4">
-              <p className="text-yellow-600 font-bold tracking-widest uppercase italic">VERIFICAÇÃO DE IDENTIDADE</p>
-              <p className="text-[10px] text-zinc-500">Insira o código enviado para {owner}</p>
-              <div className="flex items-center">
-                <span className="mr-2 text-zinc-600">OTP_TOKEN:</span>
-                <input autoFocus className="bg-transparent outline-none text-yellow-500 w-full" 
-                  value={inputVal} onChange={e => setInputVal(e.target.value)} onKeyDown={handleAuth} placeholder="6 dígitos" />
               </div>
             </div>
           )}
@@ -215,7 +173,7 @@ function App() {
 
         <div className="mt-6 pt-4 border-t border-terminal-border flex justify-between items-center opacity-30 text-[9px]">
           <span>© 1994-2026 AMIGOSECRETO_OS</span>
-          <span>DB_AUTH: SUPABASE_ENABLED</span>
+          <span>DB_AUTH: MYSQL_ENABLED</span>
         </div>
       </div>
     </div>
