@@ -12,4 +12,14 @@ return [
     'cors' => [
         'origin' => getenv('APP_ORIGIN') ?: '*',
     ],
+    'mail' => [
+        'host' => getenv('SMTP_HOST') ?: '',
+        'port' => (int)(getenv('SMTP_PORT') ?: 587),
+        'user' => getenv('SMTP_USER') ?: '',
+        'pass' => getenv('SMTP_PASS') ?: '',
+        'from' => getenv('SMTP_FROM') ?: '',
+        'from_name' => getenv('SMTP_FROM_NAME') ?: 'Amigo Secreto',
+        'secure' => getenv('SMTP_SECURE') ?: 'tls',
+        'timeout' => (int)(getenv('SMTP_TIMEOUT') ?: 10),
+    ],
 ];
