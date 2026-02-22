@@ -1,37 +1,188 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #28bda4;
-  --color-background-light: #f9fafa;
-  --color-background-dark: #181c20;
-  --color-charcoal: #333333;
-  --font-display: "Manrope", sans-serif;
-  --color-terminal-bg: #09090b;
-  --color-terminal-green: #10b981;
-  --color-terminal-border: #000;
+  /* Primary CRT phosphor green */
+  --color-crt-green:  #39ff84;
+  --color-crt-red:    #ff4444;
+  --color-crt-amber:  #ffbb00;
+  --color-crt-bg:     #020904;
+  --color-crt-panel:  #040d07;
+
+  /* Legacy aliases — RetroTyping.jsx uses these */
+  --color-terminal-green:  #39ff84;
+  --color-terminal-border: #0d2818;
 }
 
+/* ─── Base ─────────────────────────────────────────────────── */
 @layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
   body {
-    @apply bg-black text-zinc-400;
-    font-family: 'JetBrains Mono', monospace;
+    background-color: var(--color-crt-bg);
+    color: var(--color-crt-green);
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
     overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* Static scanlines grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent          0px,
+      transparent          2px,
+      rgba(0, 0, 0, 0.07)  2px,
+      rgba(0, 0, 0, 0.07)  3px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* Vignette — darkens screen corners */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      transparent 45%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* Thin green scrollbar */
+  ::-webkit-scrollbar        { width: 3px; height: 3px; }
+  ::-webkit-scrollbar-track  { background: transparent; }
+  ::-webkit-scrollbar-thumb  { background: rgba(57, 255, 132, 0.25); border-radius: 2px; }
+}
+
+/* ─── Component classes ─────────────────────────────────────── */
+@layer components {
+  /* Glowing text utility */
+  .crt-glow-text {
+    text-shadow: 0 0 8px var(--color-crt-green), 0 0 20px rgba(57, 255, 132, 0.25);
+  }
+
+  /* Terminal input / textarea */
+  .crt-input {
+    background:  rgba(57, 255, 132, 0.03);
+    border:      1px solid rgba(57, 255, 132, 0.2);
+    color:       var(--color-crt-green);
+    font-family: 'JetBrains Mono', monospace;
+    caret-color: var(--color-crt-green);
+    outline:     none;
+    transition:  border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .crt-input:focus {
+    border-color: rgba(57, 255, 132, 0.5);
+    box-shadow:   0 0 14px rgba(57, 255, 132, 0.06);
+  }
+
+  /* Primary button */
+  .crt-btn {
+    border:          1px solid var(--color-crt-green);
+    color:           var(--color-crt-green);
+    background:      transparent;
+    font-family:     'JetBrains Mono', monospace;
+    font-weight:     700;
+    font-size:       0.75rem;
+    letter-spacing:  0.22em;
+    text-transform:  uppercase;
+    padding:         0.75rem 1.5rem;
+    cursor:          pointer;
+    transition:      background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    text-shadow:     0 0 8px var(--color-crt-green);
+    width:           100%;
+    display:         block;
+  }
+
+  .crt-btn:hover:not(:disabled) {
+    background:  var(--color-crt-green);
+    color:       var(--color-crt-bg);
+    text-shadow: none;
+    box-shadow:  0 0 24px rgba(57, 255, 132, 0.3);
+  }
+
+  .crt-btn:disabled {
+    opacity: 0.3;
+    cursor:  not-allowed;
+  }
+
+  /* Secondary / icon button */
+  .crt-btn-sm {
+    border:         1px solid rgba(57, 255, 132, 0.25);
+    color:          rgba(57, 255, 132, 0.65);
+    background:     transparent;
+    font-family:    'JetBrains Mono', monospace;
+    font-size:      0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding:        0.375rem 0.75rem;
+    cursor:         pointer;
+    transition:     all 0.15s ease;
+  }
+
+  .crt-btn-sm:hover {
+    border-color: var(--color-crt-green);
+    color:        var(--color-crt-green);
+  }
+
+  .crt-btn-sm.copied {
+    background:   var(--color-crt-green);
+    border-color: var(--color-crt-green);
+    color:        var(--color-crt-bg);
   }
 }
 
-/* Efeito de Scanline de TV antiga */
-.scanline {
-  width: 100%;
-  height: 20px;
-  z-index: 5;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(16, 185, 129, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
-  position: absolute;
-  bottom: 100%;
-  animation: scanline 8s linear infinite;
-  pointer-events: none;
+/* ─── Moving scanline sweep ─────────────────────────────────── */
+.scanline-sweep {
+  position:   fixed;
+  top:        -4px;
+  left:       0;
+  right:      0;
+  height:     4px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(57, 255, 132, 0.07),
+    transparent
+  );
+  animation:       crt-sweep 8s linear infinite;
+  pointer-events:  none;
+  z-index:         998;
 }
 
-@keyframes scanline {
-  0% { bottom: 100%; }
-  100% { bottom: -100%; }
+/* ─── Keyframes ─────────────────────────────────────────────── */
+@keyframes crt-sweep {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100vh); }
 }
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes glitch-reveal {
+  0%   { opacity: 0;   clip-path: inset(70% 0 0 0);    }
+  20%  { opacity: 0.6; clip-path: inset(30% 0 50% 0);  }
+  45%  { opacity: 1;   clip-path: inset(0 0 65% 0);    }
+  65%  { opacity: 0.9; clip-path: inset(15% 0 10% 0);  }
+  85%  { opacity: 1;   clip-path: inset(3% 0 3% 0);    }
+  100% { opacity: 1;   clip-path: inset(0 0 0 0);      }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.animate-fade-in-up    { animation: fade-in-up    0.5s ease forwards; }
+.animate-glitch-reveal { animation: glitch-reveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-blink         { animation: blink 1s step-end infinite; }

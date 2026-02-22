@@ -59,7 +59,7 @@ const RetroTyping = () => {
       <span className="mr-2 text-terminal-green font-bold">C:\&gt;</span>
       <span className="tracking-widest">{displayText}</span>
       {/* Cursor clássico do DOS */}
-      <span className="w-2 h-4 bg-terminal-green ml-1 animate-pulse shadow-[0_0_5px_#4ade80]"></span>
+      <span className="w-2 h-4 bg-terminal-green ml-1 animate-blink" style={{ boxShadow: '0 0 6px var(--color-crt-green)' }}></span>
     </div>
   );
 };
