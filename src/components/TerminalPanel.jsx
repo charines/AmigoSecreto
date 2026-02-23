@@ -2,9 +2,9 @@ import RetroTyping from '../RetroTyping';
 import StepIndicator from './StepIndicator';
 import { useTheme } from '../contexts/ThemeContext';
 
-export default function TerminalPanel({ step, children }) {
+export default function TerminalPanel({ step, children, showSteps = true }) {
   const { themeConfig } = useTheme();
-  const showStepIndicator = step !== 'reveal';
+  const showStepIndicator = showSteps && step !== 'reveal';
 
   return (
     <div
