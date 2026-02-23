@@ -25,17 +25,17 @@ export default function StepIndicator({ step }) {
                   background: isActive
                     ? 'var(--color-crt-green)'
                     : isDone
-                    ? 'rgba(57, 255, 132, 0.45)'
+                    ? 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.45)'
                     : 'transparent',
                   border: `1px solid ${
                     isActive
                       ? 'var(--color-crt-green)'
                       : isDone
-                      ? 'rgba(57, 255, 132, 0.45)'
-                      : 'rgba(57, 255, 132, 0.2)'
+                      ? 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.45)'
+                      : 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.2)'
                   }`,
                   boxShadow: isActive
-                    ? '0 0 8px var(--color-crt-green), 0 0 18px rgba(57,255,132,0.3)'
+                    ? '0 0 8px var(--color-crt-green), 0 0 18px rgb(var(--color-crt-green-raw, 57 255 132) / 0.3)'
                     : 'none',
                 }}
               />
@@ -45,11 +45,9 @@ export default function StepIndicator({ step }) {
                   color: isActive
                     ? 'var(--color-crt-green)'
                     : isDone
-                    ? 'rgba(57, 255, 132, 0.45)'
-                    : 'rgba(57, 255, 132, 0.2)',
-                  textShadow: isActive
-                    ? '0 0 8px var(--color-crt-green)'
-                    : 'none',
+                    ? 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.45)'
+                    : 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.2)',
+                  textShadow: isActive ? '0 0 8px var(--color-crt-green)' : 'none',
                 }}
               >
                 {s.label}
@@ -62,10 +60,10 @@ export default function StepIndicator({ step }) {
                 className="w-16 sm:w-24 h-px mx-2 mb-3.5 transition-all duration-500"
                 style={{
                   background: isDone
-                    ? 'rgba(57, 255, 132, 0.4)'
+                    ? 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.4)'
                     : isActive
-                    ? 'rgba(57, 255, 132, 0.2)'
-                    : 'rgba(57, 255, 132, 0.1)',
+                    ? 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.2)'
+                    : 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.1)',
                 }}
               />
             )}

@@ -6,9 +6,9 @@ export default function MembersStep({
   error,
   loading,
 }) {
-  const lines  = participants.split('\n').filter((l) => l.trim() !== '');
-  const count  = lines.length;
-  const valid  = count >= 2;
+  const lines = participants.split('\n').filter((l) => l.trim() !== '');
+  const count = lines.length;
+  const valid = count >= 2;
 
   return (
     <div className="space-y-4">
@@ -16,8 +16,8 @@ export default function MembersStep({
       <div className="flex items-center justify-between">
         <span
           style={{
-            color: 'rgba(57, 255, 132, 0.4)',
-            fontSize: '10px',
+            color:         'rgb(var(--color-crt-green-raw, 57 255 132) / 0.4)',
+            fontSize:      '10px',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
           }}
@@ -31,17 +31,17 @@ export default function MembersStep({
                 ? 'var(--color-crt-green)'
                 : count > 0
                 ? 'var(--color-crt-red)'
-                : 'rgba(57, 255, 132, 0.35)',
+                : 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.35)',
               textShadow: valid ? '0 0 6px var(--color-crt-green)' : 'none',
             }}
           >
             {count}
           </span>
-          <span style={{ color: 'rgba(57, 255, 132, 0.35)' }}>
+          <span style={{ color: 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.35)' }}>
             {' '}participante{count !== 1 ? 's' : ''}
           </span>
           {!valid && count > 0 && (
-            <span style={{ color: 'rgba(255, 68, 68, 0.6)', marginLeft: '0.5rem' }}>
+            <span style={{ color: 'rgb(var(--color-crt-red-raw, 255 68 68) / 0.6)', marginLeft: '0.5rem' }}>
               (mín. 2)
             </span>
           )}
@@ -57,7 +57,7 @@ export default function MembersStep({
         onChange={(e) => setParticipants(e.target.value)}
       />
 
-      <p style={{ color: 'rgba(57, 255, 132, 0.22)', fontSize: '10px', letterSpacing: '0.15em' }}>
+      <p style={{ color: 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.22)', fontSize: '10px', letterSpacing: '0.15em' }}>
         ↵ Um nome por linha
       </p>
 
@@ -65,7 +65,7 @@ export default function MembersStep({
       {error && (
         <p
           className="text-crt-red text-[10px] tracking-wider uppercase"
-          style={{ textShadow: '0 0 6px rgba(255, 68, 68, 0.4)' }}
+          style={{ textShadow: '0 0 6px rgb(var(--color-crt-red-raw, 255 68 68) / 0.4)' }}
         >
           ✖ {error}
         </p>

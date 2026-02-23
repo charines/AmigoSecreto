@@ -1,16 +1,75 @@
+/* ─── Google Fonts (must precede @import "tailwindcss") ────── */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=UnifrakturMaguntia&display=swap');
+
 @import "tailwindcss";
 
+/* ─── Tailwind design tokens (retro defaults) ───────────────── */
 @theme {
-  /* Primary CRT phosphor green */
   --color-crt-green:  #39ff84;
   --color-crt-red:    #ff4444;
   --color-crt-amber:  #ffbb00;
   --color-crt-bg:     #020904;
   --color-crt-panel:  #040d07;
 
-  /* Legacy aliases — RetroTyping.jsx uses these */
+  /* Legacy aliases */
   --color-terminal-green:  #39ff84;
   --color-terminal-border: #0d2818;
+}
+
+/* ─── Per-theme CSS variable overrides ──────────────────────── */
+/* Applied to <html data-theme="X"> so they beat @theme :root   */
+
+html[data-theme="retro"] {
+  --color-crt-green:       #39ff84;
+  --color-crt-red:         #ff4444;
+  --color-crt-amber:       #ffbb00;
+  --color-crt-bg:          #020904;
+  --color-crt-panel:       #040d07;
+  --color-terminal-green:  #39ff84;
+  --color-terminal-border: #0d2818;
+
+  /* Raw RGB triplets for rgb(var(…) / alpha) usage */
+  --color-crt-green-raw: 57 255 132;
+  --color-crt-red-raw:   255 68 68;
+  --color-crt-amber-raw: 255 187 0;
+
+  /* Typography */
+  --theme-font:         'JetBrains Mono', 'Courier New', monospace;
+  --theme-display-font: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+html[data-theme="easter"] {
+  --color-crt-green:       #c4a0ff;
+  --color-crt-red:         #ff6b9d;
+  --color-crt-amber:       #e8c85a;
+  --color-crt-bg:          #0e0820;
+  --color-crt-panel:       #150d2a;
+  --color-terminal-green:  #c4a0ff;
+  --color-terminal-border: #2a1a4e;
+
+  --color-crt-green-raw: 196 160 255;
+  --color-crt-red-raw:   255 107 157;
+  --color-crt-amber-raw: 232 200 90;
+
+  --theme-font:         'Cinzel', Georgia, serif;
+  --theme-display-font: 'Cinzel', Georgia, serif;
+}
+
+html[data-theme="merry"] {
+  --color-crt-green:       #d4af37;
+  --color-crt-red:         #c41e3a;
+  --color-crt-amber:       #ff8c42;
+  --color-crt-bg:          #060106;
+  --color-crt-panel:       #0f0408;
+  --color-terminal-green:  #d4af37;
+  --color-terminal-border: #2a1a0a;
+
+  --color-crt-green-raw: 212 175 55;
+  --color-crt-red-raw:   196 30 58;
+  --color-crt-amber-raw: 255 140 66;
+
+  --theme-font:         'Cinzel', Georgia, serif;
+  --theme-display-font: 'UnifrakturMaguntia', serif;
 }
 
 /* ─── Base ─────────────────────────────────────────────────── */
@@ -20,12 +79,13 @@
   body {
     background-color: var(--color-crt-bg);
     color: var(--color-crt-green);
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-family: var(--theme-font, 'JetBrains Mono', 'Courier New', monospace);
     overflow-x: hidden;
     min-height: 100vh;
+    transition: background-color 0.4s ease, color 0.4s ease;
   }
 
-  /* Static scanlines grid */
+  /* Static scanlines grid — retro only */
   body::before {
     content: '';
     position: fixed;
@@ -39,6 +99,14 @@
     );
     pointer-events: none;
     z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.4s ease;
+  }
+
+  /* Hide scanlines for themed variants */
+  html[data-theme="easter"] body::before,
+  html[data-theme="merry"]  body::before {
+    opacity: 0;
   }
 
   /* Vignette — darkens screen corners */
@@ -55,33 +123,38 @@
     z-index: 999;
   }
 
-  /* Thin green scrollbar */
+  /* Thin themed scrollbar */
   ::-webkit-scrollbar        { width: 3px; height: 3px; }
   ::-webkit-scrollbar-track  { background: transparent; }
-  ::-webkit-scrollbar-thumb  { background: rgba(57, 255, 132, 0.25); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb  {
+    background: rgb(var(--color-crt-green-raw, 57 255 132) / 0.25);
+    border-radius: 2px;
+  }
 }
 
 /* ─── Component classes ─────────────────────────────────────── */
 @layer components {
   /* Glowing text utility */
   .crt-glow-text {
-    text-shadow: 0 0 8px var(--color-crt-green), 0 0 20px rgba(57, 255, 132, 0.25);
+    text-shadow:
+      0 0 8px var(--color-crt-green),
+      0 0 20px rgb(var(--color-crt-green-raw, 57 255 132) / 0.25);
   }
 
   /* Terminal input / textarea */
   .crt-input {
-    background:  rgba(57, 255, 132, 0.03);
-    border:      1px solid rgba(57, 255, 132, 0.2);
+    background:  rgb(var(--color-crt-green-raw, 57 255 132) / 0.03);
+    border:      1px solid rgb(var(--color-crt-green-raw, 57 255 132) / 0.2);
     color:       var(--color-crt-green);
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--theme-font, 'JetBrains Mono', monospace);
     caret-color: var(--color-crt-green);
     outline:     none;
     transition:  border-color 0.2s, box-shadow 0.2s;
   }
 
   .crt-input:focus {
-    border-color: rgba(57, 255, 132, 0.5);
-    box-shadow:   0 0 14px rgba(57, 255, 132, 0.06);
+    border-color: rgb(var(--color-crt-green-raw, 57 255 132) / 0.5);
+    box-shadow:   0 0 14px rgb(var(--color-crt-green-raw, 57 255 132) / 0.06);
   }
 
   /* Primary button */
@@ -89,7 +162,7 @@
     border:          1px solid var(--color-crt-green);
     color:           var(--color-crt-green);
     background:      transparent;
-    font-family:     'JetBrains Mono', monospace;
+    font-family:     var(--theme-font, 'JetBrains Mono', monospace);
     font-weight:     700;
     font-size:       0.75rem;
     letter-spacing:  0.22em;
@@ -106,7 +179,7 @@
     background:  var(--color-crt-green);
     color:       var(--color-crt-bg);
     text-shadow: none;
-    box-shadow:  0 0 24px rgba(57, 255, 132, 0.3);
+    box-shadow:  0 0 24px rgb(var(--color-crt-green-raw, 57 255 132) / 0.3);
   }
 
   .crt-btn:disabled {
@@ -116,10 +189,10 @@
 
   /* Secondary / icon button */
   .crt-btn-sm {
-    border:         1px solid rgba(57, 255, 132, 0.25);
-    color:          rgba(57, 255, 132, 0.65);
+    border:         1px solid rgb(var(--color-crt-green-raw, 57 255 132) / 0.25);
+    color:          rgb(var(--color-crt-green-raw, 57 255 132) / 0.65);
     background:     transparent;
-    font-family:    'JetBrains Mono', monospace;
+    font-family:    var(--theme-font, 'JetBrains Mono', monospace);
     font-size:      0.625rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -140,7 +213,7 @@
   }
 }
 
-/* ─── Moving scanline sweep ─────────────────────────────────── */
+/* ─── Moving scanline / theme sweep ────────────────────────── */
 .scanline-sweep {
   position:   fixed;
   top:        -4px;
@@ -150,12 +223,36 @@
   background: linear-gradient(
     to bottom,
     transparent,
-    rgba(57, 255, 132, 0.07),
+    rgb(var(--color-crt-green-raw, 57 255 132) / 0.07),
     transparent
   );
   animation:       crt-sweep 8s linear infinite;
   pointer-events:  none;
   z-index:         998;
+}
+
+/* Easter: slower, softer bloom sweep */
+html[data-theme="easter"] .scanline-sweep {
+  height:    12px;
+  animation: crt-sweep 12s ease-in-out infinite;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(var(--color-crt-green-raw) / 0.04),
+    transparent
+  );
+}
+
+/* Merry: warm comet sweep */
+html[data-theme="merry"] .scanline-sweep {
+  height:    8px;
+  animation: crt-sweep 10s linear infinite;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(var(--color-crt-green-raw) / 0.06),
+    transparent
+  );
 }
 
 /* ─── Keyframes ─────────────────────────────────────────────── */
