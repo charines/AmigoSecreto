@@ -31,9 +31,10 @@ if ($subject === '' || $message === '') {
 
 $config = require __DIR__ . '/config.php';
 $mailConfig = $config['mail'] ?? [];
+$imapConfig = $config['imap'] ?? [];
 
 try {
-    send_smtp_mail($mailConfig, $to, $subject, $message);
+    send_smtp_mail($mailConfig, $to, $subject, $message, $imapConfig);
     echo json_encode(['ok' => true]);
 } catch (Throwable $e) {
     http_response_code(500);
