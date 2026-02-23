@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useTheme } from './contexts/ThemeContext';
 
 const RetroTyping = () => {
+  const { themeConfig } = useTheme();
   const [quotes, setQuotes] = useState([]);
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -15,13 +17,12 @@ const RetroTyping = () => {
         return res.json();
       })
       .then(data => {
-        // Embaralha para que cada sessão comece com uma frase diferente
         const shuffled = [...data].sort(() => Math.random() - 0.5);
         setQuotes(shuffled);
       })
       .catch(err => {
         console.error(err);
-        setQuotes(["C:\\> SYSTEM READY..."]);
+        setQuotes(["SYSTEM READY..."]);
       });
   }, []);
 
@@ -29,23 +30,22 @@ const RetroTyping = () => {
     if (quotes.length === 0) return;
 
     const handleTyping = () => {
-      const i = loopNum % quotes.length;
+      const i        = loopNum % quotes.length;
       const fullText = quotes[i];
 
       setDisplayText(
-        isDeleting 
-          ? fullText.substring(0, displayText.length - 1) 
+        isDeleting
+          ? fullText.substring(0, displayText.length - 1)
           : fullText.substring(0, displayText.length + 1)
       );
 
-      // Velocidade: apagar (delete) é mais rápido que escrever
       setTypingSpeed(isDeleting ? 40 : 100);
 
       if (!isDeleting && displayText === fullText) {
-        setTimeout(() => setIsDeleting(true), 2500); // Pausa ao terminar frase
+        setTimeout(() => setIsDeleting(true), 2500);
       } else if (isDeleting && displayText === '') {
         setIsDeleting(false);
-        setLoopNum(loopNum + 1); // Próxima frase
+        setLoopNum(loopNum + 1);
       }
     };
 
@@ -55,11 +55,19 @@ const RetroTyping = () => {
 
   return (
     <div className="mb-6 h-6 flex items-center text-[10px] text-terminal-green font-mono">
-      {/* Prompt estilo DOS */}
-      <span className="mr-2 text-terminal-green font-bold">C:\&gt;</span>
+      {/* Prompt — changes per theme */}
+      <span
+        className="mr-2 text-terminal-green font-bold"
+        style={{ fontFamily: 'var(--theme-display-font)' }}
+      >
+        {themeConfig.prompt}
+      </span>
       <span className="tracking-widest">{displayText}</span>
-      {/* Cursor clássico do DOS */}
-      <span className="w-2 h-4 bg-terminal-green ml-1 animate-blink" style={{ boxShadow: '0 0 6px var(--color-crt-green)' }}></span>
+      {/* Cursor */}
+      <span
+        className="w-2 h-4 bg-terminal-green ml-1 animate-blink"
+        style={{ boxShadow: '0 0 6px var(--color-crt-green)' }}
+      />
     </div>
   );
 };
