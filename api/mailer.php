@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-function send_smtp_mail(array $config, string $to, string $subject, string $body): void
+function send_smtp_mail(array $config, string $to, string $subject, string $body, array $imapConfig = []): void
 {
     $host = trim((string)($config['host'] ?? ''));
     $port = (int)($config['port'] ?? 587);
@@ -69,8 +69,8 @@ function send_smtp_mail(array $config, string $to, string $subject, string $body
         'Content-Transfer-Encoding: 8bit',
     ];
 
-    $data = implode("\r\n", $headers) . "\r\n\r\n" . normalize_body($body) . "\r\n";
-    $data = dot_stuff($data);
+    $rawMessage = implode("\r\n", $headers) . "\r\n\r\n" . normalize_body($body) . "\r\n";
+    $data = dot_stuff($rawMessage);
 
     fwrite($socket, $data . "\r\n.\r\n");
     $dataResp = smtp_read($socket);
@@ -78,6 +78,10 @@ function send_smtp_mail(array $config, string $to, string $subject, string $body
 
     smtp_cmd($socket, 'QUIT', ['221', '250']);
     fclose($socket);
+
+    if ($imapConfig !== []) {
+        append_imap_sent($imapConfig, $rawMessage);
+    }
 }
 
 function smtp_cmd($socket, string $command, array $expectCodes, string $context = ''): string
@@ -140,4 +144,51 @@ function normalize_body(string $body): string
 function dot_stuff(string $data): string
 {
     return preg_replace('/^\./m', '..', $data);
+}
+
+function append_imap_sent(array $config, string $rawMessage): void
+{
+    $host = trim((string)($config['host'] ?? ''));
+    if ($host === '') {
+        return;
+    }
+
+    $port = (int)($config['port'] ?? 993);
+    $user = trim((string)($config['user'] ?? ''));
+    $pass = (string)($config['pass'] ?? '');
+    $folder = (string)($config['folder'] ?? 'Sent Items');
+    $ssl = (bool)($config['ssl'] ?? true);
+    $timeout = (int)($config['timeout'] ?? 10);
+
+    if (!function_exists('imap_open')) {
+        throw new RuntimeException('Extensão IMAP não habilitada');
+    }
+    if ($user === '' || $pass === '') {
+        throw new RuntimeException('IMAP não configurado');
+    }
+
+    if (function_exists('imap_timeout')) {
+        imap_timeout(IMAP_OPENTIMEOUT, $timeout);
+        imap_timeout(IMAP_READTIMEOUT, $timeout);
+        imap_timeout(IMAP_WRITETIMEOUT, $timeout);
+        imap_timeout(IMAP_CLOSETIMEOUT, $timeout);
+    }
+
+    $flags = $ssl ? '/imap/ssl' : '/imap/notls';
+    $mailbox = sprintf('{%s:%d%s}%s', $host, $port, $flags, $folder);
+
+    $stream = @imap_open($mailbox, $user, $pass, 0, 1);
+    if ($stream === false) {
+        $error = imap_last_error();
+        throw new RuntimeException('Falha ao abrir IMAP: ' . ($error ?: 'erro desconhecido'));
+    }
+
+    $ok = @imap_append($stream, $mailbox, $rawMessage, '\\Seen');
+    if (!$ok) {
+        $error = imap_last_error();
+        imap_close($stream);
+        throw new RuntimeException('Falha ao gravar no Sent: ' . ($error ?: 'erro desconhecido'));
+    }
+
+    imap_close($stream);
 }
