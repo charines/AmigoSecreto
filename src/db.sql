@@ -1,19 +1,38 @@
 -- WARNING: This schema is for context only and is not meant to be run.
 -- Table order and constraints may not be valid for execution.
 
-CREATE TABLE public.groups (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  owner_email text NOT NULL,
-  status text DEFAULT 'active'::text,
-  created_at timestamp with time zone DEFAULT now(),
-  CONSTRAINT groups_pkey PRIMARY KEY (id)
+CREATE TABLE admins (
+  id bigint PRIMARY KEY,
+  name varchar(255) NOT NULL,
+  email varchar(255) UNIQUE NOT NULL,
+  password_hash varchar(255) NOT NULL
 );
-CREATE TABLE public.participants (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  group_id uuid,
-  name text NOT NULL,
-  secret_friend_name text NOT NULL,
-  viewed boolean DEFAULT false,
-  CONSTRAINT participants_pkey PRIMARY KEY (id),
-  CONSTRAINT participants_group_id_fkey FOREIGN KEY (group_id) REFERENCES public.groups(id)
+
+CREATE TABLE groups (
+  id bigint PRIMARY KEY,
+  admin_id bigint NOT NULL,
+  title varchar(255) NOT NULL,
+  description text,
+  draw_date datetime,
+  budget_limit decimal(10,2),
+  status varchar(20) DEFAULT 'open'
+);
+
+CREATE TABLE participants (
+  id bigint PRIMARY KEY,
+  group_id bigint NOT NULL,
+  name varchar(255) NOT NULL,
+  email varchar(255) NOT NULL,
+  status varchar(20) DEFAULT 'invited',
+  invite_token varchar(64) NOT NULL,
+  reveal_token varchar(64)
+);
+
+CREATE TABLE draw_results (
+  id bigint PRIMARY KEY,
+  group_id bigint NOT NULL,
+  giver_id bigint NOT NULL,
+  encrypted_payload text NOT NULL,
+  iv_b64 varchar(255) NOT NULL,
+  token_hash varchar(64) NOT NULL
 );

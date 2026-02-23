@@ -1,17 +1,19 @@
-const STEPS = [
-  { key: 'email',   label: 'AUTH'  },
-  { key: 'members', label: 'NOMES' },
-  { key: 'results', label: 'LINKS' },
+const DEFAULT_STEPS = [
+  { key: 'auth', label: 'LOGIN' },
+  { key: 'groups', label: 'GRUPOS' },
+  { key: 'dashboard', label: 'STATUS' },
 ];
 
-const ORDER = ['email', 'members', 'results'];
-
-export default function StepIndicator({ step }) {
-  const currentIdx = ORDER.indexOf(step);
+export default function StepIndicator({ step, steps = DEFAULT_STEPS }) {
+  const order = steps.map((s) => s.key);
+  const currentIdx = order.indexOf(step);
+  if (currentIdx === -1) {
+    return null;
+  }
 
   return (
     <div className="flex items-center justify-center mb-6">
-      {STEPS.map((s, i) => {
+      {steps.map((s, i) => {
         const isDone   = i < currentIdx;
         const isActive = i === currentIdx;
 
@@ -55,7 +57,7 @@ export default function StepIndicator({ step }) {
             </div>
 
             {/* Connector line */}
-            {i < STEPS.length - 1 && (
+            {i < steps.length - 1 && (
               <div
                 className="w-16 sm:w-24 h-px mx-2 mb-3.5 transition-all duration-500"
                 style={{
