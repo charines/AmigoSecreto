@@ -59,6 +59,13 @@ return [
     'cors' => [
         'origin' => getenv('APP_ORIGIN') ?: '*',
     ],
+    'app' => [
+        'base_url' => rtrim((string)(getenv('APP_BASE_URL') ?: ''), '/'),
+    ],
+    'session' => [
+        'samesite' => getenv('SESSION_SAMESITE') ?: 'Lax',
+        'secure' => filter_var(getenv('SESSION_SECURE') ?: '1', FILTER_VALIDATE_BOOLEAN),
+    ],
     'mail' => [
         'host' => getenv('SMTP_HOST') ?: 'smtp.titan.email',
         'port' => (int)(getenv('SMTP_PORT') ?: 587),

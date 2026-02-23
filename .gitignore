@@ -13,6 +13,8 @@ dist-ssr
 *.local
 .env
 .env.*
+.env.local
+api/.env
 !.env.example
 .netlify/
 
@@ -27,4 +29,3 @@ dist-ssr
 *.sln
 *.sw?
 out.txt
-.env

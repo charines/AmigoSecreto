@@ -1,43 +1,44 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/cors.php';
+require __DIR__ . '/bootstrap.php';
 
-$id = $_GET['id'] ?? '';
-if (!is_string($id) || $id === '' || !ctype_digit($id)) {
-    http_response_code(400);
-    echo json_encode(['ok' => false, 'error' => 'ID inválido']);
-    exit;
+$token = trim((string)($_GET['token'] ?? ''));
+if ($token === '') {
+    json_response(['ok' => false, 'error' => 'Token invalido'], 400);
 }
 
-$pdo = require __DIR__ . '/db.php';
-
+$pdo = db();
 $stmt = $pdo->prepare(
-    'SELECT p.name, p.secret_friend_name, g.status '
-    . 'FROM participants p '
-    . 'INNER JOIN `groups` g ON g.id = p.group_id '
-    . 'WHERE p.id = ? LIMIT 1'
+    'SELECT p.id, p.name, p.status, g.title, g.status AS group_status, ' .
+    'dr.encrypted_payload, dr.iv_b64 ' .
+    'FROM participants p ' .
+    'INNER JOIN `groups` g ON g.id = p.group_id ' .
+    'INNER JOIN draw_results dr ON dr.giver_id = p.id ' .
+    'WHERE p.reveal_token = ? LIMIT 1'
 );
-$stmt->execute([(int)$id]);
+$stmt->execute([$token]);
 $row = $stmt->fetch();
-
 if (!$row) {
-    http_response_code(404);
-    echo json_encode(['ok' => false, 'error' => 'Não encontrado']);
-    exit;
+    json_response(['ok' => false, 'error' => 'Link invalido'], 404);
+}
+if (($row['group_status'] ?? '') !== 'drawn') {
+    json_response(['ok' => false, 'error' => 'Sorteio ainda nao foi concluido'], 400);
 }
 
-if (($row['status'] ?? '') !== 'active') {
-    http_response_code(403);
-    echo json_encode(['ok' => false, 'error' => 'Sorteio inativo']);
-    exit;
-}
-
-$upd = $pdo->prepare('UPDATE participants SET viewed = 1 WHERE id = ?');
-$upd->execute([(int)$id]);
-
-echo json_encode([
+json_response([
     'ok' => true,
-    'from' => $row['name'],
-    'to' => $row['secret_friend_name'],
+    'giver' => [
+        'id' => (int)$row['id'],
+        'name' => $row['name'],
+        'status' => $row['status'],
+    ],
+    'group' => [
+        'title' => $row['title'],
+        'status' => $row['group_status'],
+    ],
+    'payload' => [
+        'encrypted' => $row['encrypted_payload'],
+        'iv_b64' => $row['iv_b64'],
+    ],
 ]);
