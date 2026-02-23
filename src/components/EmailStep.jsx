@@ -5,11 +5,11 @@ export default function EmailStep({ inputVal, setInputVal, onKeyDown, error }) {
       <div className="space-y-1">
         <p
           className="text-crt-green text-xs tracking-[0.25em] uppercase"
-          style={{ textShadow: '0 0 8px rgba(57, 255, 132, 0.4)' }}
+          style={{ textShadow: '0 0 8px rgb(var(--color-crt-green-raw, 57 255 132) / 0.4)' }}
         >
           {'>>>'} INICIALIZANDO MÓDULO DE AUTENTICAÇÃO
         </p>
-        <p style={{ color: 'rgba(57, 255, 132, 0.4)', fontSize: '11px', lineHeight: '1.6' }}>
+        <p style={{ color: 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.4)', fontSize: '11px', lineHeight: '1.6' }}>
           Insira o e-mail do organizador para iniciar a sessão segura.
         </p>
       </div>
@@ -18,8 +18,8 @@ export default function EmailStep({ inputVal, setInputVal, onKeyDown, error }) {
       <div className="crt-input p-4 space-y-2">
         <div
           style={{
-            color: 'rgba(57, 255, 132, 0.35)',
-            fontSize: '10px',
+            color:         'rgb(var(--color-crt-green-raw, 57 255 132) / 0.35)',
+            fontSize:      '10px',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
           }}
@@ -39,7 +39,7 @@ export default function EmailStep({ inputVal, setInputVal, onKeyDown, error }) {
             className="bg-transparent outline-none text-crt-green w-full text-sm"
             style={{
               caretColor: 'var(--color-crt-green)',
-              textShadow: '0 0 5px rgba(57, 255, 132, 0.35)',
+              textShadow: '0 0 5px rgb(var(--color-crt-green-raw, 57 255 132) / 0.35)',
               fontFamily: 'inherit',
             }}
             placeholder="usuario@dominio.com"
@@ -54,7 +54,7 @@ export default function EmailStep({ inputVal, setInputVal, onKeyDown, error }) {
       {error && (
         <p
           className="text-crt-red text-[10px] tracking-wider uppercase"
-          style={{ textShadow: '0 0 6px rgba(255, 68, 68, 0.4)' }}
+          style={{ textShadow: '0 0 6px rgb(var(--color-crt-red-raw, 255 68 68) / 0.4)' }}
         >
           ✖ {error}
         </p>
@@ -63,7 +63,7 @@ export default function EmailStep({ inputVal, setInputVal, onKeyDown, error }) {
       {/* Hint */}
       <p
         className="text-[10px] tracking-[0.25em] uppercase animate-pulse"
-        style={{ color: 'rgba(57, 255, 132, 0.28)' }}
+        style={{ color: 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.28)' }}
       >
         PRESSIONE [ENTER] PARA AUTENTICAR
       </p>
