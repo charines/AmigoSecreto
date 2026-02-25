@@ -53,15 +53,13 @@ export default function AdminDashboard({ admin, onLogout }) {
   const [loadingGroup, setLoadingGroup] = useState(false);
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
-  const [inviteText, setInviteText] = useState('');
+  const [inviteName, setInviteName] = useState('');
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [pendingParticipants, setPendingParticipants] = useState([]);
+  const [isSending, setIsSending] = useState(false);
+  const [sendingSuccess, setSendingSuccess] = useState(false);
   const [inviteResult, setInviteResult] = useState(null);
-  const [drawResult, setDrawResult] = useState(null);
-  const [groupForm, setGroupForm] = useState({
-    title: '',
-    description: '',
-    draw_date: '',
-    budget_limit: '',
-  });
+  const [dots, setDots] = useState('');
 
   const statusCounts = useMemo(() => {
     const counts = { invited: 0, link_clicked: 0, confirmed: 0, token_sent: 0, revealed: 0 };
@@ -109,6 +107,15 @@ export default function AdminDashboard({ admin, onLogout }) {
     }
   }, [view, selectedGroupId]);
 
+  const [groupForm, setGroupForm] = useState({
+    title: '',
+    description: '',
+    draw_date: '',
+    budget_limit: '',
+  });
+
+  const [drawResult, setDrawResult] = useState(null);
+
   const handleCreateGroup = async (event) => {
     event.preventDefault();
     setNotice('');
@@ -132,26 +139,25 @@ export default function AdminDashboard({ admin, onLogout }) {
   };
 
   const handleInvite = async () => {
+    if (!selectedGroupId || pendingParticipants.length === 0) return;
+
     setNotice('');
     setError('');
-    setInviteResult(null);
-    const parsed = parseInviteLines(inviteText);
-    if (!selectedGroupId) return;
-    if (parsed.length === 0) {
-      setError('Nenhum participante valido.');
-      return;
-    }
+    setIsSending(true);
+    setSendingSuccess(false);
+
     try {
       const data = await apiPost('/groups_invite.php', {
         group_id: selectedGroupId,
-        participants: parsed,
+        participants: pendingParticipants.map(({ name, email }) => ({ name, email })),
       });
       setInviteResult(data);
-      setInviteText('');
+      setPendingParticipants([]);
       await loadGroupDetail(selectedGroupId);
-      setNotice('Convites processados.');
+      setSendingSuccess(true);
     } catch (err) {
       setError(err.message);
+      setIsSending(false);
     }
   };
 
