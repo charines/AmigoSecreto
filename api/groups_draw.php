@@ -115,7 +115,8 @@ try {
     $stmtGroup->execute(['drawn', $groupId]);
 
     $pdo->commit();
-} catch (Throwable $e) {
+}
+catch (Throwable $e) {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
@@ -129,7 +130,7 @@ $failed = [];
 $now = date('Y-m-d H:i:s');
 
 foreach ($results as $row) {
-    $revealLink = $baseUrl . '/reveal?token=' . urlencode($row['reveal_token']);
+    $revealLink = $baseUrl . '/reveal?token=' . urlencode($row['reveal_token']) . '&code=' . urlencode($row['token']);
     $subject = 'Seu amigo secreto esta pronto';
     $bodyLines = [
         'Ola ' . $row['name'] . ',',
@@ -151,7 +152,8 @@ foreach ($results as $row) {
             "UPDATE participants SET status = 'token_sent', token_sent_at = ? WHERE id = ?"
         );
         $stmt->execute([$now, (int)$row['participant_id']]);
-    } catch (Throwable $e) {
+    }
+    catch (Throwable $e) {
         $failed[] = ['email' => $row['email'], 'error' => $e->getMessage()];
     }
 }
