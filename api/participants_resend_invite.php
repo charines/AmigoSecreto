@@ -48,15 +48,29 @@ if ($baseUrl === '') {
 }
 
 $inviteLink = $baseUrl . '/invite?token=' . urlencode($row['invite_token']);
-$subject = 'REENVIO: Convite para Amigo Secreto: ' . $row['group_title'];
+$subject = 'DHARMA INITIATIVE: Re-transmissao de Protocolo Amigo Secreto [' . $row['group_title'] . ']';
 $bodyLines = [
-    'Ola ' . $row['name'] . ',',
+    'DHARMA INITIATIVE - STATION 3: THE SWAN',
+    'SYSTEM_STATUS: WARNING - PENDING_INVITATION',
+    'RE-TRANSMISSION_STATUS: ACTIVE',
+    '---------------------------------------',
     '',
-    'Este e um reenvio do seu convite para o grupo "' . $row['group_title'] . '".',
-    'Para confirmar sua participacao, acesse:',
+    'INVITATION_PROTOCOL: ' . strtoupper($row['name']),
+    'ASSIGNED_GROUP: ' . strtoupper($row['group_title']),
+    '',
+    '---------------------------------------',
+    '',
+    'ESTE E UM REENVIO DO PROTOCOLO DE CONVITE PARA O PROJETO AMIGO SECRETO.',
+    'SUA CONFIRMACAO E CRITICA PARA O SUCESSO DA OPERACAO.',
+    '',
+    'ACESSE O TERMINAL IMEDIATAMENTE:',
     $inviteLink,
     '',
-    'Se voce ja confirmou, apenas ignore este e-mail.',
+    '---------------------------------------',
+    'AVISO: OS NUMEROS DEVEM SER RESPEITADOS.',
+    '4 8 15 16 23 42',
+    '',
+    'NAMASTE.',
 ];
 
 try {

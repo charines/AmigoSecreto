@@ -132,18 +132,34 @@ $now = date('Y-m-d H:i:s');
 
 foreach ($results as $row) {
     $revealLink = $baseUrl . '/reveal?token=' . urlencode($row['reveal_token']) . '&code=' . urlencode($row['token']);
-    $subject = 'Seu amigo secreto esta pronto';
+    $subject = 'DHARMA INITIATIVE: Amigo Secreto Calculado [' . $group['title'] . ']';
     $bodyLines = [
-        'Ola ' . $row['name'] . ',',
+        'DHARMA INITIATIVE - STATION 3: THE SWAN',
+        'SYSTEM_STATUS: EXECUTION_COMPLETE',
+        'DATA_DECRYPTION_REQUIRED: TRUE',
+        '---------------------------------------',
         '',
-        'Seu amigo secreto foi sorteado!',
-        'Abra o link abaixo e informe o codigo para revelar:',
+        'RECIPIENT_ID: ' . strtoupper($row['name']),
+        'ASSIGNMENT_STATUS: ENCRYPTED',
+        'SECURITY_CODE: 4 8 15 16 23 42',
+        '',
+        '---------------------------------------',
+        '',
+        'O SORTEIO DO GRUPO "' . strtoupper($group['title']) . '" FOI FINALIZADO.',
+        'SOUBEMOS QUE VOCE FOI ESCOLHIDO PARA UMA MISSAO IMPORTANTE.',
+        '',
+        'ACESSE O LINK DE REVELACAO E INSIRA O CODIGO ABAIXO:',
         $revealLink,
         '',
-        'Codigo (guarde com cuidado):',
+        'CODIGO_DE_ACESSO_UNICO:',
         $row['token'],
         '',
-        'Se voce nao reconhece este email, ignore.',
+        '---------------------------------------',
+        'AVISO: ESTA MENSAGEM SE AUTO-DESTRUIRA (NAO REALMENTE).',
+        'APRECIE O MOMENTO. EXECUTE O PROTOCOLO.',
+        '',
+        '4 8 15 16 23 42',
+        'NAMASTE.',
     ];
 
     try {

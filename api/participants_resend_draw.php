@@ -49,19 +49,29 @@ if ($baseUrl === '') {
 }
 
 $revealLink = $baseUrl . '/reveal?token=' . urlencode($row['reveal_token']) . '&code=' . urlencode($row['token_raw']);
-$subject = 'REENVIO: Seu amigo secreto esta pronto (' . $row['group_title'] . ')';
+$subject = 'DHARMA INITIATIVE: Re-transmissao de Chave de Decriptacao [' . $row['group_title'] . ']';
 $bodyLines = [
-    'Ola ' . $row['name'] . ',',
+    'DHARMA INITIATIVE - STATION 3: THE SWAN',
+    'SYSTEM_STATUS: ALERT - DATA_RECOVERY',
+    'ENCRYPTION_RECOVERY: IN_PROGRESS',
+    '---------------------------------------',
     '',
-    'Este e um reenvio do link para revelar seu amigo secreto sorteado no grupo "' . $row['group_title'] . '".',
+    'RECIPIENT_ID: ' . strtoupper($row['name']),
+    'ASSIGNMENT_STATUS: WAITING_FOR_REVELATION',
     '',
-    'Abra o link abaixo:',
+    '---------------------------------------',
+    '',
+    'ESTE E UM REENVIO DA CHAVE DE DECRIPTACAO PARA O SEU AMIGO SECRETO NO GRUPO "' . strtoupper($row['group_title']) . '".',
+    '',
+    'ABRA O TERMINAL DE REVELACAO:',
     $revealLink,
     '',
-    'Codigo secreto caso seja solicitado:',
+    'CODIGO_DE_DECRIPTACAO_RECUPERADO:',
     $row['token_raw'],
     '',
-    'Se voce ja sabe quem e seu amigo secreto, apenas ignore este e e-mail.',
+    '---------------------------------------',
+    '4 8 15 16 23 42',
+    'NAMASTE.',
 ];
 
 try {

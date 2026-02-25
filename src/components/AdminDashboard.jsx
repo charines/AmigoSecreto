@@ -280,17 +280,40 @@ export default function AdminDashboard({ admin, onLogout }) {
 
   const getDisplayStatus = (group) => {
     if (!group) return '';
+
+    const isDrawn = group.status === 'drawn';
+
+    // Contagem de tokens e revelações
+    let tokenSent = 0;
+    let revealed = 0;
+    if (group.id === selectedGroup?.id) {
+      tokenSent = statusCounts.token_sent;
+      revealed = statusCounts.revealed;
+    } else {
+      tokenSent = parseInt(group.token_sent_count || 0);
+      revealed = parseInt(group.revealed_count || 0);
+    }
+
+    // Status FECHADO: 
+    // 1. Todos revelaram (se sorteado)
+    if (isDrawn && revealed > 0 && tokenSent === 0) {
+      return 'FECHADO';
+    }
+
+    // 2. Data do evento passou (se não foi sorteado ainda ou se já foi concluído)
     if (group.draw_date) {
-      // Normalize date string for Safari compatibility
       const dateStr = group.draw_date.includes(' ') ? group.draw_date.replace(' ', 'T') : group.draw_date;
       const eventDate = new Date(dateStr);
-      if (!isNaN(eventDate.getTime()) && new Date() > eventDate) {
-        return 'FECHADO';
+      if (!isNaN(eventDate.getTime()) && new Date() < new Date()) {
+        // Se ainda estiver "aberto" e passou a data, fecha.
+        // Se estiver sorteado mas com pendência, mantemos sorteado até o fim das revelações ou decisão do admin.
+        if (group.status === 'open') return 'FECHADO';
       }
     }
+
     const map = {
-      'open': 'ABERTO',
-      'drawn': 'SORTEADO',
+      'open': 'ABERTO - aguardando participacao',
+      'drawn': 'SORTEADO - tokens enviados',
       'cancelled': 'CANCELADO'
     };
     return map[group.status] || group.status.toUpperCase();
@@ -336,7 +359,11 @@ export default function AdminDashboard({ admin, onLogout }) {
                 <div>
                   <div className="text-sm group-hover:text-crt-green-bright transition-colors uppercase tracking-wider">{group.title}</div>
                   <div className="text-[10px] opacity-60 mt-1 uppercase">
-                    {group.confirmed_count}/{group.total_participants} PARTICIPANTES CONFIRMADOS
+                    {group.status === 'drawn' ? (
+                      `${group.revealed_count || 0}/${parseInt(group.revealed_count || 0) + parseInt(group.token_sent_count || 0)} SEGREDO REVELADO`
+                    ) : (
+                      `${group.confirmed_count || 0}/${group.total_participants || 0} PARTICIPANTES CONFIRMADOS`
+                    )}
                   </div>
                 </div>
                 <div className="text-[9px] border border-crt-green px-2 py-0.5 uppercase">
@@ -579,7 +606,7 @@ export default function AdminDashboard({ admin, onLogout }) {
                 </div>
               ) : (
                 <p className="text-[10px] opacity-60 uppercase animate-pulse">
-                  Por favor, aguarde enquanto processamos a operação...
+                  Por favor, aguarde enquanto o protocolo DHARMA é executado...
                 </p>
               )}
             </div>
@@ -592,8 +619,13 @@ export default function AdminDashboard({ admin, onLogout }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between pb-4 border-b border-crt-green/10">
-        <div className="text-[9px] tracking-[0.2em] uppercase opacity-40">
-          SYSTEM_ACCESS: {admin.email}
+        <div className="space-y-1">
+          <div className="text-[9px] tracking-[0.2em] uppercase opacity-40">
+            SYSTEM_ACCESS: {admin.email}
+          </div>
+          <div className="text-[7px] tracking-[0.4em] uppercase opacity-20 font-bold">
+            DHARMA INITIATIVE — STATION 3: THE SWAN
+          </div>
         </div>
         <button className="text-[10px] border border-crt-red/30 text-crt-red px-2 py-0.5 hover:bg-crt-red/10 transition-colors" onClick={onLogout}>DISCONNECT</button>
       </div>
@@ -616,6 +648,12 @@ export default function AdminDashboard({ admin, onLogout }) {
       {view === 'list' && renderList()}
       {view === 'create' && renderCreate()}
       {view === 'detail' && renderDetail()}
+
+      <div className="pt-8 mt-8 border-t border-crt-green/5 flex justify-center">
+        <div className="text-[8px] tracking-[1em] uppercase opacity-10 hover:opacity-30 transition-opacity cursor-default">
+          4 8 15 16 23 42
+        </div>
+      </div>
     </div>
   );
 }

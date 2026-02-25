@@ -66,7 +66,8 @@ try {
     }
 
     $pdo->commit();
-} catch (Throwable $e) {
+}
+catch (Throwable $e) {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
@@ -81,15 +82,30 @@ $failed = [];
 
 foreach ($created as $p) {
     $inviteLink = $baseUrl . '/invite?token=' . urlencode($p['invite_token']);
-    $subject = 'Convite para Amigo Secreto: ' . $group['title'];
+    $subject = 'DHARMA INITIATIVE: Convite para Amigo Secreto [' . $group['title'] . ']';
     $bodyLines = [
-        'Ola ' . $p['name'] . ',',
+        'DHARMA INITIATIVE - STATION 3: THE SWAN',
+        'SYSTEM_STATUS: ACTIVE',
+        'ENCRYPTION_LEVEL: 256-BIT',
+        '---------------------------------------',
         '',
-        'Voce foi convidado para o grupo "' . $group['title'] . '".',
-        'Para confirmar sua participacao, acesse:',
+        'INVITATION_PROTOCOL: ' . strtoupper($p['name']),
+        'ASSIGNED_GROUP: ' . strtoupper($group['title']),
+        'SYSTEM_ACCESS_CODE: 4 8 15 16 23 42',
+        '',
+        '---------------------------------------',
+        '',
+        'VOCE FOI SELECIONADO PARA PARTICIPAR DO PROJETO AMIGO SECRETO.',
+        'A CONFIRMACAO E OBRIGATORIA PARA A MANUTENCAO DO PROTOCOLO.',
+        '',
+        'ACESSE O TERMINAL ABAIXO PARA CONFIRMAR:',
         $inviteLink,
         '',
-        'Se voce nao reconhece este convite, apenas ignore.',
+        '---------------------------------------',
+        'AVISO: NAO PERMITA QUE O CONTADOR CHEGUE A ZERO.',
+        'OS NUMEROS DEVEM SER RESPEITADOS: 4 8 15 16 23 42',
+        '',
+        'NAMASTE.',
     ];
 
     try {
@@ -98,7 +114,8 @@ foreach ($created as $p) {
 
         $stmt = $pdo->prepare('UPDATE participants SET invite_sent_at = ? WHERE id = ?');
         $stmt->execute([$now, $p['id']]);
-    } catch (Throwable $e) {
+    }
+    catch (Throwable $e) {
         $failed[] = ['email' => $p['email'], 'error' => $e->getMessage()];
     }
 }

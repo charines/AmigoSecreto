@@ -30,9 +30,15 @@ export default function AdminAuth({ onAuth }) {
   return (
     <div className="space-y-5">
       <div className="space-y-1">
-        <p className="text-crt-green text-xs tracking-[0.25em] uppercase">
-          {mode === 'login' ? '>>> ACESSO ADMIN' : '>>> CRIAR CONTA ADMIN'}
-        </p>
+        <div className="flex justify-between items-start">
+          <p className="text-crt-green text-xs tracking-[0.25em] uppercase">
+            {mode === 'login' ? '>>> ACESSO ADMIN' : '>>> CRIAR CONTA ADMIN'}
+          </p>
+          <div className="text-[7px] tracking-[0.2em] opacity-30 text-right">
+            DHARMA INITIATIVE<br />
+            STATION 3
+          </div>
+        </div>
         <p style={{ color: 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.4)', fontSize: '11px' }}>
           {mode === 'login'
             ? 'Entre para gerenciar seus grupos e convites.'
