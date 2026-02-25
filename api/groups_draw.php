@@ -82,7 +82,7 @@ $results = [];
 $pdo->beginTransaction();
 try {
     $stmtInsert = $pdo->prepare(
-        'INSERT INTO draw_results (group_id, giver_id, encrypted_payload, iv_b64, token_hash) VALUES (?, ?, ?, ?, ?)'
+        'INSERT INTO draw_results (group_id, giver_id, encrypted_payload, iv_b64, token_hash, token_raw) VALUES (?, ?, ?, ?, ?, ?)'
     );
     $stmtUpdate = $pdo->prepare(
         'UPDATE participants SET reveal_token = ? WHERE id = ?'
@@ -100,6 +100,7 @@ try {
             $enc['payload_b64'],
             $enc['iv_b64'],
             hash('sha256', $token),
+            $token,
         ]);
         $stmtUpdate->execute([$revealToken, (int)$giver['id']]);
         $results[] = [

@@ -59,6 +59,9 @@ export default function AdminDashboard({ admin, onLogout }) {
   const [isSending, setIsSending] = useState(false);
   const [sendingSuccess, setSendingSuccess] = useState(false);
   const [inviteResult, setInviteResult] = useState(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [drawSuccess, setDrawSuccess] = useState(false);
+  const [drawStep, setDrawStep] = useState(0);
   const [dots, setDots] = useState('');
   const [groupForm, setGroupForm] = useState({
     title: '',
@@ -67,6 +70,7 @@ export default function AdminDashboard({ admin, onLogout }) {
     budget_limit: '',
   });
   const [drawResult, setDrawResult] = useState(null);
+  const [isResending, setIsResending] = useState(false);
 
   const statusCounts = useMemo(() => {
     const counts = { invited: 0, link_clicked: 0, confirmed: 0, token_sent: 0, revealed: 0 };
@@ -116,7 +120,7 @@ export default function AdminDashboard({ admin, onLogout }) {
 
   useEffect(() => {
     let interval;
-    if (isSending && !sendingSuccess) {
+    if ((isSending || isDrawing) && !sendingSuccess && !drawSuccess) {
       interval = setInterval(() => {
         setDots((prev) => (prev.length >= 3 ? '' : prev + '.'));
       }, 500);
@@ -124,7 +128,21 @@ export default function AdminDashboard({ admin, onLogout }) {
       setDots('');
     }
     return () => clearInterval(interval);
-  }, [isSending, sendingSuccess]);
+  }, [isSending, isDrawing, sendingSuccess, drawSuccess]);
+
+  useEffect(() => {
+    let interval;
+    if (isDrawing && !drawSuccess) {
+      interval = setInterval(() => {
+        setDrawStep((prev) => (prev >= 3 ? 0 : prev + 1));
+      }, 2000);
+    } else if (drawSuccess) {
+      setDrawStep(4);
+    } else {
+      setDrawStep(0);
+    }
+    return () => clearInterval(interval);
+  }, [isDrawing, drawSuccess]);
 
   const handleCreateGroup = async (event) => {
     event.preventDefault();
@@ -194,18 +212,69 @@ export default function AdminDashboard({ admin, onLogout }) {
   };
 
   const handleDraw = async () => {
+    if (!selectedGroupId) return;
+
     setNotice('');
     setError('');
     setDrawResult(null);
-    if (!selectedGroupId) return;
+    setIsDrawing(true);
+    setDrawSuccess(false);
+    setDrawStep(0);
+
     try {
       const data = await apiPost('/groups_draw.php', { group_id: selectedGroupId });
       setDrawResult(data);
       await loadGroupDetail(selectedGroupId);
       await loadGroups();
+      setDrawSuccess(true);
       setNotice('Sorteio concluido e tokens enviados.');
     } catch (err) {
       setError(err.message);
+      setIsDrawing(false);
+    }
+  };
+
+  const handleDeleteGroup = async (e, groupId) => {
+    e.stopPropagation();
+    if (!window.confirm('TEM CERTEZA QUE DESEJA DELETAR ESTE GRUPO? ESTA ACO INTERROMPE TUDO E E IRREVERSIVEL.')) return;
+    try {
+      await apiPost('/groups_delete.php', { group_id: groupId });
+      setNotice('Grupo deletado com sucesso.');
+      loadGroups();
+      if (selectedGroupId === groupId) {
+        setView('list');
+        setSelectedGroupId(null);
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleResendParticipantInvite = async (participantId) => {
+    setIsResending(true);
+    setNotice('');
+    setError('');
+    try {
+      await apiPost('/participants_resend_invite.php', { participant_id: participantId });
+      setNotice('Convite reenviado com sucesso! Avise o participante para checar o spam.');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsResending(false);
+    }
+  };
+
+  const handleResendParticipantDraw = async (participantId) => {
+    setIsResending(true);
+    setNotice('');
+    setError('');
+    try {
+      await apiPost('/participants_resend_draw.php', { participant_id: participantId });
+      setNotice('Resultado do sorteio reenviado com sucesso! Avise o participante para checar o spam.');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -234,26 +303,37 @@ export default function AdminDashboard({ admin, onLogout }) {
 
       <div className="grid gap-4">
         {groups.map((group) => (
-          <button
+          <div
             key={group.id}
-            className="w-full text-left p-4 border border-crt-green/20 hover:border-crt-green/50 transition-colors group"
-            onClick={() => {
-              setSelectedGroupId(group.id);
-              setView('detail');
-            }}
+            className="w-full flex items-stretch border border-crt-green/20 hover:border-crt-green/50 transition-colors group relative"
           >
-            <div className="flex justify-between items-start">
-              <div>
-                <div className="text-sm group-hover:text-crt-green-bright transition-colors uppercase tracking-wider">{group.title}</div>
-                <div className="text-[10px] opacity-60 mt-1 uppercase">
-                  {group.confirmed_count}/{group.total_participants} PARTICIPANTES CONFIRMADOS
+            <button
+              className="flex-grow text-left p-4"
+              onClick={() => {
+                setSelectedGroupId(group.id);
+                setView('detail');
+              }}
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <div className="text-sm group-hover:text-crt-green-bright transition-colors uppercase tracking-wider">{group.title}</div>
+                  <div className="text-[10px] opacity-60 mt-1 uppercase">
+                    {group.confirmed_count}/{group.total_participants} PARTICIPANTES CONFIRMADOS
+                  </div>
+                </div>
+                <div className="text-[9px] border border-crt-green px-2 py-0.5 uppercase">
+                  {group.status}
                 </div>
               </div>
-              <div className="text-[9px] border border-crt-green px-2 py-0.5 uppercase">
-                {group.status}
-              </div>
-            </div>
-          </button>
+            </button>
+            <button
+              className="px-4 border-l border-crt-green/20 bg-crt-red/5 text-crt-red hover:bg-crt-red/20 transition-colors text-[10px] items-center justify-center flex"
+              title="Deletar Grupo"
+              onClick={(e) => handleDeleteGroup(e, group.id)}
+            >
+              [X]
+            </button>
+          </div>
         ))}
       </div>
     </div>
@@ -344,9 +424,29 @@ export default function AdminDashboard({ admin, onLogout }) {
                     <div className="flex items-center gap-2">
                       <span className="text-sm">{p.name} <span className="opacity-40">- -</span> {p.email}</span>
                     </div>
-                    <span className="text-[9px] uppercase tracking-wider font-bold text-crt-green opacity-70">
-                      {STATUS_LABELS[p.status] || p.status}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      {(p.status === 'invited' || p.status === 'link_clicked') && (
+                        <button
+                          className="text-[9px] border border-crt-green/30 px-2 py-0.5 hover:bg-crt-green/10 transition-colors disabled:opacity-30"
+                          onClick={() => handleResendParticipantInvite(p.id)}
+                          disabled={isResending}
+                        >
+                          REENVIAR CONVITE
+                        </button>
+                      )}
+                      {(p.status === 'token_sent' || p.status === 'revealed') && (
+                        <button
+                          className="text-[9px] border border-crt-green/30 px-2 py-0.5 hover:bg-crt-green/10 transition-colors disabled:opacity-30"
+                          onClick={() => handleResendParticipantDraw(p.id)}
+                          disabled={isResending}
+                        >
+                          REENVIAR SORTEIO
+                        </button>
+                      )}
+                      <span className="text-[9px] uppercase tracking-wider font-bold text-crt-green opacity-70 ml-2">
+                        {STATUS_LABELS[p.status] || p.status}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -416,23 +516,32 @@ export default function AdminDashboard({ admin, onLogout }) {
           </div>
         )}
 
-        {/* Modal de Envio */}
-        {isSending && (
+        {/* Modal de Processamento (Convites ou Sorteio) */}
+        {(isSending || isDrawing) && (
           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="crt-panel max-w-md w-full border border-crt-green shadow-[0_0_50px_rgba(57,255,132,0.1)] p-8 space-y-6 text-center">
               <div className="space-y-3">
                 <p className="text-crt-green text-sm tracking-[0.2em] font-bold uppercase transition-all duration-300">
-                  {sendingSuccess ? 'CONVITES ENVIADOS COM SUCESSO!' : `ENVIANDO MENSAGENS${dots}`}
+                  {isSending ? (
+                    sendingSuccess ? 'CONVITES ENVIADOS COM SUCESSO!' : `ENVIANDO MENSAGENS${dots}`
+                  ) : (
+                    drawSuccess ? 'SORTEIO REALIZADO COM SUCESSO!' : (
+                      drawStep === 0 ? `RANDOMIZANDO DADOS${dots}` :
+                        drawStep === 1 ? `GERANDO CHAVES DE SEGURANÇA${dots}` :
+                          drawStep === 2 ? `CRIPTOGRAFANDO RESULTADOS${dots}` :
+                            `ENVIANDO TOKENS POR E-MAIL${dots}`
+                    )
+                  )}
                 </p>
                 <div className="h-1 w-full bg-crt-green/10 overflow-hidden">
-                  <div className={`h-full bg-crt-green transition-all duration-500 ${sendingSuccess ? 'w-full' : 'animate-pulse w-2/3'}`}></div>
+                  <div className={`h-full bg-crt-green transition-all duration-500 ${(sendingSuccess || drawSuccess) ? 'w-full' : 'animate-pulse w-2/3'}`}></div>
                 </div>
               </div>
 
-              {sendingSuccess ? (
+              {(sendingSuccess || drawSuccess) ? (
                 <div className="space-y-4">
                   <p className="text-[11px] uppercase leading-relaxed text-crt-green/80">
-                    Os participantes foram notificados via e-mail!
+                    {sendingSuccess ? 'Os participantes foram notificados via e-mail!' : 'O sorteio foi realizado e os tokens foram enviados!'}
                   </p>
                   <div className="bg-crt-green/5 p-3 border border-crt-green/20">
                     <p className="text-[10px] uppercase text-crt-green-bright font-bold mb-1">Atenção ao Spam:</p>
@@ -444,13 +553,15 @@ export default function AdminDashboard({ admin, onLogout }) {
                   <button className="crt-btn w-full py-2 text-xs" onClick={() => {
                     setIsSending(false);
                     setSendingSuccess(false);
+                    setIsDrawing(false);
+                    setDrawSuccess(false);
                   }}>
                     FECHAR
                   </button>
                 </div>
               ) : (
                 <p className="text-[10px] opacity-60 uppercase animate-pulse">
-                  Por favor, aguarde enquanto processamos os e-mails...
+                  Por favor, aguarde enquanto processamos a operação...
                 </p>
               )}
             </div>
