@@ -60,6 +60,13 @@ export default function AdminDashboard({ admin, onLogout }) {
   const [sendingSuccess, setSendingSuccess] = useState(false);
   const [inviteResult, setInviteResult] = useState(null);
   const [dots, setDots] = useState('');
+  const [groupForm, setGroupForm] = useState({
+    title: '',
+    description: '',
+    draw_date: '',
+    budget_limit: '',
+  });
+  const [drawResult, setDrawResult] = useState(null);
 
   const statusCounts = useMemo(() => {
     const counts = { invited: 0, link_clicked: 0, confirmed: 0, token_sent: 0, revealed: 0 };
@@ -107,14 +114,17 @@ export default function AdminDashboard({ admin, onLogout }) {
     }
   }, [view, selectedGroupId]);
 
-  const [groupForm, setGroupForm] = useState({
-    title: '',
-    description: '',
-    draw_date: '',
-    budget_limit: '',
-  });
-
-  const [drawResult, setDrawResult] = useState(null);
+  useEffect(() => {
+    let interval;
+    if (isSending && !sendingSuccess) {
+      interval = setInterval(() => {
+        setDots((prev) => (prev.length >= 3 ? '' : prev + '.'));
+      }, 500);
+    } else {
+      setDots('');
+    }
+    return () => clearInterval(interval);
+  }, [isSending, sendingSuccess]);
 
   const handleCreateGroup = async (event) => {
     event.preventDefault();
@@ -138,6 +148,27 @@ export default function AdminDashboard({ admin, onLogout }) {
     }
   };
 
+  const addPendingParticipant = (e) => {
+    e?.preventDefault();
+    if (!inviteName.trim() || !inviteEmail.trim()) return;
+    if (!inviteEmail.includes('@')) {
+      setError('Email invalido.');
+      return;
+    }
+    setPendingParticipants([...pendingParticipants, {
+      id: Date.now(),
+      name: inviteName.trim(),
+      email: inviteEmail.trim()
+    }]);
+    setInviteName('');
+    setInviteEmail('');
+    setError('');
+  };
+
+  const removePendingParticipant = (id) => {
+    setPendingParticipants(pendingParticipants.filter(p => p.id !== id));
+  };
+
   const handleInvite = async () => {
     if (!selectedGroupId || pendingParticipants.length === 0) return;
 
@@ -155,6 +186,7 @@ export default function AdminDashboard({ admin, onLogout }) {
       setPendingParticipants([]);
       await loadGroupDetail(selectedGroupId);
       setSendingSuccess(true);
+      setNotice('Participantes notificados! Verifique o spam de: amigo.secreto@mercadocompleto.com.br');
     } catch (err) {
       setError(err.message);
       setIsSending(false);
@@ -273,7 +305,7 @@ export default function AdminDashboard({ admin, onLogout }) {
     if (!selectedGroup) return <p className="text-[10px] opacity-60 uppercase">Grupo não encontrado.</p>;
 
     return (
-      <div className="space-y-8">
+      <div className="space-y-8 pb-12">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button className="text-[10px] opacity-60 hover:opacity-100" onClick={() => setView('list')}>[VOLTAR]</button>
@@ -326,27 +358,47 @@ export default function AdminDashboard({ admin, onLogout }) {
         </div>
 
         {selectedGroup.status === 'open' && (
-          <div className="grid sm:grid-cols-2 gap-6 pt-4 border-t border-crt-green/10">
-            <div className="space-y-3">
-              <div className="text-[10px] tracking-[0.3em] uppercase opacity-60">Convidar participantes</div>
-              <textarea
-                className="crt-input w-full p-3 text-xs resize-none min-h-24"
-                placeholder="Nome <email@dominio.com>&#10;Nome, email@dominio.com"
-                value={inviteText}
-                onChange={(e) => setInviteText(e.target.value)}
-              />
-              <button className="crt-btn w-full py-2 text-xs" type="button" onClick={handleInvite}>
-                ENVIAR CONVITES
-              </button>
-              {inviteResult && (
-                <div className="text-[9px] opacity-60 uppercase bg-crt-green/5 p-2">
-                  Enviados: {inviteResult.sent?.length || 0} / Falhas: {inviteResult.failed?.length || 0}
+          <div className="space-y-6 pt-4 border-t border-crt-green/10">
+            <div className="space-y-4">
+              <div className="text-[10px] tracking-[0.3em] uppercase opacity-60">Adicionar participante</div>
+              <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3">
+                <input
+                  className="crt-input p-2 text-xs"
+                  placeholder="Nome do participante"
+                  value={inviteName}
+                  onChange={(e) => setInviteName(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && addPendingParticipant()}
+                />
+                <input
+                  className="crt-input p-2 text-xs"
+                  placeholder="E-mail"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && addPendingParticipant()}
+                />
+                <button className="crt-btn text-xs px-4" onClick={addPendingParticipant}>[+] ADICIONAR</button>
+              </div>
+
+              {pendingParticipants.length > 0 && (
+                <div className="space-y-2">
+                  <div className="text-[10px] uppercase opacity-60 font-medium">Novos participantes a serem convidados:</div>
+                  <div className="border border-crt-green/20">
+                    {pendingParticipants.map((p) => (
+                      <div key={p.id} className="flex items-center justify-between p-2 border-b border-crt-green/10 last:border-0 hover:bg-crt-green/5">
+                        <span className="text-xs opacity-80">{p.name} ({p.email})</span>
+                        <button className="text-crt-red text-[10px] hover:underline" onClick={() => removePendingParticipant(p.id)}>[REMOVER]</button>
+                      </div>
+                    ))}
+                  </div>
+                  <button className="crt-btn w-full py-3 mt-4 text-sm font-bold shadow-[0_0_15px_rgba(57,255,132,0.2)]" onClick={handleInvite}>
+                    ENVIAR CONVITES ({pendingParticipants.length})
+                  </button>
                 </div>
               )}
             </div>
 
-            <div className="space-y-3 flex flex-col justify-end">
-              <div className="text-[10px] tracking-[0.3em] uppercase opacity-60">Sorteio</div>
+            <div className="pt-8 border-t border-crt-green/10">
+              <div className="text-[10px] tracking-[0.3em] uppercase opacity-60 mb-3">Sorteio</div>
               <button
                 className={`crt-btn w-full py-4 text-sm ${!canDraw ? 'opacity-50 grayscale cursor-not-allowed' : ''}`}
                 type="button"
@@ -356,9 +408,50 @@ export default function AdminDashboard({ admin, onLogout }) {
                 {drawLabel}
               </button>
               {drawResult && (
-                <div className="text-[9px] opacity-60 uppercase bg-crt-green/5 p-2">
+                <div className="text-[9px] opacity-60 uppercase bg-crt-green/5 p-2 mt-2">
                   Emails: {drawResult.sent?.length || 0} / Falhas: {drawResult.failed?.length || 0}
                 </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Envio */}
+        {isSending && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="crt-panel max-w-md w-full border border-crt-green shadow-[0_0_50px_rgba(57,255,132,0.1)] p-8 space-y-6 text-center">
+              <div className="space-y-3">
+                <p className="text-crt-green text-sm tracking-[0.2em] font-bold uppercase transition-all duration-300">
+                  {sendingSuccess ? 'CONVITES ENVIADOS COM SUCESSO!' : `ENVIANDO MENSAGENS${dots}`}
+                </p>
+                <div className="h-1 w-full bg-crt-green/10 overflow-hidden">
+                  <div className={`h-full bg-crt-green transition-all duration-500 ${sendingSuccess ? 'w-full' : 'animate-pulse w-2/3'}`}></div>
+                </div>
+              </div>
+
+              {sendingSuccess ? (
+                <div className="space-y-4">
+                  <p className="text-[11px] uppercase leading-relaxed text-crt-green/80">
+                    Os participantes foram notificados via e-mail!
+                  </p>
+                  <div className="bg-crt-green/5 p-3 border border-crt-green/20">
+                    <p className="text-[10px] uppercase text-crt-green-bright font-bold mb-1">Atenção ao Spam:</p>
+                    <p className="text-[9px] uppercase opacity-70">
+                      Peça para verificarem a caixa de spam pelo remetente:<br />
+                      <span className="text-white">amigo.secreto@mercadocompleto.com.br</span>
+                    </p>
+                  </div>
+                  <button className="crt-btn w-full py-2 text-xs" onClick={() => {
+                    setIsSending(false);
+                    setSendingSuccess(false);
+                  }}>
+                    FECHAR
+                  </button>
+                </div>
+              ) : (
+                <p className="text-[10px] opacity-60 uppercase animate-pulse">
+                  Por favor, aguarde enquanto processamos os e-mails...
+                </p>
               )}
             </div>
           </div>
@@ -383,7 +476,7 @@ export default function AdminDashboard({ admin, onLogout }) {
           </p>
         </div>
       )}
-      {notice && (
+      {notice && !isSending && (
         <div className="bg-crt-green/5 border border-crt-green/30 p-2">
           <p className="text-[10px] tracking-wider uppercase text-crt-green">
             SYSTEM_MSG: {notice}
@@ -397,4 +490,5 @@ export default function AdminDashboard({ admin, onLogout }) {
     </div>
   );
 }
+
 
