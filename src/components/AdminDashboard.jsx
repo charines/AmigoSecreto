@@ -278,6 +278,24 @@ export default function AdminDashboard({ admin, onLogout }) {
     }
   };
 
+  const getDisplayStatus = (group) => {
+    if (!group) return '';
+    if (group.draw_date) {
+      // Normalize date string for Safari compatibility
+      const dateStr = group.draw_date.includes(' ') ? group.draw_date.replace(' ', 'T') : group.draw_date;
+      const eventDate = new Date(dateStr);
+      if (!isNaN(eventDate.getTime()) && new Date() > eventDate) {
+        return 'FECHADO';
+      }
+    }
+    const map = {
+      'open': 'ABERTO',
+      'drawn': 'SORTEADO',
+      'cancelled': 'CANCELADO'
+    };
+    return map[group.status] || group.status.toUpperCase();
+  };
+
   const confirmedCount = statusCounts.confirmed;
   const canDraw = selectedGroup?.status === 'open' && confirmedCount >= 2;
   const drawLabel = selectedGroup?.status !== 'open'
@@ -322,7 +340,7 @@ export default function AdminDashboard({ admin, onLogout }) {
                   </div>
                 </div>
                 <div className="text-[9px] border border-crt-green px-2 py-0.5 uppercase">
-                  {group.status}
+                  {getDisplayStatus(group)}
                 </div>
               </div>
             </button>
@@ -364,7 +382,7 @@ export default function AdminDashboard({ admin, onLogout }) {
           <input
             className="crt-input w-full p-3 text-sm"
             type="text"
-            placeholder="Data do sorteio (ex: 25/11/2026 10:30)"
+            placeholder="Data do evento (ex: 25/11/2026 10:30)"
             value={groupForm.draw_date}
             onChange={(e) => setGroupForm((prev) => ({ ...prev, draw_date: e.target.value }))}
           />
@@ -396,13 +414,13 @@ export default function AdminDashboard({ admin, onLogout }) {
           </div>
           <div className="text-right">
             <div className="text-[10px] uppercase opacity-60">Status</div>
-            <div className="text-xs text-crt-green uppercase font-bold">{selectedGroup.status}</div>
+            <div className="text-xs text-crt-green uppercase font-bold">{getDisplayStatus(selectedGroup)}</div>
           </div>
         </div>
 
         {selectedGroup.draw_date && (
           <div className="text-[10px] opacity-80 border-l-2 border-crt-green pl-2 uppercase">
-            Sorteio em: <span className="text-crt-green">{selectedGroup.draw_date}</span>
+            Evento em: <span className="text-crt-green">{selectedGroup.draw_date}</span>
           </div>
         )}
 
