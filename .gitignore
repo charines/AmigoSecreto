@@ -29,3 +29,4 @@ api/.env
 *.sln
 *.sw?
 out.txt
+.env
