@@ -6,10 +6,14 @@ import RevealStep from './RevealStep';
 export default function RevealPage({ token }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('code') || '';
+  });
   const [revealed, setRevealed] = useState(null);
   const [error, setError] = useState('');
   const [decrypting, setDecrypting] = useState(false);
+  const [autoRevealed, setAutoRevealed] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -27,7 +31,8 @@ export default function RevealPage({ token }) {
     load();
   }, [token]);
 
-  const handleReveal = async () => {
+  const handleReveal = async (e) => {
+    if (e) e.preventDefault();
     if (!data) return;
     const cleaned = code.trim();
     if (!cleaned) {
@@ -47,6 +52,13 @@ export default function RevealPage({ token }) {
       setDecrypting(false);
     }
   };
+
+  useEffect(() => {
+    if (data && code && !revealed && !decrypting && !autoRevealed && !error) {
+      setAutoRevealed(true);
+      handleReveal();
+    }
+  }, [data, code, revealed, decrypting, autoRevealed, error]);
 
   if (loading) {
     return <p className="text-[10px] opacity-60">Carregando resultado...</p>;
