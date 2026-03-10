@@ -466,8 +466,38 @@ export default function AdminDashboard({ admin, onLogout }) {
         </div>
 
         {selectedGroup.draw_date && (
-          <div className="text-[10px] opacity-80 border-l-2 border-crt-green pl-2 uppercase">
-            Evento em: <span className="text-crt-green">{selectedGroup.draw_date}</span>
+          <div className="flex flex-wrap items-center gap-6">
+            <div className="text-[10px] opacity-80 border-l-2 border-crt-green pl-2 uppercase">
+              Evento em: <span className="text-crt-green">{selectedGroup.draw_date}</span>
+            </div>
+            {selectedGroup.dharma_code && (
+              <div className="text-[10px] opacity-80 border-l-2 border-crt-green pl-2 uppercase">
+                DH_CODE: <span className="text-crt-green font-bold">{selectedGroup.dharma_code}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {selectedGroup.status === 'open' && selectedGroup.dharma_code && (
+          <div className="bg-crt-green/5 border border-crt-green/20 p-4 space-y-3">
+            <div className="text-[9px] tracking-[0.2em] uppercase opacity-60">Link de Auto-Inscrição (WhatsApp):</div>
+            <div className="flex items-center gap-3">
+              <input
+                readOnly
+                className="crt-input flex-grow p-2 text-[10px] opacity-70"
+                value={`${window.location.origin}/join/${selectedGroup.dharma_code}`}
+              />
+              <button
+                className="crt-btn-sm bg-green-900/40 border-green-500/50 text-green-400 hover:bg-green-800/60"
+                onClick={() => {
+                  const url = `${window.location.origin}/join/${selectedGroup.dharma_code}`;
+                  const text = `Namaste! Voce foi selecionado para o Amigo Secreto "${selectedGroup.title}". Acesse o terminal para participar: ${url}`;
+                  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                }}
+              >
+                WHATSAPP
+              </button>
+            </div>
           </div>
         )}
 

@@ -280,6 +280,13 @@ html[data-theme="merry"] .scanline-sweep {
   50%       { opacity: 0; }
 }
 
+@keyframes crt-progress {
+  0%   { transform: translateX(-100%); }
+  50%  { transform: translateX(0); }
+  100% { transform: translateX(100%); }
+}
+
 .animate-fade-in-up    { animation: fade-in-up    0.5s ease forwards; }
 .animate-glitch-reveal { animation: glitch-reveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .animate-blink         { animation: blink 1s step-end infinite; }
+.animate-progress      { animation: crt-progress 3s linear infinite; }

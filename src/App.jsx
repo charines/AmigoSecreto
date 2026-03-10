@@ -4,12 +4,14 @@ import AdminAuth from './components/AdminAuth';
 import AdminDashboard from './components/AdminDashboard';
 import InvitePage from './components/InvitePage';
 import RevealPage from './components/RevealPage';
+import JoinGroup from './components/JoinGroup';
 import { apiGet, apiPost, API_BASE_URL } from './lib/api';
 
 function resolveRoute() {
   const path = window.location.pathname;
   if (path.startsWith('/invite')) return 'invite';
   if (path.startsWith('/reveal')) return 'reveal';
+  if (path.startsWith('/join')) return 'join';
   return 'admin';
 }
 
@@ -83,6 +85,9 @@ export default function App() {
         )}
       </TerminalPanel>
     );
+  }
+  if (route === 'join') {
+    return <JoinGroup />;
   }
 
   if (checking) {

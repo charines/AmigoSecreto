@@ -11,7 +11,7 @@ if ($groupId <= 0) {
 
 $pdo = db();
 $stmt = $pdo->prepare(
-    'SELECT id, title, description, draw_date, budget_limit, status, created_at ' .
+    'SELECT id, title, description, draw_date, budget_limit, status, dharma_code, created_at ' .
     'FROM `groups` WHERE id = ? AND admin_id = ? LIMIT 1'
 );
 $stmt->execute([$groupId, (int)$admin['id']]);

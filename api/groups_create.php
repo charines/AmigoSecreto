@@ -64,9 +64,11 @@ if ($budgetRaw !== '') {
     $budget = (float)$budgetRaw;
 }
 
+$dharmaCode = strtoupper(random_token(6));
+
 $pdo = db();
 $stmt = $pdo->prepare(
-    'INSERT INTO `groups` (admin_id, title, description, draw_date, budget_limit, status) VALUES (?, ?, ?, ?, ?, ?)'
+    'INSERT INTO `groups` (admin_id, title, description, draw_date, budget_limit, status, dharma_code) VALUES (?, ?, ?, ?, ?, ?, ?)'
 );
 $stmt->execute([
     (int)$admin['id'],
@@ -75,6 +77,7 @@ $stmt->execute([
     $drawDate,
     $budget,
     'open',
+    $dharmaCode
 ]);
 
 $groupId = (int)$pdo->lastInsertId();
@@ -88,5 +91,6 @@ json_response([
         'draw_date' => $drawDate,
         'budget_limit' => $budget,
         'status' => 'open',
+        'dharma_code' => $dharmaCode,
     ],
 ]);
