@@ -17,7 +17,7 @@ $pdo = db();
 
 // Verify participant ownership via group
 $stmt = $pdo->prepare('
-    SELECT p.*, g.title as group_title, g.admin_id
+    SELECT p.*, g.title as group_title, g.description as group_description, g.draw_date as group_draw_date, g.admin_id
     FROM participants p
     JOIN `groups` g ON p.group_id = g.id
     WHERE p.id = ? AND g.admin_id = ?
@@ -57,6 +57,8 @@ $bodyLines = [
     '',
     'INVITATION_PROTOCOL: ' . strtoupper($row['name']),
     'ASSIGNED_GROUP: ' . strtoupper($row['group_title']),
+    'PROJECT_OVERVIEW: ' . ($row['group_description'] ? strtoupper($row['group_description']) : 'N/A'),
+    'EVENT_TIMELINE: ' . ($row['group_draw_date'] ? $row['group_draw_date'] : 'PENDING'),
     '',
     '---------------------------------------',
     '',

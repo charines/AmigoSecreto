@@ -34,7 +34,7 @@ if ($groupId <= 0) {
 
 $pdo = db();
 $stmt = $pdo->prepare(
-    'SELECT id, title, status FROM `groups` WHERE id = ? AND admin_id = ? LIMIT 1'
+    'SELECT id, title, description, draw_date, status FROM `groups` WHERE id = ? AND admin_id = ? LIMIT 1'
 );
 $stmt->execute([$groupId, (int)$admin['id']]);
 $group = $stmt->fetch();
@@ -140,7 +140,9 @@ foreach ($results as $row) {
         '---------------------------------------',
         '',
         'RECIPIENT_ID: ' . strtoupper($row['name']),
-        'ASSIGNMENT_STATUS: ENCRYPTED',
+        'ASSIGNED_GROUP: ' . strtoupper($group['title']),
+        'PROJECT_OVERVIEW: ' . ($group['description'] ? strtoupper($group['description']) : 'N/A'),
+        'EVENT_TIMELINE: ' . ($group['draw_date'] ? $group['draw_date'] : 'PENDING'),
         'SECURITY_CODE: 4 8 15 16 23 42',
         '',
         '---------------------------------------',

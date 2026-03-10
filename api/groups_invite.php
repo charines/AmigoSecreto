@@ -91,6 +91,8 @@ foreach ($created as $p) {
         '',
         'INVITATION_PROTOCOL: ' . strtoupper($p['name']),
         'ASSIGNED_GROUP: ' . strtoupper($group['title']),
+        'PROJECT_OVERVIEW: ' . ($group['description'] ? strtoupper($group['description']) : 'N/A'),
+        'EVENT_TIMELINE: ' . ($group['draw_date'] ? $group['draw_date'] : 'PENDING'),
         'SYSTEM_ACCESS_CODE: 4 8 15 16 23 42',
         '',
         '---------------------------------------',

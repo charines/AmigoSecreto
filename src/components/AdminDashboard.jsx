@@ -278,6 +278,26 @@ export default function AdminDashboard({ admin, onLogout }) {
     }
   };
 
+  const handleDeleteParticipant = async (participantId) => {
+    const isDrawn = selectedGroup?.status === 'drawn';
+    const message = isDrawn
+      ? 'REMOVER ESTE PARTICIPANTE IRÁ CANCELAR O SORTEIO ATUAL! Todos os tokens enviados deixarão de funcionar e você precisará sortear novamente. Deseja continuar?'
+      : 'Tem certeza que deseja remover este participante?';
+
+    if (!window.confirm(message)) return;
+
+    try {
+      await apiPost('/participants_delete.php', { participant_id: participantId });
+      setNotice('Participante removido com sucesso.');
+      await loadGroupDetail(selectedGroupId);
+      if (isDrawn) {
+        await loadGroups();
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const getDisplayStatus = (group) => {
     if (!group) return '';
 
@@ -468,6 +488,13 @@ export default function AdminDashboard({ admin, onLogout }) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-sm">{p.name} <span className="opacity-40">- -</span> {p.email}</span>
+                      <button
+                        className="text-crt-red text-[10px] opacity-0 group-hover:opacity-100 transition-opacity ml-2 hover:underline"
+                        onClick={() => handleDeleteParticipant(p.id)}
+                        title="Remover Participante"
+                      >
+                        [REMOVER]
+                      </button>
                     </div>
                     <div className="flex items-center gap-3">
                       {(p.status === 'invited' || p.status === 'link_clicked') && (

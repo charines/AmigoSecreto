@@ -17,7 +17,7 @@ $pdo = db();
 
 // Verify participant ownership via group and fetch draw info
 $stmt = $pdo->prepare('
-    SELECT p.*, g.title as group_title, g.admin_id, dr.token_raw
+    SELECT p.*, g.title as group_title, g.description as group_description, g.draw_date as group_draw_date, g.admin_id, dr.token_raw
     FROM participants p
     JOIN `groups` g ON p.group_id = g.id
     JOIN draw_results dr ON p.id = dr.giver_id
@@ -57,6 +57,9 @@ $bodyLines = [
     '---------------------------------------',
     '',
     'RECIPIENT_ID: ' . strtoupper($row['name']),
+    'ASSIGNED_GROUP: ' . strtoupper($row['group_title']),
+    'PROJECT_OVERVIEW: ' . ($row['group_description'] ? strtoupper($row['group_description']) : 'N/A'),
+    'EVENT_TIMELINE: ' . ($row['group_draw_date'] ? $row['group_draw_date'] : 'PENDING'),
     'ASSIGNMENT_STATUS: WAITING_FOR_REVELATION',
     '',
     '---------------------------------------',
