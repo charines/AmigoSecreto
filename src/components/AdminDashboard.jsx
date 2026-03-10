@@ -491,7 +491,7 @@ export default function AdminDashboard({ admin, onLogout }) {
                 className="crt-btn-sm bg-green-900/40 border-green-500/50 text-green-400 hover:bg-green-800/60"
                 onClick={() => {
                   const url = `${window.location.origin}/join/${selectedGroup.dharma_code}`;
-                  const text = `Namaste! Voce foi selecionado para o Amigo Secreto "${selectedGroup.title}". Acesse o terminal para participar: ${url}`;
+                  const text = `⚠️ PROTOCOLO DHARMA ATIVADO\n\nNAMASTÊ. VOCÊ FOI SELECIONADO PARA O EXPERIMENTO: "${selectedGroup.title.toUpperCase()}".\n\nACESSE O TERMINAL PARA CONFIRMAR SUA IDENTIDADE:\n${url}\n\n4 8 15 16 23 42`;
                   window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
                 }}
               >
