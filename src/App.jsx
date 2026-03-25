@@ -5,6 +5,7 @@ import AdminDashboard from './components/AdminDashboard';
 import InvitePage from './components/InvitePage';
 import RevealPage from './components/RevealPage';
 import JoinGroup from './components/JoinGroup';
+import ChatAnonimo from './components/ChatAnonimo';
 import { apiGet, apiPost, API_BASE_URL } from './lib/api';
 
 function resolveRoute() {
@@ -12,6 +13,7 @@ function resolveRoute() {
   if (path.startsWith('/invite')) return 'invite';
   if (path.startsWith('/reveal')) return 'reveal';
   if (path.startsWith('/join')) return 'join';
+  if (path.startsWith('/chat')) return 'chat';
   return 'admin';
 }
 
@@ -88,6 +90,18 @@ export default function App() {
   }
   if (route === 'join') {
     return <JoinGroup />;
+  }
+
+  if (route === 'chat') {
+    return token ? (
+      <ChatAnonimo token={token} />
+    ) : (
+      <TerminalPanel step="chat" showSteps={false}>
+        <p className="text-crt-red text-[10px] tracking-wider uppercase">
+          ✖ Token de chat ausente.
+        </p>
+      </TerminalPanel>
+    );
   }
 
   if (checking) {

@@ -7,7 +7,7 @@ const FAKE_LINES  = [
   'VALIDANDO TOKEN DE SESSÃO ÚNICA...',
 ];
 
-export default function RevealStep({ revealedFriend }) {
+export default function RevealStep({ revealedFriend, token }) {
   const [phase, setPhase] = useState('decrypt'); // 'decrypt' | 'reveal'
   const [typed, setTyped] = useState('');
 
@@ -109,13 +109,22 @@ export default function RevealStep({ revealedFriend }) {
         </span>
       </div>
 
-      {/* Confirmation */}
       <p
         className="text-[9px] tracking-[0.3em] uppercase animate-pulse"
         style={{ color: 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.28)' }}
       >
         ■ RESULTADO CONFIRMADO E REGISTRADO
       </p>
+
+      {/* Botão de Chat Anônimo */}
+      <button
+        onClick={() => {
+          window.location.href = `/chat?token=${token}`;
+        }}
+        className="crt-btn mt-6"
+      >
+        ENVIAR MENSAGEM ANÔNIMA
+      </button>
     </div>
   );
 }

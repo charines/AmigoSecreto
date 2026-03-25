@@ -73,7 +73,7 @@ export default function RevealPage({ token }) {
   }
 
   if (revealed) {
-    return <RevealStep revealedFriend={revealed} />;
+    return <RevealStep revealedFriend={revealed} token={token} />;
   }
 
   return (
