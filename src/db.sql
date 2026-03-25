@@ -48,6 +48,22 @@ CREATE TABLE `draw_results` (
   `iv_b64` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `token_hash` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `token_raw` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `receiver_id` bigint UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chat_messages`
+--
+
+CREATE TABLE `chat_messages` (
+  `id` bigint UNSIGNED NOT NULL,
+  `group_id` bigint UNSIGNED NOT NULL,
+  `draw_id` bigint UNSIGNED NOT NULL,
+  `sender_role` enum('giver','receiver') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `texto` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -104,12 +120,21 @@ ALTER TABLE `admins`
   ADD UNIQUE KEY `uniq_admins_email` (`email`);
 
 --
+-- Indexes for table `chat_messages`
+--
+ALTER TABLE `chat_messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_chat_group_id` (`group_id`),
+  ADD KEY `idx_chat_draw_id` (`draw_id`);
+
+--
 -- Indexes for table `draw_results`
 --
 ALTER TABLE `draw_results`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `uniq_draw_giver_id` (`giver_id`),
-  ADD KEY `idx_draw_group_id` (`group_id`);
+  ADD KEY `idx_draw_group_id` (`group_id`),
+  ADD KEY `idx_draw_receiver_id` (`receiver_id`);
 
 --
 -- Indexes for table `groups`
@@ -139,6 +164,12 @@ ALTER TABLE `admins`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `chat_messages`
+--
+ALTER TABLE `chat_messages`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `draw_results`
 --
 ALTER TABLE `draw_results`
@@ -161,11 +192,19 @@ ALTER TABLE `participants`
 --
 
 --
+-- Constraints for table `chat_messages`
+--
+ALTER TABLE `chat_messages`
+  ADD CONSTRAINT `fk_chat_draw_id` FOREIGN KEY (`draw_id`) REFERENCES `draw_results` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_chat_group_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `draw_results`
 --
 ALTER TABLE `draw_results`
   ADD CONSTRAINT `fk_draw_giver_id` FOREIGN KEY (`giver_id`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_draw_group_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_draw_group_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_draw_receiver_id` FOREIGN KEY (`receiver_id`) REFERENCES `participants` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `groups`
