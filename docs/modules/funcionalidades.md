@@ -1,3 +1,11 @@
+---
+module: funcionalidades
+domain: SA-01 (Portaria) + SA-02 (Orquestrador) + SA-03 (O Juiz)
+status: snapshot — versão v1 histórica (fluxo pré-autenticação admin)
+moved_from: funcionalidade.md
+last_updated: 2026-06-28
+---
+
 # Funcionalidades atuais do sistema
 
 ## Visao geral

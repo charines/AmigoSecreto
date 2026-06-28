@@ -1,3 +1,13 @@
+---
+module: roadmap
+domain: Todos os sub-agentes (SA-01 a SA-04)
+status: planejamento — features desejadas, não implementadas
+moved_from: tobe.md
+last_updated: 2026-06-28
+---
+
+# Roadmap — Jornadas e Arquitetura Futura
+
 Esta é uma excelente base para um sistema de "Amigo Secreto" ou sorteios corporativos/sociais com foco em privacidade. A ideia de usar criptografia para garantir que nem o administrador saiba quem tirou quem é um diferencial de segurança e confiança muito forte.
 
 Abaixo, detalhei a jornada de cada ator, refinando os processos e sugerindo melhorias técnicas e de experiência.

@@ -1,0 +1,43 @@
+# AmigoSecreto — Cursor / Windsurf Rules
+
+## OBRIGATÓRIO ANTES DE QUALQUER CÓDIGO
+
+Você DEVE ler os seguintes arquivos na ordem indicada antes de propor qualquer implementação:
+
+1. `./agent.md` — constituição do projeto e fonte única de verdade
+2. `./docs/modules/<modulo_relevante>.md` — diagrama Mermaid do domínio afetado
+3. `./docs/modules/skills_catalog.md` — qual especialista ativar para a task
+
+Se o módulo Mermaid do domínio afetado não existir em `docs/modules/`, informe o
+desenvolvedor e proponha a criação do módulo antes de qualquer código.
+
+## Stack
+
+- Frontend: React 19 + Vite 7 + TailwindCSS 4 (SPA puro — sem Next.js, sem SSR)
+- Backend: PHP 8 endpoints REST individuais em `api/` (sem framework, sem controllers)
+- Banco: MySQL 8 via PDO com prepared statements exclusivamente
+- Deploy: Netlify (frontend) + hospedagem PHP compartilhada (backend)
+
+## Regras Invioláveis
+
+- CSS: exclusivamente via variáveis `var(--color-crt-*)` — nunca cores hardcoded
+- Criptografia: `src/lib/crypto.js` usa AES-GCM + Web Crypto API nativa — não substituir
+- Sorteio: lógica sempre em `src/utils/secretSanta.js` ou PHP — nunca em componente visual
+- Tokens de convite/reveal: gerados no PHP — nunca no frontend
+- Segredos de banco e SMTP: exclusivamente em `api/.env` — nunca em `src/` ou `.env` raiz
+
+## Segurança
+
+Antes de qualquer alteração em `crypto.js`, `reveal.php`, `invite_confirm.php`,
+`groups_draw.php`, `admin_login.php` ou `db.php`: carregar e aplicar as diretrizes
+de auditoria de segurança da skill `007` em `.claude/skills/007/SKILL.md`.
+
+## Preflight Rápido
+
+```
+[ ] agent.md lido
+[ ] módulo Mermaid do domínio carregado
+[ ] drift verificado (git log -5 nos arquivos do módulo)
+[ ] skill adequada ativada
+[ ] impacto de segurança avaliado
+```
