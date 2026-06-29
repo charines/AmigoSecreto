@@ -4,6 +4,10 @@ domain: SA-01 (Portaria) + SA-02 (Orquestrador de Grupo)
 components: [App.jsx, TerminalPanel.jsx, AdminAuth.jsx, AdminDashboard.jsx, InvitePage.jsx, JoinGroup.jsx]
 endpoints: [admin_me.php, admin_login.php, invite.php, invite_confirm.php, groups_join.php]
 last_updated: 2026-06-28
+redesign_note: >
+  2026-06-28 · Redesign Neo-Brutalist — AdminAuth, AdminDashboard e RevealPage
+  passaram a ter layout próprio (full-page). TerminalPanel mantido apenas para:
+  estados de erro sem token, rota /invite e estado de checking inicial.
 ---
 
 # Módulo: Menu Inicial — Fluxo de Entrada e Self-Invitation
@@ -30,21 +34,21 @@ flowchart TD
     CHECK_ENV -->|SIM| CHECK_SESSION[apiGet /admin_me.php\nverifica cookie de sessão]
 
     CHECK_SESSION -->|checking=true| LOADING[TerminalPanel step=auth\nCarregando sessão...]
-    CHECK_SESSION -->|admin presente| DASHBOARD[TerminalPanel step=dashboard\nAdminDashboard.jsx]
-    CHECK_SESSION -->|sem sessão| AUTH[TerminalPanel step=auth\nAdminAuth.jsx]
+    CHECK_SESSION -->|admin presente| DASHBOARD["AdminDashboard.jsx\nlayout próprio Neo-Brutalist\n(sem TerminalPanel)"]
+    CHECK_SESSION -->|sem sessão| AUTH["AdminAuth.jsx\nlayout próprio Neo-Brutalist\n(sem TerminalPanel)"]
 
     ROUTE_INVITE --> CHECK_TOKEN_I{?token=\npresente?}
     CHECK_TOKEN_I -->|SIM| INVITE_PAGE[TerminalPanel step=invite\nInvitePage.jsx]
     CHECK_TOKEN_I -->|NÃO| ERR_TOKEN_I[Erro: Token de convite ausente]
 
     ROUTE_REVEAL --> CHECK_TOKEN_R{?token=\npresente?}
-    CHECK_TOKEN_R -->|SIM| REVEAL_PAGE[TerminalPanel step=reveal\nRevealPage.jsx]
-    CHECK_TOKEN_R -->|NÃO| ERR_TOKEN_R[Erro: Token de revelação ausente]
+    CHECK_TOKEN_R -->|SIM| REVEAL_PAGE["RevealPage.jsx\nlayout próprio Neo-Brutalist\n(sem TerminalPanel)"]
+    CHECK_TOKEN_R -->|NÃO| ERR_TOKEN_R[TerminalPanel step=reveal\nErro: Token de revelação ausente]
 
     ROUTE_JOIN --> JOIN_PAGE[JoinGroup.jsx\nsem TerminalPanel wrapper]
 
     ROUTE_CHAT --> CHECK_TOKEN_C{?token=\npresente?}
-    CHECK_TOKEN_C -->|SIM| CHAT_PAGE[ChatAnonimo.jsx]
+    CHECK_TOKEN_C -->|SIM| CHAT_PAGE["ChatAnonimo.jsx\nlayout próprio Neo-Brutalist\n(sem TerminalPanel)"]
     CHECK_TOKEN_C -->|NÃO| ERR_TOKEN_C[TerminalPanel step=chat\nErro: Token ausente]
 ```
 
@@ -135,17 +139,24 @@ sequenceDiagram
 
 ---
 
-## Estados do TerminalPanel por Rota
+## Uso do TerminalPanel por Rota (pós-redesign Neo-Brutalist)
 
-| `step` prop  | Rota         | `showSteps` | Componente filho       |
-|--------------|--------------|-------------|------------------------|
-| `"auth"`     | `/` (admin)  | `true`      | AdminAuth.jsx          |
-| `"dashboard"`| `/` (admin)  | `true`      | AdminDashboard.jsx     |
-| `"invite"`   | `/invite`    | `false`     | InvitePage.jsx         |
-| `"reveal"`   | `/reveal`    | `false`     | RevealPage.jsx         |
-| `"chat"`     | `/chat`      | `false`     | ChatAnonimo.jsx        |
+> **2026-06-28:** AdminAuth, AdminDashboard, RevealPage e ChatAnonimo passaram a ter
+> layout próprio. TerminalPanel é usado apenas para estados de erro/loading.
 
-> `JoinGroup.jsx` não usa `TerminalPanel` — tem seu próprio layout.
+| Situação | `step` | Usa TerminalPanel? | Componente principal |
+|---|---|---|---|
+| API não configurada | `"auth"` | ✅ sim | — (só exibe erro) |
+| Verificando sessão (loading) | `"auth"` | ✅ sim | — (só exibe loading) |
+| Admin autenticado | — | ❌ não | AdminDashboard.jsx (full-page) |
+| Sem sessão admin | — | ❌ não | AdminAuth.jsx (full-page) |
+| `/invite` com token | `"invite"` | ✅ sim | InvitePage.jsx |
+| `/invite` sem token | `"invite"` | ✅ sim | — (só exibe erro) |
+| `/reveal` com token | — | ❌ não | RevealPage.jsx (full-page) |
+| `/reveal` sem token | `"reveal"` | ✅ sim | — (só exibe erro) |
+| `/chat` com token | — | ❌ não | ChatAnonimo.jsx (full-page) |
+| `/chat` sem token | `"chat"` | ✅ sim | — (só exibe erro) |
+| `/join` | — | ❌ não | JoinGroup.jsx (layout próprio) |
 
 ---
 

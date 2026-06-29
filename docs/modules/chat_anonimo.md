@@ -1,10 +1,14 @@
 ---
 module: chat_anonimo
 domain: SA-04 · A Sombra
-components: [ChatAnonimo.jsx, TerminalPanel.jsx]
+components: [ChatAnonimo.jsx]
 endpoints: [chat_get.php, chat_send.php]
 database: [chat_messages, draw_results, participants]
 last_updated: 2026-06-28
+redesign_note: >
+  2026-06-28 · Redesign Neo-Brutalist — ChatAnonimo.jsx passou a ter layout
+  full-page próprio (header + bottom nav Neo-Brutalist). TerminalPanel removido.
+  App.jsx renderiza ChatAnonimo diretamente quando token presente.
 ---
 
 # Módulo: Chat Anônimo (SA-04 · A Sombra)
@@ -216,33 +220,25 @@ flowchart TD
 
 ---
 
-## Diagrama 5 — Composição do Shell Terminal (TerminalPanel · ThemeContext · RetroTyping)
+## Diagrama 5 — Composição do Shell Neo-Brutalist (pós-redesign 2026-06-28)
+
+> **Nota de redesign:** `ChatAnonimo.jsx` não usa mais `TerminalPanel`. Possui
+> header sticky e bottom nav próprios com estética Neo-Brutalist. `App.jsx` renderiza
+> `ChatAnonimo` diretamente quando `token` está presente na rota `/chat`.
 
 ```mermaid
 sequenceDiagram
     actor U as Participante
     participant APP as App.jsx
-    participant TP as TerminalPanel.jsx
-    participant TC as ThemeContext.jsx
-    participant RT as RetroTyping.jsx
     participant CA as ChatAnonimo.jsx
     participant API as lib/api.js
     participant CGP as chat_get.php
     participant CSP as chat_send.php
 
-    %% ── Montagem do shell visual CRT ────────────────────────────
+    %% ── Montagem direta (sem TerminalPanel) ─────────────────────
     U->>APP: Acessa /chat?token=revealToken
-    APP->>APP: resolveRoute() → 'chat'
-    APP->>TP: render TerminalPanel(step='chat', showSteps=false)
-
-    TP->>TC: useTheme()
-    TC-->>TP: {themeConfig, theme}<br/>CSS vars no :root:<br/>--color-crt-bg · --color-crt-green-raw<br/>--theme-display-font
-    Note over TP: showStepIndicator = showSteps(false)<br/>→ StepIndicator NÃO renderizado
-
-    TP->>RT: render RetroTyping no body do painel
-    RT->>TC: useTheme() → lê variáveis de tema CRT
-    RT-->>TP: Efeito de digitação animado no cabeçalho
-    TP->>CA: render ChatAnonimo(token=revealToken)
+    APP->>APP: resolveRoute() → 'chat'\ntoken = getTokenParam()
+    APP->>CA: render ChatAnonimo(token=revealToken)
 
     %% ── Inicialização e carga inicial ───────────────────────────
     CA->>API: apiGet('/chat_get.php?token=revealToken')
@@ -256,7 +252,7 @@ sequenceDiagram
     deactivate CGP
     API-->>CA: messages
     CA->>CA: setMessages() → setLoading(false)<br/>scrollToBottom() via messagesEndRef
-    CA-->>U: Abas + mensagens com estilização do ThemeContext
+    CA-->>U: Header Neo-Brutalist + tabs + mensagens
 
     %% ── Polling automático ──────────────────────────────────────
     loop A cada 5 segundos — sem WebSocket
@@ -293,8 +289,8 @@ sequenceDiagram
 
     API-->>CA: new message
     CA->>CA: setMessages(prev => ({...prev,<br/>[activeTab]: [...prev[tab], msg]}))<br/>scrollToBottom()
-    CA-->>U: Mensagem própria: direita · verde CRT
-    Note over CA,U: Mensagens recebidas via polling:<br/>esquerda · âmbar (crt-amber)<br/>Sistema: centralizadas · opacidade 40%
+    CA-->>U: Msg própria: direita · bg-primary (vermelho)<br/>Msg recebida: esquerda · bg-secondary-container (amarelo)
+    Note over CA,U: Sistema: centralizado · opacidade reduzida
 
     %% ── Saída ───────────────────────────────────────────────────
     U->>CA: Clica VOLTAR PARA REVELAÇÃO

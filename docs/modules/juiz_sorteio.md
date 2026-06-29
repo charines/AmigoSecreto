@@ -5,6 +5,12 @@ components: [AdminDashboard.jsx, RevealPage.jsx, RevealStep.jsx, ResultsStep.jsx
 utils: [src/utils/secretSanta.js, src/lib/crypto.js]
 endpoints: [groups_draw.php, reveal.php, reveal_confirm.php, participants_resend_draw.php]
 last_updated: 2026-06-28
+redesign_note: >
+  2026-06-28 · Redesign Neo-Brutalist — RevealPage.jsx e RevealStep.jsx com
+  layout full-page próprio. App.jsx renderiza RevealPage diretamente (sem
+  TerminalPanel). RevealStep mantém typewriter setInterval/36ms, DECRYPT_MSG
+  original e setTimeout 950ms. Lógica de crypto (decryptName, AES-GCM) e
+  API calls (reveal.php, reveal_confirm.php) 100% preservadas.
 ---
 
 # Módulo: O Juiz — Sorteio e Revelação (SA-03)

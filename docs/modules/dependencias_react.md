@@ -4,6 +4,10 @@ domain: Todos os sub-agentes (visão transversal)
 components: todos os src/
 generated_from: react-map.json (madge)
 last_updated: 2026-06-28
+redesign_note: >
+  2026-06-28 · Redesign Neo-Brutalist — ChatAnonimo, AdminAuth, AdminDashboard e
+  RevealPage removeram a dependência de TerminalPanel. TerminalPanel agora tem
+  apenas 1 dependente direto (App.jsx, para estados de erro/loading/invite).
 ---
 
 # Módulo: Mapa de Dependências React
@@ -90,8 +94,7 @@ flowchart TD
     REVEAL_P --> API
     REVEAL_P --> CRYPTO
 
-    %% SA-04
-    CHAT --> PANEL
+    %% SA-04 (sem TerminalPanel após redesign 2026-06-28)
     CHAT --> API
 
     %% Layout Shell
@@ -115,7 +118,7 @@ de alterar.
 |---|---|---|---|
 | `lib/api.js` | 7 (App + todos os SA) | **CRÍTICO** | Toca tudo — qualquer mudança exige teste em todas as rotas |
 | `ThemeContext.jsx` | 3 (main, TerminalPanel, RetroTyping) | **ALTO** | Afeta toda a UI visual |
-| `TerminalPanel.jsx` | 2 (App, ChatAnonimo) | **MÉDIO-ALTO** | Layout shell de quase todas as telas |
+| `TerminalPanel.jsx` | 1 (App) | **MÉDIO** | Usado só para erros/loading/invite (pós-redesign) |
 | `RetroTyping.jsx` | 1 (TerminalPanel) | **MÉDIO** | Via TerminalPanel, afeta indiretamente tudo |
 | `lib/crypto.js` | 1 (RevealPage) | **MÉDIO** | Impacto isolado mas crítico — segurança |
 | `themes/themes.js` | 1 (ThemeContext) | **BAIXO** | Mudança de dados sem lógica |
@@ -148,7 +151,7 @@ Agrupa componentes que podem ser alterados juntos sem risco de efeito colateral 
 | A — Auth Admin | `AdminAuth.jsx` | Sim |
 | B — Grupo | `AdminDashboard.jsx`, `InvitePage.jsx`, `JoinGroup.jsx` | Sim |
 | C — Reveal | `RevealPage.jsx`, `RevealStep.jsx`, `crypto.js` | Sim |
-| D — Chat | `ChatAnonimo.jsx` | Sim (usa TerminalPanel mas não o modifica) |
+| D — Chat | `ChatAnonimo.jsx` | Sim (layout próprio Neo-Brutalist, não usa TerminalPanel) |
 | E — Shell | `TerminalPanel.jsx`, `RetroTyping.jsx`, `StepIndicator.jsx` | **Não** — afeta A, B, C, D via App |
 | F — Tema | `ThemeContext.jsx`, `themes.js` | **Não** — afeta E que afeta tudo |
 | G — API | `api.js` | **Não** — afeta todos os clusters |

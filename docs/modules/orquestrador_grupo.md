@@ -10,6 +10,11 @@ endpoints:
    participants_delete.php, participants_resend_invite.php,
    invite.php, invite_confirm.php, mailer.php]
 last_updated: 2026-06-28
+redesign_note: >
+  2026-06-28 · Redesign Neo-Brutalist — AdminDashboard.jsx (3 views) passou a
+  ter layout full-page próprio. App.jsx renderiza o componente diretamente,
+  sem TerminalPanel wrapper. Toda lógica de negócio (grupos, participantes,
+  convites, sorteio, delete, resend) permanece 100% intacta.
 ---
 
 # Módulo: Orquestrador de Grupo (SA-02)

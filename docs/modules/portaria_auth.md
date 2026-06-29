@@ -9,6 +9,11 @@ note: >
   Documento de jornada — cobre a entrada completa do usuário desde o acesso à URL
   até as ações do SA-02. Detalhes internos do SA-02 em orquestrador_grupo.md.
 last_updated: 2026-06-28
+redesign_note: >
+  2026-06-28 · Redesign Neo-Brutalist — AdminAuth.jsx passou a ter layout
+  full-page próprio (star-pattern, card neo-brutalist, botão nb-btn-primary).
+  App.jsx renderiza AdminAuth diretamente, sem TerminalPanel wrapper.
+  Lógica de auth (apiPost, onAuth, mode, setError) 100% preservada.
 ---
 
 # Módulo: Portaria e Autenticação (SA-01 · A Portaria)
