@@ -43,6 +43,14 @@ const STATUS_LABELS = {
   revealed: 'REVELADO',
 };
 
+const STATUS_BADGE = {
+  invited:      { bg: 'bg-surface-variant', text: 'text-on-surface-variant' },
+  link_clicked: { bg: 'bg-surface-container-high', text: 'text-on-surface' },
+  confirmed:    { bg: 'bg-secondary-container', text: 'text-on-secondary-container' },
+  token_sent:   { bg: 'bg-tertiary-container', text: 'text-on-tertiary-container' },
+  revealed:     { bg: 'bg-primary', text: 'text-on-primary' },
+};
+
 export default function AdminDashboard({ admin, onLogout }) {
   const [view, setView] = useState('list'); // 'list', 'create', 'detail'
   const [groups, setGroups] = useState([]);
@@ -303,7 +311,6 @@ export default function AdminDashboard({ admin, onLogout }) {
 
     const isDrawn = group.status === 'drawn';
 
-    // Contagem de tokens e revelações
     let tokenSent = 0;
     let revealed = 0;
     if (group.id === selectedGroup?.id) {
@@ -314,26 +321,21 @@ export default function AdminDashboard({ admin, onLogout }) {
       revealed = parseInt(group.revealed_count || 0);
     }
 
-    // Status FECHADO: 
-    // 1. Todos revelaram (se sorteado)
     if (isDrawn && revealed > 0 && tokenSent === 0) {
       return 'FECHADO';
     }
 
-    // 2. Data do evento passou (se não foi sorteado ainda ou se já foi concluído)
     if (group.draw_date) {
       const dateStr = group.draw_date.includes(' ') ? group.draw_date.replace(' ', 'T') : group.draw_date;
       const eventDate = new Date(dateStr);
       if (!isNaN(eventDate.getTime()) && new Date() < new Date()) {
-        // Se ainda estiver "aberto" e passou a data, fecha.
-        // Se estiver sorteado mas com pendência, mantemos sorteado até o fim das revelações ou decisão do admin.
         if (group.status === 'open') return 'FECHADO';
       }
     }
 
     const map = {
-      'open': 'ABERTO - aguardando participacao',
-      'drawn': 'SORTEADO - tokens enviados',
+      'open': 'ABERTO',
+      'drawn': 'SORTEADO',
       'cancelled': 'CANCELADO'
     };
     return map[group.status] || group.status.toUpperCase();
@@ -345,325 +347,486 @@ export default function AdminDashboard({ admin, onLogout }) {
     ? 'SORTEIO FINALIZADO'
     : canDraw
       ? 'EXECUTAR SORTEIO'
-      : 'AGUARDANDO CONFIRMACOES';
+      : 'AGUARDANDO CONFIRMAÇÕES';
 
-  const renderList = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-crt-green text-xs tracking-[0.3em] uppercase">Seus Grupos</h2>
-        <button className="crt-btn-sm" onClick={() => setView('create')}>+ NOVO GRUPO</button>
+  /* ── Header compartilhado ── */
+  const renderHeader = (title, showBack = false) => (
+    <header className="nb-header">
+      <div className="flex items-center gap-3">
+        {showBack && (
+          <button
+            className="flex items-center justify-center w-10 h-10 border-2 border-[var(--color-nb-ink)] bg-surface-container-highest nb-shadow-sm nb-press"
+            onClick={() => setView('list')}
+          >
+            <span className="material-symbols-outlined text-on-surface" style={{ fontVariationSettings: "'wght' 700" }}>arrow_back</span>
+          </button>
+        )}
+        {!showBack && (
+          <span className="material-symbols-outlined text-primary text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>redeem</span>
+        )}
+        <h1 className="text-[1.75rem] leading-tight font-black text-primary italic" style={{ fontFamily: 'var(--font-nb)' }}>
+          {title}
+        </h1>
       </div>
+      <div className="flex items-center gap-3">
+        <button
+          className="text-xs border border-error text-error px-3 py-1 rounded font-bold hover:bg-error hover:text-on-error transition-colors"
+          style={{ fontFamily: 'var(--font-nb)' }}
+          onClick={onLogout}
+        >
+          SAIR
+        </button>
+        <div className="w-10 h-10 rounded-full border-2 border-[var(--color-nb-ink)] bg-secondary-container overflow-hidden nb-shadow-sm flex items-center justify-center">
+          <span className="text-xs font-black text-on-secondary-container" style={{ fontFamily: 'var(--font-nb)' }}>
+            {admin.email?.[0]?.toUpperCase() || 'A'}
+          </span>
+        </div>
+      </div>
+    </header>
+  );
 
-      {loadingGroups && <p className="text-[10px] opacity-60">Carregando lista...</p>}
-
-      {!loadingGroups && groups.length === 0 && (
-        <div className="p-8 border border-dashed border-crt-green/20 text-center">
-          <p className="text-[10px] opacity-60 uppercase">Nenhum grupo encontrado</p>
+  /* ── Alertas inline ── */
+  const renderAlerts = () => (
+    <>
+      {error && (
+        <div className="bg-error-container border-2 border-error rounded-xl p-3 nb-shadow-sm">
+          <p className="text-on-error-container text-sm font-bold" style={{ fontFamily: 'var(--font-nb)' }}>
+            ✖ {error}
+          </p>
         </div>
       )}
+      {notice && !isSending && !isDrawing && (
+        <div className="bg-secondary-container border-2 border-[var(--color-nb-ink)] rounded-xl p-3 nb-shadow-sm">
+          <p className="text-on-secondary-container text-sm font-bold" style={{ fontFamily: 'var(--font-nb)' }}>
+            ✓ {notice}
+          </p>
+        </div>
+      )}
+    </>
+  );
 
-      <div className="grid gap-4">
-        {groups.map((group) => (
-          <div
-            key={group.id}
-            className="w-full flex items-stretch border border-crt-green/20 hover:border-crt-green/50 transition-colors group relative"
-          >
-            <button
-              className="flex-grow text-left p-4"
-              onClick={() => {
-                setSelectedGroupId(group.id);
-                setView('detail');
-              }}
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <div className="text-sm group-hover:text-crt-green-bright transition-colors uppercase tracking-wider">{group.title}</div>
-                  <div className="text-[10px] opacity-60 mt-1 uppercase">
-                    {group.status === 'drawn' ? (
-                      `${group.revealed_count || 0}/${parseInt(group.revealed_count || 0) + parseInt(group.token_sent_count || 0)} SEGREDO REVELADO`
-                    ) : (
-                      `${group.confirmed_count || 0}/${group.total_participants || 0} PARTICIPANTES CONFIRMADOS`
-                    )}
+  /* ── View: Lista de grupos ── */
+  const renderList = () => (
+    <div className="star-pattern min-h-screen pb-24" style={{ fontFamily: 'var(--font-nb)' }}>
+      {renderHeader('AmigoSecreto')}
+
+      <main className="max-w-4xl mx-auto px-5 py-10 space-y-6">
+        {renderAlerts()}
+
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-[2rem] leading-tight font-black text-on-surface">Meus Grupos</h2>
+            <div className="h-1 w-24 bg-primary border-2 border-[var(--color-nb-ink)] rounded-full mt-1"></div>
+          </div>
+        </div>
+
+        {loadingGroups && (
+          <p className="text-on-surface-variant font-bold text-sm animate-pulse">Carregando grupos...</p>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {groups.map((group) => {
+            const status = getDisplayStatus(group);
+            const isDrawn = group.status === 'drawn';
+            return (
+              <div
+                key={group.id}
+                className="nb-card p-6 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_var(--color-nb-ink)] transition-all"
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex flex-col gap-2">
+                    <span className={`text-[10px] font-black px-2 py-0.5 rounded border-2 border-[var(--color-nb-ink)] w-fit tracking-tighter ${
+                      isDrawn ? 'bg-secondary-container text-on-secondary-container' : 'bg-[#22c55e] text-white'
+                    }`}>
+                      {status}
+                    </span>
+                    <h3 className="text-xl font-extrabold text-on-surface">{group.title}</h3>
                   </div>
+                  <button
+                    className="text-on-surface-variant hover:text-error transition-colors"
+                    title="Deletar grupo"
+                    onClick={(e) => handleDeleteGroup(e, group.id)}
+                  >
+                    <span className="material-symbols-outlined text-2xl">delete</span>
+                  </button>
                 </div>
-                <div className="text-[9px] border border-crt-green px-2 py-0.5 uppercase">
-                  {getDisplayStatus(group)}
+
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    {isDrawn ? 'visibility' : 'group'}
+                  </span>
+                  <p className="font-semibold text-on-surface text-sm">
+                    {isDrawn
+                      ? `${group.revealed_count || 0} revelados`
+                      : `${group.confirmed_count || 0}/${group.total_participants || 0} confirmados`}
+                  </p>
+                </div>
+
+                <div className="w-full bg-surface-container-low border-2 border-[var(--color-nb-ink)] rounded-lg p-3 flex items-center justify-between">
+                  <div className="text-xs font-semibold text-on-surface-variant">
+                    {group.draw_date ? `📅 ${group.draw_date}` : 'Sem data definida'}
+                  </div>
+                  <button
+                    className="nb-btn-secondary px-4 py-1 rounded-lg text-sm"
+                    onClick={() => { setSelectedGroupId(group.id); setView('detail'); }}
+                  >
+                    GERENCIAR
+                  </button>
                 </div>
               </div>
-            </button>
-            <button
-              className="px-4 border-l border-crt-green/20 bg-crt-red/5 text-crt-red hover:bg-crt-red/20 transition-colors text-[10px] items-center justify-center flex"
-              title="Deletar Grupo"
-              onClick={(e) => handleDeleteGroup(e, group.id)}
-            >
-              [X]
-            </button>
+            );
+          })}
+
+          {/* Card vazio / criar novo */}
+          <div
+            className="bg-surface-container border-2 border-[var(--color-nb-ink)] border-dashed rounded-xl p-6 flex flex-col items-center justify-center gap-4 opacity-70 hover:opacity-100 transition-opacity cursor-pointer min-h-[200px]"
+            onClick={() => setView('create')}
+          >
+            <div className="w-16 h-16 rounded-full bg-white border-2 border-[var(--color-nb-ink)] flex items-center justify-center">
+              <span className="material-symbols-outlined text-4xl text-on-surface-variant">add_circle</span>
+            </div>
+            <p className="text-xl font-extrabold text-center text-on-surface">Criar um novo grupo</p>
           </div>
-        ))}
+        </div>
+      </main>
+
+      {/* FAB */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+        <button
+          className="flex items-center gap-3 bg-secondary-container px-8 py-4 rounded-full border-[3px] border-[var(--color-nb-ink)] nb-shadow-lg nb-press-lg transition-transform hover:scale-105"
+          style={{ fontFamily: 'var(--font-nb)' }}
+          onClick={() => setView('create')}
+        >
+          <span className="material-symbols-outlined text-3xl font-black">add</span>
+          <span className="text-xl font-black tracking-tight text-on-secondary-container">NOVO GRUPO</span>
+        </button>
       </div>
     </div>
   );
 
+  /* ── View: Criar grupo ── */
   const renderCreate = () => (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <button className="text-[10px] opacity-60 hover:opacity-100" onClick={() => setView('list')}>[VOLTAR]</button>
-        <h2 className="text-crt-green text-xs tracking-[0.3em] uppercase">Criar Grupo</h2>
-      </div>
+    <div className="dot-pattern min-h-screen" style={{ fontFamily: 'var(--font-nb)' }}>
+      {renderHeader('Criar Grupo', true)}
 
-      <form className="space-y-4" onSubmit={handleCreateGroup}>
-        <div className="space-y-4">
+      <main className="max-w-[600px] mx-auto px-5 py-8 space-y-4">
+        {renderAlerts()}
+
+        <h2 className="text-2xl font-black text-on-surface">Novo Grupo</h2>
+
+        <form className="space-y-4" onSubmit={handleCreateGroup}>
           <input
-            className="crt-input w-full p-3 text-sm"
-            placeholder="Titulo do grupo"
+            className="nb-input w-full p-3 rounded-xl text-sm text-on-surface"
+            style={{ fontFamily: 'var(--font-nb)' }}
+            placeholder="Título do grupo"
             value={groupForm.title}
             onChange={(e) => setGroupForm((prev) => ({ ...prev, title: e.target.value }))}
             required
           />
           <textarea
-            className="crt-input w-full p-3 text-sm resize-none min-h-24"
-            placeholder="Descricao (opcional)"
+            className="nb-input w-full p-3 rounded-xl text-sm text-on-surface resize-none min-h-24"
+            style={{ fontFamily: 'var(--font-nb)' }}
+            placeholder="Descrição (opcional)"
             value={groupForm.description}
             onChange={(e) => setGroupForm((prev) => ({ ...prev, description: e.target.value }))}
           />
           <input
-            className="crt-input w-full p-3 text-sm"
+            className="nb-input w-full p-3 rounded-xl text-sm text-on-surface"
+            style={{ fontFamily: 'var(--font-nb)' }}
             type="text"
             placeholder="Data do evento (ex: 25/11/2026 10:30)"
             value={groupForm.draw_date}
             onChange={(e) => setGroupForm((prev) => ({ ...prev, draw_date: e.target.value }))}
           />
           <input
-            className="crt-input w-full p-3 text-sm"
+            className="nb-input w-full p-3 rounded-xl text-sm text-on-surface"
+            style={{ fontFamily: 'var(--font-nb)' }}
             placeholder="Budget (ex: 100.00)"
             value={groupForm.budget_limit}
             onChange={(e) => setGroupForm((prev) => ({ ...prev, budget_limit: e.target.value }))}
           />
-        </div>
-        <button className="crt-btn w-full" type="submit">CRIAR GRUPO</button>
-      </form>
+          <button
+            className="nb-btn-primary w-full py-4 rounded-xl text-base"
+            type="submit"
+          >
+            CRIAR GRUPO
+          </button>
+        </form>
+      </main>
     </div>
   );
 
+  /* ── View: Detalhes do grupo ── */
   const renderDetail = () => {
-    if (loadingGroup) return <p className="text-[10px] opacity-60 uppercase">Carregando detalhes...</p>;
-    if (!selectedGroup) return <p className="text-[10px] opacity-60 uppercase">Grupo não encontrado.</p>;
+    if (loadingGroup) return (
+      <div className="dot-pattern min-h-screen" style={{ fontFamily: 'var(--font-nb)' }}>
+        {renderHeader(selectedGroup?.title || 'Carregando...', true)}
+        <main className="max-w-[600px] mx-auto px-5 py-8">
+          <p className="text-on-surface-variant font-bold animate-pulse">Carregando detalhes...</p>
+        </main>
+      </div>
+    );
+
+    if (!selectedGroup) return (
+      <div className="dot-pattern min-h-screen" style={{ fontFamily: 'var(--font-nb)' }}>
+        {renderHeader('Grupo', true)}
+        <main className="max-w-[600px] mx-auto px-5 py-8">
+          <p className="text-on-surface-variant font-bold">Grupo não encontrado.</p>
+        </main>
+      </div>
+    );
 
     return (
-      <div className="space-y-8 pb-12">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button className="text-[10px] opacity-60 hover:opacity-100" onClick={() => setView('list')}>[VOLTAR]</button>
-            <div className="space-y-1">
-              <div className="text-[10px] tracking-[0.3em] uppercase opacity-60">Detalhes do grupo</div>
-              <h2 className="text-crt-green-bright text-lg uppercase tracking-tight">{selectedGroup.title}</h2>
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="text-[10px] uppercase opacity-60">Status</div>
-            <div className="text-xs text-crt-green uppercase font-bold">{getDisplayStatus(selectedGroup)}</div>
-          </div>
-        </div>
+      <div className="dot-pattern min-h-screen pb-28" style={{ fontFamily: 'var(--font-nb)' }}>
+        {renderHeader(selectedGroup.title, true)}
 
-        {selectedGroup.draw_date && (
-          <div className="flex flex-wrap items-center gap-6">
-            <div className="text-[10px] opacity-80 border-l-2 border-crt-green pl-2 uppercase">
-              Evento em: <span className="text-crt-green">{selectedGroup.draw_date}</span>
-            </div>
-            {selectedGroup.dharma_code && (
-              <div className="text-[10px] opacity-80 border-l-2 border-crt-green pl-2 uppercase">
-                DH_CODE: <span className="text-crt-green font-bold">{selectedGroup.dharma_code}</span>
+        <main className="max-w-[600px] mx-auto px-5 py-6 space-y-4">
+          {renderAlerts()}
+
+          {/* Info Card */}
+          <section className="bg-white border-2 border-[var(--color-nb-ink)] p-4 nb-shadow relative overflow-hidden rounded-none">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs text-on-surface-variant uppercase tracking-wider font-bold">Status</p>
+                <span className="inline-block px-3 py-1 bg-tertiary-container text-on-tertiary-container border-2 border-[var(--color-nb-ink)] text-xs font-black nb-shadow-sm mt-1">
+                  {getDisplayStatus(selectedGroup)}
+                </span>
               </div>
-            )}
-          </div>
-        )}
-
-        {selectedGroup.status === 'open' && selectedGroup.dharma_code && (
-          <div className="bg-crt-green/5 border border-crt-green/20 p-4 space-y-3">
-            <div className="text-[9px] tracking-[0.2em] uppercase opacity-60">Link de Auto-Inscrição (WhatsApp):</div>
-            <div className="flex items-center gap-3">
-              <input
-                readOnly
-                className="crt-input flex-grow p-2 text-[10px] opacity-70"
-                value={`${window.location.origin}/join/${selectedGroup.dharma_code}`}
-              />
-              <button
-                className="crt-btn-sm bg-green-900/40 border-green-500/50 text-green-400 hover:bg-green-800/60"
-                onClick={() => {
-                  const url = `${window.location.origin}/join/${selectedGroup.dharma_code}`;
-                  const text = `⚠️ PROTOCOLO DHARMA ATIVADO\n\nNAMASTÊ. VOCÊ FOI SELECIONADO PARA O EXPERIMENTO: "${selectedGroup.title.toUpperCase()}".\n\nACESSE O TERMINAL PARA CONFIRMAR SUA IDENTIDADE:\n${url}\n\n4 8 15 16 23 42`;
-                  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-                }}
-              >
-                WHATSAPP
-              </button>
+              <div>
+                <p className="text-xs text-on-surface-variant uppercase tracking-wider font-bold">Data</p>
+                <p className="text-xl font-black text-primary mt-1">{selectedGroup.draw_date || '—'}</p>
+              </div>
+              <div>
+                <p className="text-xs text-on-surface-variant uppercase tracking-wider font-bold">Orçamento</p>
+                <p className="text-xl font-black text-secondary mt-1">
+                  {selectedGroup.budget_limit ? `R$ ${selectedGroup.budget_limit}` : '—'}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-on-surface-variant uppercase tracking-wider font-bold">Dharma Code</p>
+                <p className="text-xl font-black text-on-surface font-mono mt-1">{selectedGroup.dharma_code || '—'}</p>
+              </div>
             </div>
-          </div>
-        )}
+          </section>
 
-        <div className="space-y-4">
-          <div className="text-[10px] tracking-[0.3em] uppercase text-crt-green">Status dos participantes</div>
-          <div className="flex gap-4 text-[10px] opacity-60 uppercase">
-            <span>CONFIRMADOS: <b className="text-crt-green">{statusCounts.confirmed}</b></span>
-            <span>·</span>
-            <span>TOKEN ENVIADOS: <b className="text-crt-green">{statusCounts.token_sent}</b></span>
-            <span>·</span>
-            <span>REVELADOS: <b className="text-crt-green">{statusCounts.revealed}</b></span>
-          </div>
+          {/* Link de compartilhamento */}
+          {selectedGroup.status === 'open' && selectedGroup.dharma_code && (
+            <section className="space-y-2">
+              <div className="flex gap-2 items-center">
+                <div className="flex-grow">
+                  <input
+                    readOnly
+                    className="nb-input w-full px-4 py-3 text-sm text-on-surface rounded-none"
+                    value={`${window.location.origin}/join/${selectedGroup.dharma_code}`}
+                  />
+                </div>
+                <button
+                  className="bg-[#25D366] text-white border-2 border-[var(--color-nb-ink)] p-3 nb-shadow hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_var(--color-nb-ink)] active:translate-y-0.5 active:shadow-[2px_2px_0px_0px_var(--color-nb-ink)] transition-all flex items-center gap-2 font-black text-sm"
+                  onClick={() => {
+                    const url = `${window.location.origin}/join/${selectedGroup.dharma_code}`;
+                    const text = `⚠️ PROTOCOLO DHARMA ATIVADO\n\nNAMASTÊ. VOCÊ FOI SELECIONADO PARA O EXPERIMENTO: "${selectedGroup.title.toUpperCase()}".\n\nACESSE O TERMINAL PARA CONFIRMAR SUA IDENTIDADE:\n${url}\n\n4 8 15 16 23 42`;
+                    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                  }}
+                >
+                  <span className="material-symbols-outlined">share</span>
+                  <span className="hidden sm:inline">Compartilhar</span>
+                </button>
+              </div>
+            </section>
+          )}
 
-          <div className="border border-crt-green/20 overflow-hidden">
-            <div className="max-h-64 overflow-y-auto custom-scrollbar">
-              {participants.map((p) => (
-                <div key={p.id} className="group p-3 border-b border-crt-green/10 last:border-0 hover:bg-crt-green/5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">{p.name} <span className="opacity-40">- -</span> {p.email}</span>
-                      <button
-                        className="text-crt-red text-[10px] opacity-0 group-hover:opacity-100 transition-opacity ml-2 hover:underline"
-                        onClick={() => handleDeleteParticipant(p.id)}
-                        title="Remover Participante"
-                      >
-                        [REMOVER]
-                      </button>
+          {/* Contadores */}
+          <section className="grid grid-cols-3 gap-2">
+            {[
+              { label: 'Confirmados', value: statusCounts.confirmed, color: 'text-primary' },
+              { label: 'Tokens Env.', value: statusCounts.token_sent, color: 'text-on-surface-variant' },
+              { label: 'Revelados',   value: statusCounts.revealed,   color: 'text-on-surface-variant' },
+            ].map(({ label, value, color }) => (
+              <div key={label} className="bg-surface-container-low border-2 border-[var(--color-nb-ink)] p-2 text-center nb-shadow-sm">
+                <p className={`text-2xl font-black ${color}`}>{value}</p>
+                <p className="text-[10px] font-bold uppercase leading-tight text-on-surface-variant">{label}</p>
+              </div>
+            ))}
+          </section>
+
+          {/* Formulário de adicionar participante */}
+          {selectedGroup.status === 'open' && (
+            <section className="bg-surface-container border-2 border-[var(--color-nb-ink)] p-4 nb-shadow space-y-3">
+              <h3 className="text-xl font-extrabold text-on-surface">Novo Participante</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <input
+                  className="nb-input px-4 py-2 rounded-none text-sm text-on-surface"
+                  placeholder="Nome"
+                  value={inviteName}
+                  onChange={(e) => setInviteName(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && addPendingParticipant()}
+                />
+                <input
+                  className="nb-input px-4 py-2 rounded-none text-sm text-on-surface"
+                  placeholder="E-mail"
+                  type="email"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && addPendingParticipant()}
+                />
+              </div>
+              <button
+                className="nb-btn-secondary w-full py-3 rounded-none flex items-center justify-center gap-2"
+                onClick={addPendingParticipant}
+              >
+                <span className="material-symbols-outlined">person_add</span>
+                [+] ADICIONAR
+              </button>
+
+              {pendingParticipants.length > 0 && (
+                <div className="space-y-2">
+                  <div className="text-xs uppercase font-bold text-on-surface-variant">A convidar:</div>
+                  {pendingParticipants.map((p) => (
+                    <div key={p.id} className="flex items-center justify-between bg-white border border-[var(--color-nb-ink)] p-2">
+                      <span className="text-sm font-semibold text-on-surface">{p.name} ({p.email})</span>
+                      <button className="text-error text-xs font-bold hover:underline" onClick={() => removePendingParticipant(p.id)}>REMOVER</button>
                     </div>
+                  ))}
+                  <button className="nb-btn-secondary w-full py-3 rounded-none mt-2" onClick={handleInvite}>
+                    ENVIAR CONVITES ({pendingParticipants.length})
+                  </button>
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* Lista de participantes */}
+          <section className="space-y-3">
+            <h3 className="text-xl font-extrabold text-on-surface flex items-center gap-2">
+              <span className="material-symbols-outlined">groups</span>
+              Participantes
+            </h3>
+            <div className="space-y-2">
+              {participants.length === 0 && (
+                <p className="text-sm text-on-surface-variant font-semibold text-center py-4">Nenhum participante ainda</p>
+              )}
+              {participants.map((p) => {
+                const badge = STATUS_BADGE[p.status] || { bg: 'bg-surface-variant', text: 'text-on-surface-variant' };
+                const initials = p.name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
+                return (
+                  <div key={p.id} className="bg-white border-2 border-[var(--color-nb-ink)] p-3 nb-shadow flex items-center justify-between group">
                     <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-primary-fixed border-2 border-[var(--color-nb-ink)] flex items-center justify-center font-black text-primary text-sm">
+                        {initials}
+                      </div>
+                      <div>
+                        <p className="font-bold text-on-surface text-sm">{p.name}</p>
+                        <p className="text-xs text-on-surface-variant">{p.email}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
                       {(p.status === 'invited' || p.status === 'link_clicked') && (
                         <button
-                          className="text-[9px] border border-crt-green/30 px-2 py-0.5 hover:bg-crt-green/10 transition-colors disabled:opacity-30"
+                          className="text-xs border border-[var(--color-nb-ink)] px-2 py-0.5 hover:bg-surface-container transition-colors font-bold disabled:opacity-30"
                           onClick={() => handleResendParticipantInvite(p.id)}
                           disabled={isResending}
                         >
-                          REENVIAR CONVITE
+                          REENVIAR
                         </button>
                       )}
                       {(p.status === 'token_sent' || p.status === 'revealed') && (
                         <button
-                          className="text-[9px] border border-crt-green/30 px-2 py-0.5 hover:bg-crt-green/10 transition-colors disabled:opacity-30"
+                          className="text-xs border border-[var(--color-nb-ink)] px-2 py-0.5 hover:bg-surface-container transition-colors font-bold disabled:opacity-30"
                           onClick={() => handleResendParticipantDraw(p.id)}
                           disabled={isResending}
                         >
                           REENVIAR SORTEIO
                         </button>
                       )}
-                      <span className="text-[9px] uppercase tracking-wider font-bold text-crt-green opacity-70 ml-2">
+                      <span className={`${badge.bg} ${badge.text} border-2 border-[var(--color-nb-ink)] px-2 py-0.5 text-[10px] font-black nb-shadow-sm`}>
                         {STATUS_LABELS[p.status] || p.status}
                       </span>
+                      <button
+                        className="text-error hover:scale-110 transition-transform opacity-0 group-hover:opacity-100"
+                        onClick={() => handleDeleteParticipant(p.id)}
+                        title="Remover"
+                      >
+                        <span className="material-symbols-outlined text-xl">delete</span>
+                      </button>
                     </div>
                   </div>
-                </div>
-              ))}
-              {participants.length === 0 && (
-                <div className="p-4 text-center text-[10px] opacity-40 uppercase">Nenhum participante ainda</div>
-              )}
+                );
+              })}
             </div>
-          </div>
-        </div>
+          </section>
+        </main>
 
+        {/* Botão de sorteio sticky */}
         {selectedGroup.status === 'open' && (
-          <div className="space-y-6 pt-4 border-t border-crt-green/10">
-            <div className="space-y-4">
-              <div className="text-[10px] tracking-[0.3em] uppercase opacity-60">Adicionar participante</div>
-              <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3">
-                <input
-                  className="crt-input p-2 text-xs"
-                  placeholder="Nome do participante"
-                  value={inviteName}
-                  onChange={(e) => setInviteName(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && addPendingParticipant()}
-                />
-                <input
-                  className="crt-input p-2 text-xs"
-                  placeholder="E-mail"
-                  value={inviteEmail}
-                  onChange={(e) => setInviteEmail(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && addPendingParticipant()}
-                />
-                <button className="crt-btn text-xs px-4" onClick={addPendingParticipant}>[+] ADICIONAR</button>
-              </div>
-
-              {pendingParticipants.length > 0 && (
-                <div className="space-y-2">
-                  <div className="text-[10px] uppercase opacity-60 font-medium">Novos participantes a serem convidados:</div>
-                  <div className="border border-crt-green/20">
-                    {pendingParticipants.map((p) => (
-                      <div key={p.id} className="flex items-center justify-between p-2 border-b border-crt-green/10 last:border-0 hover:bg-crt-green/5">
-                        <span className="text-xs opacity-80">{p.name} ({p.email})</span>
-                        <button className="text-crt-red text-[10px] hover:underline" onClick={() => removePendingParticipant(p.id)}>[REMOVER]</button>
-                      </div>
-                    ))}
-                  </div>
-                  <button className="crt-btn w-full py-3 mt-4 text-sm font-bold shadow-[0_0_15px_rgba(57,255,132,0.2)]" onClick={handleInvite}>
-                    ENVIAR CONVITES ({pendingParticipants.length})
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div className="pt-8 border-t border-crt-green/10">
-              <div className="text-[10px] tracking-[0.3em] uppercase opacity-60 mb-3">Sorteio</div>
+          <div className="fixed bottom-0 left-0 w-full p-4 bg-white/80 backdrop-blur-sm border-t-2 border-[var(--color-nb-ink)] z-40">
+            <div className="max-w-[600px] mx-auto">
               <button
-                className={`crt-btn w-full py-4 text-sm ${!canDraw ? 'opacity-50 grayscale cursor-not-allowed' : ''}`}
-                type="button"
+                className={`nb-btn-primary w-full py-5 rounded-none text-xl flex items-center justify-center gap-4 ${!canDraw ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={handleDraw}
                 disabled={!canDraw}
               >
+                <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
                 {drawLabel}
+                <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>celebration</span>
               </button>
-              {drawResult && (
-                <div className="text-[9px] opacity-60 uppercase bg-crt-green/5 p-2 mt-2">
-                  Emails: {drawResult.sent?.length || 0} / Falhas: {drawResult.failed?.length || 0}
-                </div>
-              )}
             </div>
           </div>
         )}
 
-        {/* Modal de Processamento (Convites ou Sorteio) */}
+        {drawResult && (
+          <div className="max-w-[600px] mx-auto px-5 pb-4">
+            <p className="text-xs text-on-surface-variant font-semibold">
+              Emails enviados: {drawResult.sent?.length || 0} · Falhas: {drawResult.failed?.length || 0}
+            </p>
+          </div>
+        )}
+
+        {/* Modal de processamento */}
         {(isSending || isDrawing) && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="crt-panel max-w-md w-full border border-crt-green shadow-[0_0_50px_rgba(57,255,132,0.1)] p-8 space-y-6 text-center">
+          <div className="fixed inset-0 bg-[var(--color-nb-ink)]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white border-2 border-[var(--color-nb-ink)] rounded-xl p-8 max-w-md w-full shadow-[12px_12px_0px_0px_var(--color-nb-ink)] space-y-6 text-center" style={{ fontFamily: 'var(--font-nb)' }}>
               <div className="space-y-3">
-                <p className="text-crt-green text-sm tracking-[0.2em] font-bold uppercase transition-all duration-300">
+                <span className="material-symbols-outlined text-5xl text-secondary-container animate-spin" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  {sendingSuccess || drawSuccess ? 'celebration' : 'autorenew'}
+                </span>
+                <p className="text-xl font-black text-on-surface">
                   {isSending ? (
-                    sendingSuccess ? 'CONVITES ENVIADOS COM SUCESSO!' : `ENVIANDO MENSAGENS${dots}`
+                    sendingSuccess ? 'CONVITES ENVIADOS!' : `ENVIANDO MENSAGENS${dots}`
                   ) : (
-                    drawSuccess ? 'SORTEIO REALIZADO COM SUCESSO!' : (
+                    drawSuccess ? 'SORTEIO REALIZADO!' : (
                       drawStep === 0 ? `RANDOMIZANDO DADOS${dots}` :
-                        drawStep === 1 ? `GERANDO CHAVES DE SEGURANÇA${dots}` :
-                          drawStep === 2 ? `CRIPTOGRAFANDO RESULTADOS${dots}` :
-                            `ENVIANDO TOKENS POR E-MAIL${dots}`
+                        drawStep === 1 ? `GERANDO CHAVES${dots}` :
+                          drawStep === 2 ? `CRIPTOGRAFANDO${dots}` :
+                            `ENVIANDO TOKENS${dots}`
                     )
                   )}
                 </p>
-                <div className="h-1 w-full bg-crt-green/10 overflow-hidden">
-                  <div className={`h-full bg-crt-green transition-all duration-500 ${(sendingSuccess || drawSuccess) ? 'w-full' : 'animate-pulse w-2/3'}`}></div>
+                <div className="h-2 w-full bg-surface-container rounded-full overflow-hidden border border-[var(--color-nb-ink)]">
+                  <div className={`h-full bg-primary transition-all duration-500 ${(sendingSuccess || drawSuccess) ? 'w-full' : 'w-2/3 animate-pulse'}`}></div>
                 </div>
               </div>
 
               {(sendingSuccess || drawSuccess) ? (
                 <div className="space-y-4">
-                  <p className="text-[11px] uppercase leading-relaxed text-crt-green/80">
-                    {sendingSuccess ? 'Os participantes foram notificados via e-mail!' : 'O sorteio foi realizado e os tokens foram enviados!'}
-                  </p>
-                  <div className="bg-crt-green/5 p-3 border border-crt-green/20">
-                    <p className="text-[10px] uppercase text-crt-green-bright font-bold mb-1">Atenção ao Spam:</p>
-                    <p className="text-[9px] uppercase opacity-70">
-                      Peça para verificarem a caixa de spam pelo remetente:<br />
-                      <span className="text-white">amigo.secreto@mercadocompleto.com.br</span>
-                    </p>
+                  <div className="bg-secondary-container/20 p-3 border-2 border-[var(--color-nb-ink)] rounded-xl">
+                    <p className="text-sm font-bold text-on-secondary-container">⚠️ Cheque o spam:</p>
+                    <p className="text-xs font-semibold text-on-surface">amigo.secreto@mercadocompleto.com.br</p>
                   </div>
-                  <button className="crt-btn w-full py-2 text-xs" onClick={() => {
-                    setIsSending(false);
-                    setSendingSuccess(false);
-                    setIsDrawing(false);
-                    setDrawSuccess(false);
-                  }}>
+                  <button
+                    className="nb-btn-secondary w-full py-3 rounded-xl"
+                    onClick={() => {
+                      setIsSending(false);
+                      setSendingSuccess(false);
+                      setIsDrawing(false);
+                      setDrawSuccess(false);
+                    }}
+                  >
                     FECHAR
                   </button>
                 </div>
               ) : (
-                <p className="text-[10px] opacity-60 uppercase animate-pulse">
-                  Por favor, aguarde enquanto o protocolo DHARMA é executado...
+                <p className="text-sm text-on-surface-variant font-semibold animate-pulse">
+                  Aguarde enquanto o sorteio é processado...
                 </p>
               )}
             </div>
@@ -674,45 +837,10 @@ export default function AdminDashboard({ admin, onLogout }) {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between pb-4 border-b border-crt-green/10">
-        <div className="space-y-1">
-          <div className="text-[9px] tracking-[0.2em] uppercase opacity-40">
-            SYSTEM_ACCESS: {admin.email}
-          </div>
-          <div className="text-[7px] tracking-[0.4em] uppercase opacity-20 font-bold">
-            DHARMA INITIATIVE — STATION 3: THE SWAN
-          </div>
-        </div>
-        <button className="text-[10px] border border-crt-red/30 text-crt-red px-2 py-0.5 hover:bg-crt-red/10 transition-colors" onClick={onLogout}>DISCONNECT</button>
-      </div>
-
-      {error && (
-        <div className="bg-crt-red/5 border border-crt-red/30 p-2">
-          <p className="text-crt-red text-[10px] tracking-wider uppercase">
-            ERROR_LOG: {error}
-          </p>
-        </div>
-      )}
-      {notice && !isSending && (
-        <div className="bg-crt-green/5 border border-crt-green/30 p-2">
-          <p className="text-[10px] tracking-wider uppercase text-crt-green">
-            SYSTEM_MSG: {notice}
-          </p>
-        </div>
-      )}
-
+    <>
       {view === 'list' && renderList()}
       {view === 'create' && renderCreate()}
       {view === 'detail' && renderDetail()}
-
-      <div className="pt-8 mt-8 border-t border-crt-green/5 flex justify-center">
-        <div className="text-[8px] tracking-[1em] uppercase opacity-10 hover:opacity-30 transition-opacity cursor-default">
-          4 8 15 16 23 42
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
-
-

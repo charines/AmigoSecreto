@@ -76,15 +76,13 @@ export default function App() {
   }
 
   if (route === 'reveal') {
-    return (
+    return token ? (
+      <RevealPage token={token} />
+    ) : (
       <TerminalPanel step="reveal" showSteps={false}>
-        {token ? (
-          <RevealPage token={token} />
-        ) : (
-          <p className="text-crt-red text-[10px] tracking-wider uppercase">
-            ✖ Token de revelacao ausente.
-          </p>
-        )}
+        <p className="text-crt-red text-[10px] tracking-wider uppercase">
+          ✖ Token de revelacao ausente.
+        </p>
       </TerminalPanel>
     );
   }
@@ -122,15 +120,9 @@ export default function App() {
     }
   };
 
-  return (
-    <TerminalPanel step={admin ? 'dashboard' : 'auth'}>
-      {!admin && <AdminAuth onAuth={setAdmin} />}
-      {admin && (
-        <AdminDashboard
-          admin={admin}
-          onLogout={handleLogout}
-        />
-      )}
-    </TerminalPanel>
-  );
+  if (admin) {
+    return <AdminDashboard admin={admin} onLogout={handleLogout} />;
+  }
+
+  return <AdminAuth onAuth={setAdmin} />;
 }

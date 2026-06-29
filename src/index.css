@@ -1,5 +1,7 @@
 /* ─── Google Fonts (must precede @import "tailwindcss") ────── */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=UnifrakturMaguntia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,600;0,700;0,800;0,900;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
 @import "tailwindcss";
 
@@ -14,6 +16,60 @@
   /* Legacy aliases */
   --color-terminal-green:  #39ff84;
   --color-terminal-border: #0d2818;
+
+  /* ── Neo-Brutalist Palette (AmigoSecreto redesign) ── */
+  --color-nb-ink:                    #181a2e;
+  --color-nb-bg:                     #fbf8ff;
+  --color-primary:                   #b7102a;
+  --color-on-primary:                #ffffff;
+  --color-primary-container:         #db313f;
+  --color-on-primary-container:      #fffbff;
+  --color-primary-fixed:             #ffdad8;
+  --color-primary-fixed-dim:         #ffb3b1;
+  --color-on-primary-fixed:          #410007;
+  --color-on-primary-fixed-variant:  #92001c;
+  --color-inverse-primary:           #ffb3b1;
+  --color-secondary:                 #7d5800;
+  --color-on-secondary:              #ffffff;
+  --color-secondary-container:       #ffb702;
+  --color-on-secondary-container:    #6b4b00;
+  --color-secondary-fixed:           #ffdea9;
+  --color-secondary-fixed-dim:       #ffba27;
+  --color-on-secondary-fixed:        #271900;
+  --color-on-secondary-fixed-variant: #5e4100;
+  --color-tertiary:                  #705d00;
+  --color-on-tertiary:               #ffffff;
+  --color-tertiary-container:        #caa800;
+  --color-on-tertiary-container:     #4c3e00;
+  --color-tertiary-fixed:            #ffe171;
+  --color-tertiary-fixed-dim:        #e9c400;
+  --color-on-tertiary-fixed:         #221b00;
+  --color-on-tertiary-fixed-variant: #554600;
+  --color-error:                     #ba1a1a;
+  --color-on-error:                  #ffffff;
+  --color-error-container:           #ffdad6;
+  --color-on-error-container:        #93000a;
+  --color-surface:                   #fbf8ff;
+  --color-surface-dim:               #d7d8f4;
+  --color-surface-bright:            #fbf8ff;
+  --color-surface-container-lowest:  #ffffff;
+  --color-surface-container-low:     #f4f2ff;
+  --color-surface-container:         #edecff;
+  --color-surface-container-high:    #e6e6ff;
+  --color-surface-container-highest: #e0e0fc;
+  --color-surface-tint:              #bb152c;
+  --color-surface-variant:           #e0e0fc;
+  --color-on-surface:                #181a2e;
+  --color-on-surface-variant:        #5b403f;
+  --color-inverse-surface:           #2d2f44;
+  --color-inverse-on-surface:        #f1efff;
+  --color-outline:                   #8f6f6e;
+  --color-outline-variant:           #e4bebc;
+  --color-background:                #fbf8ff;
+  --color-on-background:             #181a2e;
+
+  /* ── Neo-Brutalist Typography scale ── */
+  --font-nb: 'Nunito Sans', system-ui, sans-serif;
 }
 
 /* ─── Per-theme CSS variable overrides ──────────────────────── */
@@ -211,6 +267,142 @@ html[data-theme="merry"] {
     border-color: var(--color-crt-green);
     color:        var(--color-crt-bg);
   }
+}
+
+/* ─── Neo-Brutalist utilities ──────────────────────────────── */
+@layer base {
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}
+
+@layer components {
+  .nb-shadow     { box-shadow: 4px 4px 0px 0px var(--color-nb-ink); }
+  .nb-shadow-sm  { box-shadow: 2px 2px 0px 0px var(--color-nb-ink); }
+  .nb-shadow-lg  { box-shadow: 8px 8px 0px 0px var(--color-nb-ink); }
+  .nb-shadow-up  { box-shadow: 0px -4px 0px 0px var(--color-nb-ink); }
+  .nb-shadow-btn { box-shadow: 0px 6px 0px 0px #9B2226; }
+
+  .nb-press:active     { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px var(--color-nb-ink); }
+  .nb-press-lg:active  { transform: translate(4px, 4px); box-shadow: 4px 4px 0px 0px var(--color-nb-ink); }
+  .nb-press-btn:active { transform: translateY(4px); box-shadow: 0px 2px 0px 0px #9B2226; }
+
+  .star-pattern {
+    background-color: var(--color-nb-bg);
+    background-image: radial-gradient(var(--color-tertiary-container) 0.5px, transparent 0.5px),
+                      radial-gradient(var(--color-primary-container) 0.5px, var(--color-nb-bg) 0.5px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+  }
+
+  .dot-pattern {
+    background-color: var(--color-nb-bg);
+    background-image: radial-gradient(var(--color-surface-container) 1.5px, transparent 1.5px),
+                      radial-gradient(var(--color-surface-container) 1.5px, var(--color-nb-bg) 1.5px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+  }
+
+  .nb-card {
+    background: #ffffff;
+    border: 2px solid var(--color-nb-ink);
+    border-radius: 0.75rem;
+    box-shadow: 4px 4px 0px 0px var(--color-nb-ink);
+  }
+
+  .nb-input {
+    background: #ffffff;
+    border: 2px solid var(--color-nb-ink);
+    font-family: var(--font-nb);
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .nb-input:focus {
+    border-color: var(--color-primary);
+    background: #fff9e6;
+  }
+
+  .nb-btn-primary {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    border: 2px solid var(--color-nb-ink);
+    font-family: var(--font-nb);
+    font-weight: 900;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.1s;
+    box-shadow: 0px 6px 0px 0px #9B2226;
+  }
+  .nb-btn-primary:hover { transform: translateY(-2px); box-shadow: 0px 8px 0px 0px #9B2226; }
+  .nb-btn-primary:active { transform: translateY(4px); box-shadow: 0px 2px 0px 0px #9B2226; }
+  .nb-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .nb-btn-secondary {
+    background: var(--color-secondary-container);
+    color: var(--color-on-secondary-container);
+    border: 2px solid var(--color-nb-ink);
+    font-family: var(--font-nb);
+    font-weight: 900;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.1s;
+    box-shadow: 4px 4px 0px 0px var(--color-nb-ink);
+  }
+  .nb-btn-secondary:hover  { transform: translate(-2px,-2px); box-shadow: 6px 6px 0px 0px var(--color-nb-ink); }
+  .nb-btn-secondary:active { transform: translate(2px,2px);  box-shadow: 2px 2px 0px 0px var(--color-nb-ink); }
+
+  .nb-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    background: var(--color-nb-bg);
+    border-bottom: 2px solid var(--color-nb-ink);
+    box-shadow: 4px 4px 0px 0px var(--color-nb-ink);
+    font-family: var(--font-nb);
+  }
+
+  .nb-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 40;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px;
+    background: #ffffff;
+    border-top: 2px solid var(--color-nb-ink);
+    box-shadow: 0px -4px 0px 0px var(--color-nb-ink);
+    font-family: var(--font-nb);
+  }
+
+  @keyframes nb-float {
+    0%   { transform: translateY(0px) rotate(0deg); }
+    50%  { transform: translateY(-15px) rotate(5deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+  }
+  .nb-float { animation: nb-float 4s ease-in-out infinite; }
 }
 
 /* ─── Moving scanline / theme sweep ────────────────────────── */

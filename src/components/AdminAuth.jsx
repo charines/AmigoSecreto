@@ -28,66 +28,177 @@ export default function AdminAuth({ onAuth }) {
   };
 
   return (
-    <div className="space-y-5">
-      <div className="space-y-1">
-        <div className="flex justify-between items-start">
-          <p className="text-crt-green text-xs tracking-[0.25em] uppercase">
-            {mode === 'login' ? '>>> ACESSO ADMIN' : '>>> CRIAR CONTA ADMIN'}
-          </p>
-          <div className="text-[7px] tracking-[0.2em] opacity-30 text-right">
-            DHARMA INITIATIVE<br />
-            STATION 3
-          </div>
+    <div
+      className="min-h-screen flex flex-col overflow-x-hidden"
+      style={{ fontFamily: 'var(--font-nb)' }}
+    >
+      {/* Fundo com padrão de estrelinhas */}
+      <div className="star-pattern fixed inset-0 z-0" />
+
+      {/* Decorações flutuantes */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[10%] left-[5%] opacity-20 nb-float">
+          <span
+            className="material-symbols-outlined text-primary"
+            style={{ fontSize: '100px', fontVariationSettings: "'FILL' 1" }}
+          >
+            redeem
+          </span>
         </div>
-        <p style={{ color: 'rgb(var(--color-crt-green-raw, 57 255 132) / 0.4)', fontSize: '11px' }}>
-          {mode === 'login'
-            ? 'Entre para gerenciar seus grupos e convites.'
-            : 'Cadastre o administrador para iniciar um novo grupo.'}
-        </p>
+        <div
+          className="absolute top-[40%] right-[4%] opacity-15"
+          style={{ animation: 'nb-float 3.5s ease-in-out infinite 1s' }}
+        >
+          <span
+            className="material-symbols-outlined text-secondary-container"
+            style={{ fontSize: '80px', fontVariationSettings: "'FILL' 1" }}
+          >
+            card_giftcard
+          </span>
+        </div>
+        <div
+          className="absolute bottom-[15%] left-[8%] opacity-15"
+          style={{ animation: 'nb-float 4s ease-in-out infinite 2s' }}
+        >
+          <span
+            className="material-symbols-outlined text-tertiary-container"
+            style={{ fontSize: '72px', fontVariationSettings: "'FILL' 1" }}
+          >
+            auto_awesome
+          </span>
+        </div>
       </div>
 
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        {mode === 'register' && (
-          <input
-            className="crt-input w-full p-3 text-sm"
-            placeholder="Nome do administrador"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        )}
-        <input
-          className="crt-input w-full p-3 text-sm"
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="crt-input w-full p-3 text-sm"
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+      {/* Header */}
+      <header className="nb-header relative z-10">
+        <div className="flex items-center gap-2">
+          <span
+            className="material-symbols-outlined text-primary text-3xl"
+            style={{ fontVariationSettings: "'FILL' 1" }}
+          >
+            redeem
+          </span>
+          <h1 className="text-[1.75rem] leading-tight font-black text-primary italic">
+            AmigoSecreto
+          </h1>
+        </div>
+        <span className="text-xs font-bold text-on-surface-variant border-2 border-(--color-nb-ink) px-3 py-1 rounded-full nb-shadow-sm bg-white">
+          ADMIN
+        </span>
+      </header>
 
-        {error && (
-          <p className="text-crt-red text-[10px] tracking-wider uppercase">
-            ✖ {error}
+      {/* Conteúdo centralizado */}
+      <main className="relative z-10 flex-1 flex items-center justify-center px-5 py-10">
+        <div className="w-full max-w-sm space-y-6">
+
+          {/* Título */}
+          <div className="text-center space-y-1">
+            <h2
+              className="text-[2.25rem] leading-tight font-black text-on-background"
+              style={{ textShadow: '2px 2px 0px var(--color-nb-ink)' }}
+            >
+              {mode === 'login' ? 'Bem-vindo!' : 'Criar Conta'}
+            </h2>
+            <p className="text-on-surface-variant font-semibold text-base">
+              {mode === 'login'
+                ? 'Entre para gerenciar seu amigo secreto.'
+                : 'Cadastre-se para criar seu primeiro grupo.'}
+            </p>
+          </div>
+
+          {/* Card do formulário */}
+          <div className="nb-card p-6 space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              {mode === 'register' && (
+                <div className="space-y-1">
+                  <label className="text-xs font-extrabold text-on-surface uppercase tracking-wider">
+                    Nome
+                  </label>
+                  <input
+                    className="nb-input w-full p-3 rounded-xl text-sm text-on-surface"
+                    placeholder="Seu nome"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    autoComplete="name"
+                  />
+                </div>
+              )}
+
+              <div className="space-y-1">
+                <label className="text-xs font-extrabold text-on-surface uppercase tracking-wider">
+                  E-mail
+                </label>
+                <input
+                  className="nb-input w-full p-3 rounded-xl text-sm text-on-surface"
+                  type="email"
+                  placeholder="seu@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-extrabold text-on-surface uppercase tracking-wider">
+                  Senha
+                </label>
+                <input
+                  className="nb-input w-full p-3 rounded-xl text-sm text-on-surface"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                />
+              </div>
+
+              {error && (
+                <div className="bg-error-container border-2 border-error rounded-xl p-3">
+                  <p className="text-on-error-container text-sm font-bold">✖ {error}</p>
+                </div>
+              )}
+
+              <button
+                className="nb-btn-primary w-full py-4 rounded-xl text-base flex items-center justify-center gap-2"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="material-symbols-outlined text-xl animate-spin">autorenew</span>
+                    PROCESSANDO...
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      {mode === 'login' ? 'login' : 'person_add'}
+                    </span>
+                    {mode === 'login' ? 'ENTRAR' : 'CRIAR CONTA'}
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="border-t-2 border-[var(--color-outline-variant)] pt-4">
+              <button
+                type="button"
+                className="w-full py-3 rounded-xl border-2 border-(--color-nb-ink) bg-surface-container font-extrabold text-sm text-on-surface hover:bg-surface-container-high transition-colors nb-shadow-sm nb-press"
+                onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); }}
+              >
+                {mode === 'login' ? 'Criar nova conta' : 'Já tenho uma conta'}
+              </button>
+            </div>
+          </div>
+
+          {/* Rodapé */}
+          <p className="text-center text-[10px] text-on-surface-variant/40 font-bold uppercase tracking-widest">
+            4 8 15 16 23 42
           </p>
-        )}
-
-        <button className="crt-btn" type="submit" disabled={loading}>
-          {loading ? 'PROCESSANDO...' : mode === 'login' ? 'ENTRAR' : 'CRIAR CONTA'}
-        </button>
-      </form>
-
-      <button
-        type="button"
-        className="crt-btn-sm w-full"
-        onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-      >
-        {mode === 'login' ? 'CRIAR CONTA' : 'JA TENHO CONTA'}
-      </button>
+        </div>
+      </main>
     </div>
   );
 }
