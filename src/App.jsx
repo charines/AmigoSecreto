@@ -6,14 +6,16 @@ import InvitePage from './components/InvitePage';
 import RevealPage from './components/RevealPage';
 import JoinGroup from './components/JoinGroup';
 import ChatAnonimo from './components/ChatAnonimo';
+import ResetPassword from './components/ResetPassword';
 import { apiGet, apiPost, API_BASE_URL } from './lib/api';
 
 function resolveRoute() {
   const path = window.location.pathname;
-  if (path.startsWith('/invite')) return 'invite';
-  if (path.startsWith('/reveal')) return 'reveal';
-  if (path.startsWith('/join')) return 'join';
-  if (path.startsWith('/chat')) return 'chat';
+  if (path.startsWith('/invite'))        return 'invite';
+  if (path.startsWith('/reveal'))        return 'reveal';
+  if (path.startsWith('/join'))          return 'join';
+  if (path.startsWith('/chat'))          return 'chat';
+  if (path.startsWith('/reset-password')) return 'reset-password';
   return 'admin';
 }
 
@@ -88,6 +90,11 @@ export default function App() {
   }
   if (route === 'join') {
     return <JoinGroup />;
+  }
+
+  if (route === 'reset-password') {
+    const resetToken = new URLSearchParams(window.location.search).get('token') || '';
+    return <ResetPassword token={resetToken} />;
   }
 
   if (route === 'chat') {

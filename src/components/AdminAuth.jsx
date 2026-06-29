@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { apiPost } from '../lib/api';
+import ForgotPassword from './ForgotPassword';
 
 export default function AdminAuth({ onAuth }) {
-  const [mode, setMode] = useState('login');
+  const [mode, setMode] = useState('login'); // 'login' | 'register' | 'forgot'
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -90,6 +91,16 @@ export default function AdminAuth({ onAuth }) {
       {/* Conteúdo centralizado */}
       <main className="relative z-10 flex-1 flex items-center justify-center px-5 py-10">
         <div className="w-full max-w-sm space-y-6">
+
+          {/* Modo forgot password — delega para componente dedicado */}
+          {mode === 'forgot' && (
+            <div className="nb-card p-6">
+              <ForgotPassword onBack={() => { setMode('login'); setError(''); }} />
+            </div>
+          )}
+
+          {/* Formulário de login / registro */}
+          {mode !== 'forgot' && <>
 
           {/* Título */}
           <div className="text-center space-y-1">
@@ -182,7 +193,7 @@ export default function AdminAuth({ onAuth }) {
               </button>
             </form>
 
-            <div className="border-t-2 border-[var(--color-outline-variant)] pt-4">
+            <div className="border-t-2 border-outline-variant pt-4 space-y-3">
               <button
                 type="button"
                 className="w-full py-3 rounded-xl border-2 border-(--color-nb-ink) bg-surface-container font-extrabold text-sm text-on-surface hover:bg-surface-container-high transition-colors nb-shadow-sm nb-press"
@@ -190,8 +201,21 @@ export default function AdminAuth({ onAuth }) {
               >
                 {mode === 'login' ? 'Criar nova conta' : 'Já tenho uma conta'}
               </button>
+
+              {mode === 'login' && (
+                <button
+                  type="button"
+                  className="w-full text-sm font-extrabold text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center gap-1"
+                  onClick={() => { setMode('forgot'); setError(''); }}
+                >
+                  <span className="material-symbols-outlined text-base">lock_reset</span>
+                  Esqueci minha senha
+                </button>
+              )}
             </div>
           </div>
+
+          </>}
 
           {/* Rodapé */}
           <p className="text-center text-[10px] text-on-surface-variant/40 font-bold uppercase tracking-widest">

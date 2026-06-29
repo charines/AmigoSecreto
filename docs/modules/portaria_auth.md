@@ -1,19 +1,23 @@
 ---
 module: portaria_auth
 domain: SA-01 · A Portaria + SA-02 handoff
-components: [App.jsx, AdminAuth.jsx, AdminDashboard.jsx, InvitePage.jsx, JoinGroup.jsx]
+components: [App.jsx, AdminAuth.jsx, ForgotPassword.jsx, ResetPassword.jsx, AdminDashboard.jsx, InvitePage.jsx, JoinGroup.jsx]
 endpoints:
-  [admin_me.php, admin_login.php, groups_invite.php, mailer.php,
-   invite.php, invite_confirm.php, groups_get_public.php, groups_join.php]
+  [admin_me.php, admin_login.php, admin_forgot_password.php, admin_reset_password.php,
+   groups_invite.php, mailer.php, invite.php, invite_confirm.php,
+   groups_get_public.php, groups_join.php]
 note: >
   Documento de jornada — cobre a entrada completa do usuário desde o acesso à URL
   até as ações do SA-02. Detalhes internos do SA-02 em orquestrador_grupo.md.
 last_updated: 2026-06-28
 redesign_note: >
-  2026-06-28 · Redesign Neo-Brutalist — AdminAuth.jsx passou a ter layout
-  full-page próprio (star-pattern, card neo-brutalist, botão nb-btn-primary).
-  App.jsx renderiza AdminAuth diretamente, sem TerminalPanel wrapper.
-  Lógica de auth (apiPost, onAuth, mode, setError) 100% preservada.
+  2026-06-28 · Redesign Neo-Brutalist — AdminAuth.jsx layout full-page próprio.
+  App.jsx renderiza AdminAuth diretamente, sem TerminalPanel.
+forgot_password_note: >
+  2026-06-28 · Feature adicionada: Forgot Password completo.
+  DB: colunas reset_token_hash + reset_expires em admins (migrate_v5.php).
+  Rota: /reset-password → ResetPassword.jsx.
+  Segurança: token SHA-256 hash no DB, expiração 1h, anti-enumeração de email.
 ---
 
 # Módulo: Portaria e Autenticação (SA-01 · A Portaria)
@@ -128,6 +132,81 @@ sequenceDiagram
     API-->>JOIN: sucesso
     JOIN-->>U: Protocolo Iniciado — verifique seu e-mail
 ```
+
+---
+
+## Diagrama 2 — Forgot Password (SA-01 · recuperação de acesso)
+
+```mermaid
+sequenceDiagram
+    actor U as Admin
+    participant AUTH as AdminAuth.jsx
+    participant FP as ForgotPassword.jsx
+    participant RP as ResetPassword.jsx
+    participant APP as App.jsx
+    participant API_FP as admin_forgot_password.php
+    participant API_RP as admin_reset_password.php
+    participant MAILER as mailer.php
+    participant DB as admins (MySQL)
+
+    %% ── FASE 1: Solicitar link ───────────────────────────────────
+    U->>AUTH: Clica "Esqueci minha senha"
+    AUTH->>AUTH: setMode('forgot')
+    AUTH->>FP: render ForgotPassword(onBack)
+
+    U->>FP: Digita email → clica ENVIAR LINK
+    FP->>API_FP: POST /admin_forgot_password.php {email}
+
+    API_FP->>DB: SELECT id, name FROM admins WHERE email = ?
+
+    alt Email cadastrado
+        API_FP->>API_FP: rawToken = random_token(32)\ntokenHash = SHA-256(rawToken)\nexpiresAt = NOW() + 3600s
+        API_FP->>DB: UPDATE admins SET reset_token_hash = tokenHash,\nreset_expires = expiresAt WHERE id = ?
+        API_FP->>MAILER: send_smtp_mail() com link:\n/reset-password?token=rawToken
+    else Email não cadastrado
+        Note over API_FP: Silencia — não revela se email existe
+    end
+
+    API_FP-->>FP: {ok: true, message: "Se esse e-mail..."}
+    FP-->>U: "E-mail enviado! Verifique também o spam."
+
+    %% ── FASE 2: Redefinir senha ──────────────────────────────────
+    Note over U: Usuário recebe e-mail com link
+    U->>APP: Acessa /reset-password?token=rawToken
+    APP->>APP: resolveRoute() → 'reset-password'\nresetToken = URLSearchParams.get('token')
+    APP->>RP: render ResetPassword(token=rawToken)
+
+    U->>RP: Preenche nova senha + confirmação → REDEFINIR
+    RP->>RP: Valida: len >= 6, senha === confirmação
+    RP->>API_RP: POST /admin_reset_password.php {token: rawToken, password}
+
+    API_RP->>API_RP: tokenHash = SHA-256(rawToken)
+    API_RP->>DB: SELECT id FROM admins\nWHERE reset_token_hash = tokenHash\nAND reset_expires > NOW()
+
+    alt Token válido e não expirado
+        API_RP->>DB: UPDATE admins SET\npassword_hash = bcrypt(password),\nreset_token_hash = NULL,\nreset_expires = NULL
+        API_RP-->>RP: {ok: true}
+        RP-->>U: "Senha redefinida!" + botão "IR PARA O LOGIN"
+        U->>APP: window.location.href = '/'
+    else Token inválido ou expirado
+        API_RP-->>RP: {ok: false, error: "Token invalido ou expirado"} 400
+        RP-->>U: Exibe erro em error-container
+    end
+```
+
+---
+
+## Invariantes de Segurança — Forgot Password
+
+| Invariante | Implementação |
+|---|---|
+| Token armazenado como hash | `hash('sha256', $rawToken)` no DB — raw token só no e-mail |
+| Expiração de 1 hora | `reset_expires = NOW() + 3600` · validado com `> NOW()` no SELECT |
+| Token de uso único | `reset_token_hash = NULL` após uso bem-sucedido |
+| Anti-enumeração de email | Resposta `{ok: true}` idêntica se email existe ou não |
+| Falha de SMTP silenciosa | `error_log()` no servidor — cliente não recebe detalhe do erro |
+| Validação de senha mínima | Frontend: 6 chars + confirmação · Backend: `strlen < 6` |
+| Token único no índice | `ADD UNIQUE KEY uniq_admins_reset_token_hash` — colisão impossível |
 
 ---
 

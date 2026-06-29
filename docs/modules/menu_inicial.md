@@ -47,6 +47,9 @@ flowchart TD
 
     ROUTE_JOIN --> JOIN_PAGE[JoinGroup.jsx\nsem TerminalPanel wrapper]
 
+    RESOLVE -->|path = /reset-password| ROUTE_RESET[route = 'reset-password']
+    ROUTE_RESET --> RESET_PAGE["ResetPassword.jsx\nlayout próprio Neo-Brutalist\n(token via URLSearchParams)"]
+
     ROUTE_CHAT --> CHECK_TOKEN_C{?token=\npresente?}
     CHECK_TOKEN_C -->|SIM| CHAT_PAGE["ChatAnonimo.jsx\nlayout próprio Neo-Brutalist\n(sem TerminalPanel)"]
     CHECK_TOKEN_C -->|NÃO| ERR_TOKEN_C[TerminalPanel step=chat\nErro: Token ausente]
@@ -157,6 +160,7 @@ sequenceDiagram
 | `/chat` com token | — | ❌ não | ChatAnonimo.jsx (full-page) |
 | `/chat` sem token | `"chat"` | ✅ sim | — (só exibe erro) |
 | `/join` | — | ❌ não | JoinGroup.jsx (layout próprio) |
+| `/reset-password` | — | ❌ não | ResetPassword.jsx (full-page, token via URL) |
 
 ---
 
