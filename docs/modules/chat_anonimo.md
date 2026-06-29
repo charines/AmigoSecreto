@@ -216,6 +216,94 @@ flowchart TD
 
 ---
 
+## Diagrama 5 — Composição do Shell Terminal (TerminalPanel · ThemeContext · RetroTyping)
+
+```mermaid
+sequenceDiagram
+    actor U as Participante
+    participant APP as App.jsx
+    participant TP as TerminalPanel.jsx
+    participant TC as ThemeContext.jsx
+    participant RT as RetroTyping.jsx
+    participant CA as ChatAnonimo.jsx
+    participant API as lib/api.js
+    participant CGP as chat_get.php
+    participant CSP as chat_send.php
+
+    %% ── Montagem do shell visual CRT ────────────────────────────
+    U->>APP: Acessa /chat?token=revealToken
+    APP->>APP: resolveRoute() → 'chat'
+    APP->>TP: render TerminalPanel(step='chat', showSteps=false)
+
+    TP->>TC: useTheme()
+    TC-->>TP: {themeConfig, theme}<br/>CSS vars no :root:<br/>--color-crt-bg · --color-crt-green-raw<br/>--theme-display-font
+    Note over TP: showStepIndicator = showSteps(false)<br/>→ StepIndicator NÃO renderizado
+
+    TP->>RT: render RetroTyping no body do painel
+    RT->>TC: useTheme() → lê variáveis de tema CRT
+    RT-->>TP: Efeito de digitação animado no cabeçalho
+    TP->>CA: render ChatAnonimo(token=revealToken)
+
+    %% ── Inicialização e carga inicial ───────────────────────────
+    CA->>API: apiGet('/chat_get.php?token=revealToken')
+    activate CGP
+    API->>CGP: GET /chat_get.php?token=revealToken
+    CGP->>CGP: SELECT participants WHERE reveal_token=token
+    CGP->>CGP: Canal amigo: draw_results WHERE giver_id=participantId
+    CGP->>CGP: Canal admirador: draw_results WHERE receiver_id=participantId
+    Note over CGP: sender_role='giver'    → 'Você' ou 'Meu Amigo Secreto'<br/>sender_role='receiver' → 'Você' ou 'Meu Admirador Secreto'<br/>Sem PII em chat_messages
+    CGP-->>API: {ok:true, messages:{amigo:[], admirador:[]}}
+    deactivate CGP
+    API-->>CA: messages
+    CA->>CA: setMessages() → setLoading(false)<br/>scrollToBottom() via messagesEndRef
+    CA-->>U: Abas + mensagens com estilização do ThemeContext
+
+    %% ── Polling automático ──────────────────────────────────────
+    loop A cada 5 segundos — sem WebSocket
+        CA->>API: apiGet('/chat_get.php?token=revealToken')
+        API->>CGP: GET /chat_get.php
+        CGP-->>API: messages estado atual
+        API-->>CA: dados atualizados
+        CA->>CA: setMessages() → scrollToBottom()
+    end
+
+    %% ── Troca de canal ──────────────────────────────────────────
+    U->>CA: Clica aba "Para: Meu Amigo Secreto"
+    CA->>CA: setActiveTab('amigo')
+    Note over CA: useEffect([messages, activeTab])<br/>→ scrollToBottom() automático
+
+    %% ── Envio de mensagem ───────────────────────────────────────
+    U->>CA: Digita mensagem + clica ENVIAR
+    CA->>CA: handleSend(e) · textToSend = inputText.trim()<br/>setInputText('') imediato
+
+    CA->>API: apiPost('/chat_send.php',<br/>{token, channel:activeTab, texto})
+    activate CSP
+    API->>CSP: POST /chat_send.php
+    CSP->>CSP: SELECT participants WHERE reveal_token=token
+
+    alt channel = 'amigo' — sou o GIVER
+        CSP->>CSP: draw_results WHERE giver_id=participantId<br/>senderRole='giver'
+    else channel = 'admirador' — sou o RECEIVER
+        CSP->>CSP: draw_results WHERE receiver_id=participantId<br/>senderRole='receiver'
+    end
+
+    CSP->>CSP: INSERT chat_messages(group_id, draw_id, sender_role, texto)
+    CSP-->>API: {ok:true, message:{id, role:'Você', texto, timestamp}}
+    deactivate CSP
+
+    API-->>CA: new message
+    CA->>CA: setMessages(prev => ({...prev,<br/>[activeTab]: [...prev[tab], msg]}))<br/>scrollToBottom()
+    CA-->>U: Mensagem própria: direita · verde CRT
+    Note over CA,U: Mensagens recebidas via polling:<br/>esquerda · âmbar (crt-amber)<br/>Sistema: centralizadas · opacidade 40%
+
+    %% ── Saída ───────────────────────────────────────────────────
+    U->>CA: Clica VOLTAR PARA REVELAÇÃO
+    CA->>APP: window.location.href = /reveal?token=revealToken
+    Note over APP: clearInterval() no cleanup do useEffect
+```
+
+---
+
 ## 🔄 Ação Requerida — Obsidian Mirror
 
 ```

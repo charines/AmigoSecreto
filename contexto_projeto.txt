@@ -1,6 +1,6 @@
 =========================================
 ESTRUTURA DO PROJETO
-Gerado em: Sun 28 Jun 2026 07:50:05 PM -03
+Gerado em: Sun 28 Jun 2026 08:51:20 PM -03
 =========================================
 .
 ./vite.config.js
@@ -1482,6 +1482,11 @@ Gerado em: Sun 28 Jun 2026 07:50:05 PM -03
 ./docs/modules
 ./docs/modules/dependencias_react.md
 ./docs/modules/menu_inicial.md
+./docs/modules/juiz_sorteio.md
+./docs/modules/chat_anonimo.md
+./docs/modules/skills_catalog.md
+./docs/modules/portaria_auth.md
+./docs/modules/orquestrador_grupo.md
 ./docs/modules/funcionalidades.md
 ./docs/modules/roadmap.md
 ./docs/docs_for_llm.md
@@ -19369,6 +19374,1264 @@ sequenceDiagram
 
 --- FIM DE ./docs/modules/menu_inicial.md ---
 
+--- ARQUIVO: ./docs/modules/juiz_sorteio.md ---
+---
+module: juiz_sorteio
+domain: SA-03 · O Juiz
+components: [AdminDashboard.jsx, RevealPage.jsx, RevealStep.jsx, ResultsStep.jsx]
+utils: [src/utils/secretSanta.js, src/lib/crypto.js]
+endpoints: [groups_draw.php, reveal.php, reveal_confirm.php, participants_resend_draw.php]
+last_updated: 2026-06-28
+---
+
+# Módulo: O Juiz — Sorteio e Revelação (SA-03)
+
+> **Achado crítico de redesign:** `RevealStep.jsx` possui seu próprio efeito typewriter
+> implementado com `setInterval` inline — **não usa `RetroTyping.jsx`**. O `RetroTyping.jsx`
+> pertence ao `TerminalPanel.jsx`. Ao redesenhar, manter os dois comportamentos separados.
+
+> **Achado de segurança:** O link de revelação embute a chave de descriptografia diretamente
+> na URL (`?code=<token>`). O backend nunca recebe essa chave — ela existe apenas no e-mail
+> do participante e no browser no momento da revelação. Nunca alterar esse contrato.
+
+---
+
+## Diagrama 1 — Gatilho e Execução do Sorteio
+
+```mermaid
+flowchart TD
+    subgraph PRECOND["Pré-condições (AdminDashboard)"]
+        STATUS{"grupo.status\n= 'open'?"}
+        COUNT{"confirmedCount\n≥ 2?"}
+        BTN_DRAW["Botão EXECUTAR SORTEIO\nhabilitado"]
+        BTN_WAIT["Botão desabilitado\n'AGUARDANDO CONFIRMACOES'"]
+        BTN_DONE["Botão desabilitado\n'SORTEIO FINALIZADO'"]
+    end
+
+    subgraph ANIM["Modal de Processamento (UI)"]
+        S0["RANDOMIZANDO DADOS..."]
+        S1["GERANDO CHAVES DE SEGURANÇA..."]
+        S2["CRIPTOGRAFANDO RESULTADOS..."]
+        S3["ENVIANDO TOKENS POR E-MAIL..."]
+        S_OK["SORTEIO REALIZADO COM SUCESSO!"]
+    end
+
+    subgraph PHP["groups_draw.php (PHP backend)"]
+        PHP1["Valida sessão admin\nValida group_id e status='open'"]
+        PHP2["SELECT participants\nWHERE status='confirmed'"]
+        PHP3["PHP shuffle()\nCirculariza: pair[i] → pair[(i+1)%n]"]
+        PHP4["Para cada par (giver, receiver):"]
+        PHP5["token = random_token(24)\nrevealToken = random_token(24)"]
+        PHP6["AES-256-GCM\nkey = SHA-256(token)\niv = random_bytes(12)\ncipher = openssl_encrypt(name, key, iv)\npayload = ciphertext + tag_16bytes"]
+        PHP7["INSERT draw_results:\ngiver_id · encrypted_payload\niv_b64 · token_hash\ntoken_raw · receiver_id"]
+        PHP8["UPDATE participants\nSET reveal_token = revealToken\nWHERE id = giver.id"]
+        PHP9["UPDATE groups SET status='drawn'"]
+        PHP10["mailer.php → SMTP\nEnvia e-mail Dharma Initiative\nURL: /reveal?token=<revealToken>&code=<token>"]
+        PHP11["{ok, sent: [emails], failed: []}"]
+    end
+
+    STATUS -->|"sim"| COUNT
+    STATUS -->|"não"| BTN_DONE
+    COUNT -->|"sim"| BTN_DRAW
+    COUNT -->|"não"| BTN_WAIT
+
+    BTN_DRAW -->|"Admin clica"| S0
+    S0 -->|"2s interval"| S1 --> S2 --> S3
+    S0 -->|"handleDraw()\nPOST /groups_draw.php"| PHP1
+    PHP1 --> PHP2 --> PHP3 --> PHP4
+    PHP4 --> PHP5 --> PHP6 --> PHP7 --> PHP8 --> PHP9 --> PHP10 --> PHP11
+    PHP11 -->|"drawSuccess = true"| S_OK
+```
+
+---
+
+## Diagrama 2 — Fluxo Completo de Revelação
+
+```mermaid
+sequenceDiagram
+    actor P as Participante (Giver)
+    participant EMAIL as Caixa de E-mail
+    participant B as Browser
+    participant RP as RevealPage.jsx
+    participant API_RV as reveal.php
+    participant CRYPTO as lib/crypto.js
+    participant RS as RevealStep.jsx
+    participant API_CONF as reveal_confirm.php
+    participant DB as MySQL
+
+    P->>EMAIL: Recebe e-mail com link e código
+    Note over EMAIL: URL: /reveal?token=<revealToken>&code=<token>
+    Note over EMAIL: revealToken = UUID para lookup no DB
+    Note over EMAIL: token = chave de descriptografia AES
+
+    P->>B: Clica no link
+    B->>RP: mount(token=revealToken)
+    Note over RP: Extrai code=<token> de URLSearchParams\nno estado inicial do useState
+
+    RP->>API_RV: GET /reveal.php?token=<revealToken>
+    API_RV->>DB: SELECT draw_results WHERE\nreveal_token=revealToken (via participants)
+    DB-->>API_RV: {encrypted_payload, iv_b64, giver.name, group.title}
+    API_RV-->>RP: {payload: {encrypted, iv_b64}, giver, group}
+
+    Note over RP: useEffect detecta: data carregado + code presente\n→ autoRevealed = true → handleReveal() automático
+
+    RP->>CRYPTO: decryptName(payload.encrypted, payload.iv_b64, code.trim())
+    Note over CRYPTO: key = SHA-256(code)\nimporta CryptoKey → AES-GCM\ndecode Base64 → Uint8Array\ncrypto.subtle.decrypt()
+    CRYPTO-->>RP: revealedFriend.to = "NOME DO AMIGO SECRETO"
+
+    RP->>API_CONF: POST /reveal_confirm.php {token: revealToken}
+    API_CONF->>DB: UPDATE participants SET status='revealed'\nWHERE reveal_token=revealToken
+    DB-->>API_CONF: OK
+
+    RP->>RS: render RevealStep({from: giver.name, to: nome})
+
+    Note over RS: FASE 1 — 'decrypt' (typewriter inline)
+    RS->>RS: setInterval 36ms\nDigita: "DECRIPTOGRAFANDO RESULTADO SEGURO..."\nchar por char → typed state
+
+    Note over RS: Após 12+ chars: exibe fake log lines\n"VERIFICANDO INTEGRIDADE SHA256_AES256..."\n"CONSULTANDO BANCO DE DADOS SEGURO..."\n"VALIDANDO TOKEN DE SESSÃO ÚNICA..."
+
+    RS->>RS: Mensagem completa → clearInterval\nsetTimeout(950ms) → phase = 'reveal'
+
+    Note over RS: FASE 2 — 'reveal' (animate-fade-in-up)
+    RS-->>P: Exibe nome com efeito glitch CRT\n+ bloom glow radial\n+ botão ENVIAR MENSAGEM ANÔNIMA
+
+    P->>B: Clica ENVIAR MENSAGEM ANÔNIMA
+    B->>B: window.location.href = /chat?token=<revealToken>
+
+    alt code inválido ou expirado
+        CRYPTO-->>RP: Lança exceção (tag inválida)
+        RP-->>P: "✖ Codigo invalido ou expirado" (vermelho CRT)
+    end
+
+    alt revealToken não encontrado no DB
+        API_RV-->>RP: {ok: false, error: '...'}
+        RP-->>P: "✖ [mensagem de erro]" (vermelho CRT)
+    end
+```
+
+---
+
+## Diagrama 3 — Algoritmo de Sorteio (backend PHP)
+
+```mermaid
+flowchart TD
+    subgraph INPUT["Entrada"]
+        PARTS["participants[]\nstatus = 'confirmed'\nOrdenados por ID ASC"]
+    end
+
+    subgraph SHUFFLE["Randomização"]
+        SH1["PHP: shuffle(participants)\n(Fisher-Yates interno do PHP)"]
+        SH2["Circularização:\nfor i in 0..n-1:\n  pairs[i] = {giver: shuffled[i],\n  receiver: shuffled[(i+1) % n]}"]
+    end
+
+    subgraph CRYPTO_LOOP["Loop de Criptografia por Par"]
+        C1["token = random_token(24)\n← chave de descriptografia do giver"]
+        C2["revealToken = random_token(24)\n← token de lookup no DB"]
+        C3["key = SHA-256(token)\n← 32 bytes raw"]
+        C4["iv = random_bytes(12)\n← nonce GCM único"]
+        C5["cipher = AES-256-GCM(\n  plaintext: receiver.name,\n  key: key, iv: iv\n)\npayload = ciphertext || tag_16bytes"]
+        C6["INSERT draw_results:\n  giver_id, receiver_id\n  encrypted_payload_b64\n  iv_b64, token_hash, token_raw"]
+        C7["UPDATE participants\n  SET reveal_token = revealToken\n  WHERE id = giver.id"]
+    end
+
+    subgraph INVARIANTS["Invariantes de Segurança"]
+        INV1["O servidor armazena token_raw no DB\nmas a CHAVE nunca é devolvida via API\n→ só enviada por e-mail"]
+        INV2["reveal.php retorna apenas\nencrypted_payload + iv_b64\nNunca o nome em texto claro"]
+        INV3["A descriptografia ocorre\nexclusivamente no browser\ndo participante (Web Crypto API)"]
+    end
+
+    INPUT --> SH1 --> SH2
+    SH2 --> C1 --> C2 --> C3 --> C4 --> C5 --> C6 --> C7
+    C7 -->|"próximo par"| C1
+    C6 -.-> INV1
+    INV1 -.-> INV2
+    INV2 -.-> INV3
+```
+
+---
+
+## Componente RevealStep — Fases de Animação
+
+```mermaid
+stateDiagram-v2
+    [*] --> decrypt : mount com {from, to}
+
+    state decrypt {
+        typing : setInterval 36ms\nDigita DECRYPT_MSG char a char
+        fake_logs : Exibe após 12 chars\n3 linhas de log fake
+        typing --> fake_logs
+        fake_logs --> done : mensagem completa
+    }
+
+    decrypt --> reveal : setTimeout 950ms
+
+    state reveal {
+        name_card : Nome em uppercase\ntamanho 5xl-6xl\nanimate-glitch-reveal\nbloom glow radial
+        confirm_badge : "■ RESULTADO CONFIRMADO E REGISTRADO"\nanimate-pulse
+        chat_btn : Botão ENVIAR MENSAGEM ANÔNIMA\n→ /chat?token=<revealToken>
+    }
+```
+
+---
+
+## Diagrama 4 — Processo de Revelação (Flowchart · Visão do Usuário)
+
+```mermaid
+flowchart TD
+    classDef crtNode    fill:#0d1f0d,stroke:#57ff84,color:#57ff84
+    classDef crtDecide  fill:#0a0a1e,stroke:#57ff84,color:#57ff84
+    classDef crtError   fill:#200000,stroke:#ff4444,color:#ff4444
+    classDef crtCrypto  fill:#0a001f,stroke:#a78bfa,color:#c4b5fd
+    classDef crtAnim    fill:#1a1000,stroke:#f6ad55,color:#f6ad55
+    classDef crtConfirm fill:#001a10,stroke:#34d399,color:#34d399
+
+    subgraph ENTRY["📥 Entrada — URL gerada pelo groups_draw.php"]
+        URL(["Browser: /reveal\n?token=revealToken\n&code=chaveAES"])
+        MOUNT["RevealPage.jsx monta\ntoken ← prop revealToken\ncode  ← URLSearchParams.get('code')"]
+    end
+
+    subgraph FETCH["🌐 Busca de Dados Criptografados"]
+        API_CALL["apiGet('/reveal.php?token=revealToken')\nlib/api.js com credentials:include"]
+        API_OK["{payload:{encrypted_b64, iv_b64}\n giver:{name}\n group:{title}}"]
+        API_ERR["✖ token inválido ou não encontrado\nExibe erro em vermelho CRT\nNÃO renderiza RevealStep"]
+    end
+
+    subgraph TRIGGER["⚡ Gatilho de Revelação"]
+        HAS_CODE{"code presente\nna URL?"}
+        AUTO_REV["autoRevealed = true\nhandleReveal() via useEffect\nrevelação automática"]
+        MANUAL_UI["Exibe input Código secreto\n+ botão REVELAR AMIGO SECRETO"]
+        USER_CODE["Usuário digita código\nclica REVELAR"]
+    end
+
+    subgraph DECRYPT_BOX["🔐 Descriptografia — lib/crypto.js · decryptName()"]
+        TRIM["code.trim()\nvalida string não-vazia"]
+        SHA["SHA-256(code)\n→ keyBytes 32 bytes raw"]
+        IMPORT["crypto.subtle.importKey(\n  'raw', keyBytes,\n  AES-GCM, false, ['decrypt']\n)"]
+        B64["base64ToBytes(encrypted_b64) → Uint8Array\nbase64ToBytes(iv_b64)      → Uint8Array iv"]
+        GCM["crypto.subtle.decrypt(\n  {name:'AES-GCM', iv},\n  CryptoKey, payload\n)"]
+        DECODE["textDecoder.decode(result)\n→ nome do amigo secreto plaintext"]
+        DEC_ERR["✖ tag GCM inválida\n'Codigo invalido ou expirado'\nExibe em vermelho CRT"]
+    end
+
+    subgraph CONFIRM_BOX["✅ Confirmação no Backend"]
+        POST_CONF["apiPost('/reveal_confirm.php',\n{token: revealToken})"]
+        DB_UP["UPDATE participants\nSET status='revealed'"]
+        SET_STATE["setRevealed({from: giver.name, to: nome})\n→ renderiza RevealStep"]
+    end
+
+    subgraph ANIM_BOX["🖥 RevealStep.jsx — Typewriter próprio (2 fases)"]
+        NOTE_CORR>"⚠ RevealStep NÃO usa StepIndicator.\nTypewriter é setInterval inline.\nStepIndicator fica em TerminalPanel\ne é suprimido nesta rota (showSteps=false)."]
+        PH_D["FASE 1 · 'decrypt'\nsetInterval 36ms — digita char a char\n'DECRIPTOGRAFANDO RESULTADO SEGURO...'"]
+        FAKE_LOG["Após 12+ chars — fake log lines:\n› VERIFICANDO INTEGRIDADE SHA256_AES256...\n› CONSULTANDO BANCO DE DADOS SEGURO...\n› VALIDANDO TOKEN DE SESSÃO ÚNICA..."]
+        DONE_WAIT["Mensagem completa → clearInterval\nsetTimeout(950ms) → phase='reveal'"]
+        PH_R["FASE 2 · 'reveal'\nanimate-fade-in-up\nNome uppercase 5xl/6xl\nEfeito glitch CRT + bloom glow radial"]
+        CHAT_BTN["Botão ENVIAR MENSAGEM ANÔNIMA\nwindow.location.href =\n/chat?token=revealToken"]
+    end
+
+    URL --> MOUNT --> API_CALL
+    API_CALL --> API_OK
+    API_CALL --> API_ERR
+    API_OK --> HAS_CODE
+    HAS_CODE -->|"sim"| AUTO_REV
+    HAS_CODE -->|"não"| MANUAL_UI --> USER_CODE
+    AUTO_REV --> TRIM
+    USER_CODE --> TRIM
+    TRIM --> SHA --> IMPORT --> B64 --> GCM
+    GCM -->|"sucesso"| DECODE
+    GCM -->|"falha tag inválida"| DEC_ERR
+    DECODE --> POST_CONF --> DB_UP --> SET_STATE
+    SET_STATE --> NOTE_CORR --> PH_D --> FAKE_LOG --> DONE_WAIT --> PH_R --> CHAT_BTN
+
+    class URL,MOUNT,API_OK crtNode
+    class HAS_CODE crtDecide
+    class API_ERR,DEC_ERR crtError
+    class SHA,IMPORT,B64,GCM,DECODE crtCrypto
+    class PH_D,FAKE_LOG,DONE_WAIT,PH_R,CHAT_BTN crtAnim
+    class POST_CONF,DB_UP,SET_STATE crtConfirm
+```
+
+---
+
+## 🔄 Ação Requerida — Obsidian Mirror
+
+```
+╔══════════════════════════════════════════════════════╗
+║  ⚑  AÇÃO REQUERIDA · MIRROR OBSIDIAN                ║
+╠══════════════════════════════════════════════════════╣
+║  Módulo: juiz_sorteio                                ║
+║  Arquivo: docs/modules/juiz_sorteio.md               ║
+║  Draw.io: docs/arquitetura.drawio (swimlane SA-03)   ║
+║                                                      ║
+║  Após qualquer alteração em:                         ║
+║  groups_draw.php · reveal.php · reveal_confirm.php   ║
+║  RevealPage.jsx · RevealStep.jsx · crypto.js         ║
+║                                                      ║
+║  ⚠ INVOCAR /007 antes de alterar crypto.js           ║
+║     ou qualquer endpoint deste módulo                ║
+║                                                      ║
+║  1. Atualizar swimlane SA-03 no drawio               ║
+║  2. Refletir mudança neste arquivo Mermaid           ║
+║  3. Copiar bloco Mermaid atualizado para o vault     ║
+║  4. Exportar PNG do drawio para vault                ║
+╚══════════════════════════════════════════════════════╝
+```
+
+--- FIM DE ./docs/modules/juiz_sorteio.md ---
+
+--- ARQUIVO: ./docs/modules/chat_anonimo.md ---
+---
+module: chat_anonimo
+domain: SA-04 · A Sombra
+components: [ChatAnonimo.jsx, TerminalPanel.jsx]
+endpoints: [chat_get.php, chat_send.php]
+database: [chat_messages, draw_results, participants]
+last_updated: 2026-06-28
+---
+
+# Módulo: Chat Anônimo (SA-04 · A Sombra)
+
+> **Achado crítico de redesign:** O chat possui **dois canais independentes** por participante,
+> não um único. A identidade é mascarada exclusivamente pelo campo `sender_role` na tabela
+> `chat_messages` — nenhum PII é armazenado no chat. Ao redesenhar a UI, preservar a
+> separação visual de abas e o label dinâmico ('Você' vs 'Meu Amigo Secreto').
+
+> **Tecnologia:** Polling puro a cada 5 segundos via `setInterval`. Não há WebSocket nem SSE.
+
+---
+
+## Diagrama 1 — Arquitetura de Dois Canais
+
+```mermaid
+flowchart TD
+    subgraph ENTRY["Entrada"]
+        URL["/chat?token=<revealToken>"]
+        CHAT["ChatAnonimo.jsx\nmount(token=revealToken)"]
+    end
+
+    subgraph CHANNELS["Dois Canais de Chat"]
+        TAB_A["Aba: 'Para: Meu Amigo Secreto'\nactiveTab = 'amigo'"]
+        TAB_B["Aba: 'De: Quem me tirou'\nactiveTab = 'admirador'"]
+    end
+
+    subgraph CANAL_AMIGO["Canal 'amigo' — Participante é o GIVER"]
+        A_DESC["Participante escreve\npara quem ELE sorteou"]
+        A_DB["draw_results\nWHERE giver_id = participantId"]
+        A_ROLE["senderRole = 'giver'"]
+        A_LABEL_ME["Minhas msgs → role: 'Você'"]
+        A_LABEL_OTHER["Msgs recebidas → role: 'Meu Amigo Secreto'"]
+    end
+
+    subgraph CANAL_ADM["Canal 'admirador' — Participante é o RECEIVER"]
+        B_DESC["Participante lê msgs\nde quem o sorteou"]
+        B_DB["draw_results\nWHERE receiver_id = participantId"]
+        B_ROLE["senderRole = 'receiver'"]
+        B_LABEL_ME["Minhas msgs → role: 'Você'"]
+        B_LABEL_OTHER["Msgs recebidas → role: 'Meu Admirador Secreto'"]
+    end
+
+    subgraph DB_SCHEMA["Tabela chat_messages"]
+        COLS["id · group_id · draw_id\nsender_role ('giver'|'receiver')\ntexto · created_at"]
+        NO_PII["⚠ Sem nome, e-mail ou ID de usuário\nIdentidade = posição no draw_results"]
+    end
+
+    URL --> CHAT
+    CHAT --> TAB_A
+    CHAT --> TAB_B
+    TAB_A --> CANAL_AMIGO
+    TAB_B --> CANAL_ADM
+    CANAL_AMIGO -.-> DB_SCHEMA
+    CANAL_ADM -.-> DB_SCHEMA
+```
+
+---
+
+## Diagrama 2 — Fluxo de Envio de Mensagem
+
+```mermaid
+sequenceDiagram
+    actor P as Participante
+    participant UI as ChatAnonimo.jsx
+    participant API_SEND as chat_send.php
+    participant DB as MySQL
+
+    P->>UI: Digita mensagem + clica ENVIAR
+    Note over UI: handleSend(e)\ne.preventDefault()\ntextToSend = inputText.trim()\nsetInputText('')
+
+    UI->>API_SEND: POST /chat_send.php\n{token, channel, texto}
+    Note over API_SEND: token = revealToken (lookup de participante)\nchannel = 'amigo' | 'admirador'\ntexto = conteúdo da mensagem
+
+    API_SEND->>DB: SELECT participants\nWHERE reveal_token = token
+    DB-->>API_SEND: {participantId, groupId}
+
+    alt channel = 'amigo' (participante é GIVER)
+        API_SEND->>DB: SELECT draw_results\nWHERE giver_id = participantId
+        DB-->>API_SEND: {drawId}
+        Note over API_SEND: senderRole = 'giver'
+    else channel = 'admirador' (participante é RECEIVER)
+        API_SEND->>DB: SELECT draw_results\nWHERE receiver_id = participantId
+        DB-->>API_SEND: {drawId}
+        Note over API_SEND: senderRole = 'receiver'
+    end
+
+    API_SEND->>DB: INSERT chat_messages\n(group_id, draw_id, sender_role, texto)
+    DB-->>API_SEND: insertedId + created_at
+
+    API_SEND-->>UI: {ok: true, message: {id, role: 'Você', texto, timestamp}}
+
+    Note over UI: setMessages(prev => ({\n  ...prev,\n  [activeTab]: [...prev[activeTab], res.message]\n}))
+
+    UI-->>P: Nova mensagem aparece\nalinhada à direita (isMe=true)\ncor verde CRT · borda verde
+
+    alt token inválido
+        API_SEND-->>UI: {ok: false, error: 'Participante nao encontrado'} 404
+        Note over UI: console.error (sem UI de erro)
+    end
+
+    alt channel inválido (não 'amigo' nem 'admirador')
+        API_SEND-->>UI: {ok: false, error: 'Canal invalido'} 400
+    end
+
+    alt draw_result não encontrado (sorteio antigo sem receiver_id)
+        API_SEND-->>UI: {ok: false, error: 'Chat do admirador nao disponivel'} 404
+        Note over UI: Funcionalidade não disponível\npara sorteios anteriores à migrate_v4
+    end
+```
+
+---
+
+## Diagrama 3 — Polling e Exibição de Mensagens
+
+```mermaid
+sequenceDiagram
+    participant TIMER as setInterval (5000ms)
+    participant UI as ChatAnonimo.jsx
+    participant API_GET as chat_get.php
+    participant DB as MySQL
+
+    Note over UI: mount: loadMessages() imediato\n+ setInterval(loadMessages, 5000)
+
+    loop A cada 5 segundos
+        TIMER->>UI: dispara loadMessages()
+        UI->>API_GET: GET /chat_get.php?token=<revealToken>
+        API_GET->>DB: SELECT participants WHERE reveal_token=token
+        DB-->>API_GET: {participantId}
+
+        API_GET->>DB: SELECT draw_results WHERE giver_id=participantId
+        DB-->>API_GET: drawIdAmigo (ou null)
+
+        API_GET->>DB: SELECT chat_messages WHERE draw_id=drawIdAmigo ORDER BY id ASC
+        DB-->>API_GET: amigoMsgs[]
+
+        API_GET->>DB: SELECT draw_results WHERE receiver_id=participantId
+        DB-->>API_GET: drawIdAdmirador (ou null)
+
+        API_GET->>DB: SELECT chat_messages WHERE draw_id=drawIdAdmirador ORDER BY id ASC
+        DB-->>API_GET: admiradorMsgs[]
+
+        Note over API_GET: Formata mensagens:\nGiver msgs:\n  sender_role='giver' → role='Você'\n  sender_role='receiver' → role='Meu Amigo Secreto'\nAdmirador msgs:\n  sender_role='receiver' → role='Você'\n  sender_role='giver' → role='Meu Admirador Secreto'
+
+        API_GET-->>UI: {ok: true, messages: {amigo: [], admirador: []}}
+        Note over UI: setMessages(res.messages)\nsetLoading(false)
+
+        UI->>UI: scrollToBottom()\n(messagesEndRef.current.scrollIntoView)
+    end
+
+    Note over UI: unmount → clearInterval(timer)
+```
+
+---
+
+## Diagrama 4 — Lógica de Mascaramento de Identidade
+
+```mermaid
+flowchart TD
+    subgraph IDENTIFY["Como o sistema sabe quem é quem"]
+        TOKEN["revealToken no URL\n(identifica o participante)"]
+        LOOKUP["SELECT participants\nWHERE reveal_token = token"]
+        PID["participantId"]
+    end
+
+    subgraph CANAL_A["Resolução canal 'amigo'"]
+        QA["SELECT draw_results\nWHERE giver_id = participantId"]
+        DID_A["drawId → mensagens\ndeste par específico"]
+    end
+
+    subgraph CANAL_B["Resolução canal 'admirador'"]
+        QB["SELECT draw_results\nWHERE receiver_id = participantId"]
+        DID_B["drawId → mensagens\ndeste par específico"]
+    end
+
+    subgraph LABELS["Labels exibidos no frontend"]
+        L1["Minhas msgs\n(role = sender_role do meu canal)\n→ 'Você' · cor verde · direita"]
+        L2["Msgs do outro\n(role ≠ sender_role do meu canal)\n→ 'Meu Amigo Secreto' · âmbar · esquerda"]
+        L3["Msgs do sistema\n→ centralizadas · opacidade 40%"]
+    end
+
+    subgraph NOMATCH["Sem PII no chat_messages"]
+        NM1["Não armazena: nome · email · participantId"]
+        NM2["Armazena apenas: sender_role · texto · timestamps"]
+        NM3["Identidade inferida somente\npelo token no momento da consulta"]
+    end
+
+    TOKEN --> LOOKUP --> PID
+    PID --> QA --> DID_A
+    PID --> QB --> DID_B
+    DID_A --> LABELS
+    DID_B --> LABELS
+    LABELS -.-> NOMATCH
+```
+
+---
+
+## Regras de Negócio Preservar no Redesign
+
+| Regra | Origem no código | Criticidade |
+|---|---|---|
+| Dois canais separados por aba | `activeTab` state + dois arrays em `messages` | **Alta** — lógica central |
+| Label 'Você' para mensagens próprias | `msg.role === 'Você'` → `isMe = true` | **Alta** — identidade mascarada |
+| Sistema como primeira mensagem | Injetado em `chat_get.php` formatação | **Média** — UX de contexto |
+| Polling 5 segundos | `setInterval(loadMessages, 5000)` | **Média** — sem WebSocket |
+| Scroll automático ao fundo | `scrollToBottom()` após `setMessages` | **Baixa** — UX |
+| Botão voltar para revelação | `window.location.href = /reveal?token=` | **Média** — navegação |
+| Entrada desabilitada se texto vazio | `disabled={!inputText.trim()}` | **Baixa** — UX |
+
+---
+
+## Diagrama 5 — Composição do Shell Terminal (TerminalPanel · ThemeContext · RetroTyping)
+
+```mermaid
+sequenceDiagram
+    actor U as Participante
+    participant APP as App.jsx
+    participant TP as TerminalPanel.jsx
+    participant TC as ThemeContext.jsx
+    participant RT as RetroTyping.jsx
+    participant CA as ChatAnonimo.jsx
+    participant API as lib/api.js
+    participant CGP as chat_get.php
+    participant CSP as chat_send.php
+
+    %% ── Montagem do shell visual CRT ────────────────────────────
+    U->>APP: Acessa /chat?token=revealToken
+    APP->>APP: resolveRoute() → 'chat'
+    APP->>TP: render TerminalPanel(step='chat', showSteps=false)
+
+    TP->>TC: useTheme()
+    TC-->>TP: {themeConfig, theme}<br/>CSS vars no :root:<br/>--color-crt-bg · --color-crt-green-raw<br/>--theme-display-font
+    Note over TP: showStepIndicator = showSteps(false)<br/>→ StepIndicator NÃO renderizado
+
+    TP->>RT: render RetroTyping no body do painel
+    RT->>TC: useTheme() → lê variáveis de tema CRT
+    RT-->>TP: Efeito de digitação animado no cabeçalho
+    TP->>CA: render ChatAnonimo(token=revealToken)
+
+    %% ── Inicialização e carga inicial ───────────────────────────
+    CA->>API: apiGet('/chat_get.php?token=revealToken')
+    activate CGP
+    API->>CGP: GET /chat_get.php?token=revealToken
+    CGP->>CGP: SELECT participants WHERE reveal_token=token
+    CGP->>CGP: Canal amigo: draw_results WHERE giver_id=participantId
+    CGP->>CGP: Canal admirador: draw_results WHERE receiver_id=participantId
+    Note over CGP: sender_role='giver'    → 'Você' ou 'Meu Amigo Secreto'<br/>sender_role='receiver' → 'Você' ou 'Meu Admirador Secreto'<br/>Sem PII em chat_messages
+    CGP-->>API: {ok:true, messages:{amigo:[], admirador:[]}}
+    deactivate CGP
+    API-->>CA: messages
+    CA->>CA: setMessages() → setLoading(false)<br/>scrollToBottom() via messagesEndRef
+    CA-->>U: Abas + mensagens com estilização do ThemeContext
+
+    %% ── Polling automático ──────────────────────────────────────
+    loop A cada 5 segundos — sem WebSocket
+        CA->>API: apiGet('/chat_get.php?token=revealToken')
+        API->>CGP: GET /chat_get.php
+        CGP-->>API: messages estado atual
+        API-->>CA: dados atualizados
+        CA->>CA: setMessages() → scrollToBottom()
+    end
+
+    %% ── Troca de canal ──────────────────────────────────────────
+    U->>CA: Clica aba "Para: Meu Amigo Secreto"
+    CA->>CA: setActiveTab('amigo')
+    Note over CA: useEffect([messages, activeTab])<br/>→ scrollToBottom() automático
+
+    %% ── Envio de mensagem ───────────────────────────────────────
+    U->>CA: Digita mensagem + clica ENVIAR
+    CA->>CA: handleSend(e) · textToSend = inputText.trim()<br/>setInputText('') imediato
+
+    CA->>API: apiPost('/chat_send.php',<br/>{token, channel:activeTab, texto})
+    activate CSP
+    API->>CSP: POST /chat_send.php
+    CSP->>CSP: SELECT participants WHERE reveal_token=token
+
+    alt channel = 'amigo' — sou o GIVER
+        CSP->>CSP: draw_results WHERE giver_id=participantId<br/>senderRole='giver'
+    else channel = 'admirador' — sou o RECEIVER
+        CSP->>CSP: draw_results WHERE receiver_id=participantId<br/>senderRole='receiver'
+    end
+
+    CSP->>CSP: INSERT chat_messages(group_id, draw_id, sender_role, texto)
+    CSP-->>API: {ok:true, message:{id, role:'Você', texto, timestamp}}
+    deactivate CSP
+
+    API-->>CA: new message
+    CA->>CA: setMessages(prev => ({...prev,<br/>[activeTab]: [...prev[tab], msg]}))<br/>scrollToBottom()
+    CA-->>U: Mensagem própria: direita · verde CRT
+    Note over CA,U: Mensagens recebidas via polling:<br/>esquerda · âmbar (crt-amber)<br/>Sistema: centralizadas · opacidade 40%
+
+    %% ── Saída ───────────────────────────────────────────────────
+    U->>CA: Clica VOLTAR PARA REVELAÇÃO
+    CA->>APP: window.location.href = /reveal?token=revealToken
+    Note over APP: clearInterval() no cleanup do useEffect
+```
+
+---
+
+## 🔄 Ação Requerida — Obsidian Mirror
+
+```
+╔══════════════════════════════════════════════════════╗
+║  ⚑  AÇÃO REQUERIDA · MIRROR OBSIDIAN                ║
+╠══════════════════════════════════════════════════════╣
+║  Módulo: chat_anonimo                                ║
+║  Arquivo: docs/modules/chat_anonimo.md               ║
+║  Draw.io: docs/arquitetura.drawio (swimlane SA-04)   ║
+║                                                      ║
+║  Após qualquer alteração em:                         ║
+║  ChatAnonimo.jsx · chat_get.php · chat_send.php      ║
+║  Tabelas: chat_messages · draw_results               ║
+║                                                      ║
+║  1. Atualizar swimlane SA-04 no drawio               ║
+║  2. Refletir mudança neste arquivo Mermaid           ║
+║  3. Copiar bloco Mermaid atualizado para o vault     ║
+║  4. Exportar PNG do drawio para vault                ║
+╚══════════════════════════════════════════════════════╝
+```
+
+--- FIM DE ./docs/modules/chat_anonimo.md ---
+
+--- ARQUIVO: ./docs/modules/skills_catalog.md ---
+---
+module: skills_catalog
+domain: Governança de IA — transversal
+ai_agnostic: true
+last_updated: 2026-06-28
+---
+
+# Módulo: Catálogo de Skills de IA
+
+> **Contexto de uso:** Inclua este arquivo quando a task exigir saber qual skill ativar ou
+> como invocá-la na ferramenta de IA em uso. Não inclua junto com módulos funcionais —
+> use um ou outro por sessão.
+
+---
+
+## Tabela de Seleção Rápida
+
+| Domínio da task                          | Skill a ativar           |
+|------------------------------------------|--------------------------|
+| Deploy, segurança, tokens, crypto, SQL   | `007`                    |
+| Code review, PR, novo endpoint PHP       | `cc-skill-security-review` |
+| Criar ou atualizar diagrama Mermaid      | `mermaid-expert`         |
+| Novo componente React, otimização UI     | `react-best-practices`   |
+| Novo endpoint PHP, refatoração backend   | `php-pro`                |
+
+**Regra:** uma skill por sessão de trabalho. Skills instaladas em `.claude/skills/`.
+
+---
+
+## Como Invocar por Ferramenta
+
+| Ferramenta        | Invocação                                              |
+|-------------------|--------------------------------------------------------|
+| **Claude Code**   | `/007`, `/mermaid-expert`, `/react-best-practices` etc.|
+| **Cursor**        | Adicionar `@.claude/skills/<skill>/SKILL.md` no contexto do chat |
+| **Windsurf**      | Abrir `SKILL.md` da skill e incluir no contexto da sessão |
+| **Web chat**      | Colar o conteúdo do `SKILL.md` como primeira mensagem da conversa |
+| **Codex / API**   | Incluir `SKILL.md` como system prompt da requisição    |
+
+---
+
+## 1 · `007` — Auditor de Segurança
+
+**Arquivo:** `.claude/skills/007/SKILL.md`
+**Risk level:** `critical` | **Idioma:** Português
+
+### Quando é obrigatório neste projeto
+
+```
+crypto.js               → AES-GCM, derivação de chave SHA-256
+reveal.php              → endpoint de revelação do sorteio
+invite_confirm.php      → confirmação de participação por token
+groups_draw.php         → execução do sorteio server-side
+admin_login.php         → autenticação de administrador
+db.php                  → camada de acesso ao banco de dados
+Qualquer novo endpoint  → antes do primeiro deploy
+```
+
+### Modos do 007 relevantes para o projeto
+
+| Modo       | Como acionar (Claude Code) | Uso                                        |
+|------------|----------------------------|--------------------------------------------|
+| `Audit`    | `audite api/`              | Auditoria completa antes de deploy         |
+| `Approve`  | `aprove api/<endpoint>.php`| Veredito: endpoint pronto para produção?   |
+| `Threat-Model` | `threat-model src/lib/crypto.js` | STRIDE na lógica AES-GCM       |
+| `Incident` | `incidente: token vazado`  | Playbook se token de reveal/invite vazar   |
+| `Checklist`| `checklist APIs`           | Checklist técnico focado em endpoints PHP  |
+
+### Superfície de ataque crítica deste projeto
+
+- `AES-GCM` em `crypto.js` — chave derivada de token único via SHA-256
+- Tokens UUID em `participants.invite_token` e `participants.reveal_token`
+- Cookie de sessão admin cruzando domínios Netlify ↔ HostGator via CORS
+- PDO prepared statements em todos os endpoints PHP
+- SMTP credentials em `api/.env` — nunca no `.env` do frontend
+
+**Score mínimo para deploy:** 70/100 (Aprovado com ressalvas).
+
+---
+
+## 2 · `cc-skill-security-review` — Checklist Diário
+
+**Arquivo:** `.claude/skills/cc-skill-security-review/SKILL.md`
+**Risk level:** `safe` | **Uso:** rotineiro, pré-PR
+
+### Quando usar (vs. quando usar o 007)
+
+- **Este checklist:** revisão rápida (5-10 min) de um PR ou endpoint específico
+- **007:** auditoria estruturada de 6 fases (30+ min) antes de deploy
+
+### Checklist prioritário para este projeto
+
+```
+[ ] Tokens nunca expostos em logs ou mensagens de erro da API
+[ ] Todo SQL novo usa PDO prepared statements — zero concatenação de string
+[ ] CORS restrito ao domínio do frontend (APP_ORIGIN em api/.env)
+[ ] Nenhum segredo em src/ — apenas VITE_API_BASE_URL é seguro expor
+[ ] Cookies de sessão com HttpOnly + SameSite configurados
+[ ] Mensagens de erro da API são genéricas ao usuário (sem stack trace)
+[ ] Endpoints de reenvio de email têm rate limiting
+```
+
+---
+
+## 3 · `mermaid-expert` — Especialista em Diagramas
+
+**Arquivo:** `.claude/skills/mermaid-expert/SKILL.md`
+**Risk level:** `safe`
+
+### Quando usar neste projeto
+
+- Criar novo arquivo em `docs/modules/`
+- Atualizar diagrama após implementação de feature
+- Traduzir fluxo do `docs/arquitetura.drawio` para Mermaid
+- Gerar `sequenceDiagram` de novos endpoints PHP
+
+### Tipos de diagrama por contexto
+
+| Contexto                        | Tipo Mermaid       | Módulo de referência        |
+|---------------------------------|--------------------|-----------------------------|
+| Fluxo de rota / navegação       | `flowchart TD`     | `menu_inicial.md`           |
+| Frontend ↔ API ↔ DB             | `sequenceDiagram`  | `menu_inicial.md`           |
+| Schema de banco                 | `erDiagram`        | a criar: `banco.md`         |
+| Estados de grupo (lifecycle)    | `stateDiagram-v2`  | a criar: `grupo_lifecycle.md` |
+| Dependências entre componentes  | `flowchart TD`     | `dependencias_react.md`     |
+
+**Regra de nomenclatura:** usar sempre o nome exato do componente ou endpoint
+(`AdminDashboard.jsx`, `groups_draw.php`) para garantir rastreabilidade código ↔ diagrama.
+
+---
+
+## 4 · `react-best-practices` — Padrões React
+
+**Arquivo:** `.claude/skills/react-best-practices/SKILL.md`
+**Risk level:** `safe`
+
+### Quando usar neste projeto
+
+- Criar componente novo em `src/components/`
+- Otimizar `AdminDashboard.jsx` (múltiplas chamadas API no mount)
+- Otimizar `ChatAnonimo.jsx` (polling manual com setInterval)
+- Reduzir re-renders identificados via React Profiler
+
+### ⚠ Regras que NÃO se aplicam — projeto usa Vite SPA, não Next.js
+
+```
+server-*              → Server Components, RSC, React.cache — ignorar
+async-suspense-*      → sem SSR aqui
+server-after-*        → não existe em Vite
+```
+
+### Regras de alta relevância para este projeto
+
+| Regra                        | Aplicação                                                    |
+|------------------------------|--------------------------------------------------------------|
+| `rerender-memo`              | `AdminDashboard`: memoize itens da lista de grupos           |
+| `rerender-functional-setstate` | Callbacks em `ChatAnonimo` (setState dentro de polling)    |
+| `rerender-lazy-state-init`   | Inicialização de estado pesado em qualquer componente        |
+| `client-swr-dedup`           | Substituir polling manual do chat por SWR com `refreshInterval` |
+| `bundle-dynamic-imports`     | Lazy load de `AdminDashboard` se crescer além de 50KB        |
+
+---
+
+## 5 · `php-pro` — PHP Idiomático
+
+**Arquivo:** `.claude/skills/php-pro/SKILL.md`
+**Risk level:** `unknown`
+
+### Quando usar neste projeto
+
+- Criar novo endpoint em `api/`
+- Refatorar `mailer.php` (lógica de envio em lote)
+- Otimizar queries com JOINs em `groups_detail.php`
+- Implementar features do `docs/modules/roadmap.md` que exigem lógica PHP complexa
+
+### Padrões relevantes para o projeto
+
+| Padrão                     | Aplicação                                              |
+|----------------------------|--------------------------------------------------------|
+| Generators                 | Processar listas grandes de participantes no sorteio   |
+| `SplPriorityQueue`         | Fila de reenvio de emails se implementada              |
+| `match` expression (PHP 8) | Substituir `switch` em lógica de status de grupos      |
+| Named arguments            | Melhorar legibilidade nas chamadas a `mailer.php`      |
+| PDO `FETCH_ASSOC`          | Já em uso — manter; evitar `FETCH_OBJ` sem necessidade |
+
+**Invariante:** cada endpoint é um arquivo `.php` isolado em `api/`. A skill `php-pro` não
+deve propor consolidação em controllers ou frameworks — isso viola a arquitetura definida
+em `agent.md §5`.
+
+---
+
+## Módulos Mermaid Pendentes de Criação
+
+Os módulos abaixo estão mapeados mas não criados. Sem eles, sessões de codificação nos
+domínios correspondentes caem de volta à leitura de código-fonte.
+
+| Módulo a criar             | Sub-agente | Arquivos a mapear                                          |
+|----------------------------|------------|------------------------------------------------------------|
+| `sorteio.md`               | SA-03      | `groups_draw.php`, `reveal.php`, `crypto.js`, `secretSanta.js`, `RevealPage.jsx` |
+| `chat_anonimo.md`          | SA-04      | `ChatAnonimo.jsx`, `chat_get.php`, `chat_send.php`         |
+| `banco.md`                 | Todos      | `database/schema.mysql.sql`, `migrate_v*.php`, `db.php`   |
+| `grupo_lifecycle.md`       | SA-02/03   | Status: `draft → open → drawn → closed`                    |
+
+--- FIM DE ./docs/modules/skills_catalog.md ---
+
+--- ARQUIVO: ./docs/modules/portaria_auth.md ---
+---
+module: portaria_auth
+domain: SA-01 · A Portaria + SA-02 handoff
+components: [App.jsx, AdminAuth.jsx, AdminDashboard.jsx, InvitePage.jsx, JoinGroup.jsx]
+endpoints:
+  [admin_me.php, admin_login.php, groups_invite.php, mailer.php,
+   invite.php, invite_confirm.php, groups_get_public.php, groups_join.php]
+note: >
+  Documento de jornada — cobre a entrada completa do usuário desde o acesso à URL
+  até as ações do SA-02. Detalhes internos do SA-02 em orquestrador_grupo.md.
+last_updated: 2026-06-28
+---
+
+# Módulo: Portaria e Autenticação (SA-01 · A Portaria)
+
+> **Contexto de uso:** Inclua este arquivo em prompts sobre autenticação de admin,
+> gestão de sessão (cookie HttpOnly), fluxo de convite e auto-inscrição via Dharma Code.
+> Para detalhes internos de grupos e participantes, use `orquestrador_grupo.md`.
+
+---
+
+## Diagrama 1 — Jornada Completa: Auth → Convite → Confirmação → Auto-inscrição
+
+```mermaid
+sequenceDiagram
+    actor U as Usuário/Browser
+    participant APP as App.jsx
+    participant AUTH as AdminAuth.jsx
+    participant DASH as AdminDashboard.jsx
+    participant API as lib/api.js
+    participant ME as admin_me.php
+    participant LOGIN as admin_login.php
+    participant INV_PHP as groups_invite.php
+    participant MAILER as mailer.php
+    participant INV_PAGE as InvitePage.jsx
+    participant INV_CONF as invite.php · invite_confirm.php
+    participant JOIN as JoinGroup.jsx
+    participant JOIN_PHP as groups_get_public.php · groups_join.php
+
+    %% ── FASE 1: Verificação de sessão ──────────────────────────
+    U->>APP: Acessa / (rota admin)
+    APP->>APP: resolveRoute() → 'admin'
+    APP->>API: apiGet('/admin_me.php')
+    API->>ME: GET + cookie de sessão HttpOnly
+
+    alt Sessão ativa (cookie válido)
+        ME-->>API: {admin: {id, email}}
+        API-->>APP: admin data
+        APP->>DASH: render AdminDashboard (step='dashboard')
+    else Sem sessão ou expirada
+        ME-->>API: 401
+        API-->>APP: throw Error
+        APP->>AUTH: render AdminAuth (step='auth')
+
+        %% ── FASE 2: Login ───────────────────────────────────────
+        U->>AUTH: Insere email + senha → pressiona [ENTER]
+        AUTH->>API: apiPost('/admin_login.php', {email, password})
+        API->>LOGIN: POST /admin_login.php
+
+        alt Credenciais válidas
+            LOGIN-->>API: {ok:true, admin} + Set-Cookie session
+            API-->>AUTH: admin data
+            AUTH->>APP: onAuth(admin) callback
+            APP->>DASH: render AdminDashboard (step='dashboard')
+        else Credenciais inválidas
+            LOGIN-->>API: {ok:false, error: 'Credenciais invalidas'}
+            API-->>AUTH: throw Error
+            AUTH-->>U: ✖ Erro exibido em vermelho CRT
+        end
+    end
+
+    %% ── FASE 3: Convite de participantes (SA-02 handoff) ────────
+    U->>DASH: Preenche nome + email → clica [+] ADICIONAR
+    DASH->>DASH: addPendingParticipant()<br/>push → pendingParticipants[]
+
+    U->>DASH: Clica ENVIAR CONVITES (n participantes)
+    DASH->>API: apiPost('/groups_invite.php', {group_id, participants[]})
+    API->>INV_PHP: POST /groups_invite.php (sessão admin validada)
+    INV_PHP->>INV_PHP: INSERT participants<br/>status='invited', invite_token=random_token(24)
+    INV_PHP->>MAILER: send_smtp_mail() para cada participante
+    Note over MAILER: E-mail Dharma Initiative<br/>Link: /invite?token=invite_token
+    MAILER-->>INV_PHP: sent[] · failed[]
+    INV_PHP-->>API: {ok:true, sent, failed}
+    API-->>DASH: resultado
+    DASH-->>U: Modal: CONVITES ENVIADOS COM SUCESSO!
+
+    %% ── FASE 4: Confirmação de convite pelo participante ────────
+    Note over INV_PAGE: Rota: /invite?token=UUID
+    U->>INV_PAGE: Clica link do e-mail recebido
+    INV_PAGE->>API: apiGet('/invite.php?token=UUID')
+    API->>INV_CONF: GET /invite.php
+    INV_CONF-->>API: {participant: {name, email, status}, group: {title}}
+    API-->>INV_PAGE: dados do convite
+
+    alt status = 'confirmed'
+        INV_PAGE-->>U: ✔ Participação já confirmada
+    else status = 'invited' ou 'link_clicked'
+        INV_PAGE-->>U: Dados do grupo + botão CONFIRMAR PARTICIPAÇÃO
+        U->>INV_PAGE: Clica CONFIRMAR PARTICIPAÇÃO
+        INV_PAGE->>API: apiPost('/invite_confirm.php', {token: UUID})
+        API->>INV_CONF: POST /invite_confirm.php
+        INV_CONF->>INV_CONF: UPDATE participants SET status='confirmed'
+        INV_CONF-->>API: {ok:true}
+        API-->>INV_PAGE: OK
+        INV_PAGE-->>U: ✔ Participação confirmada. Aguarde o sorteio.
+    end
+
+    %% ── FASE 5: Auto-inscrição via Dharma Code ──────────────────
+    Note over JOIN: Rota alternativa: /join/DHARMA_CODE
+    U->>JOIN: Acessa link público compartilhado pelo admin
+    JOIN->>JOIN: getJoinCode()<br/>extrai último segmento do pathname
+    JOIN->>API: apiGet('/groups_get_public.php?code=DHARMA_CODE')
+    API->>JOIN_PHP: GET /groups_get_public.php
+    JOIN_PHP-->>API: {group: {title, description, draw_date, budget_limit}}
+    API-->>JOIN: dados públicos do grupo
+    JOIN-->>U: Info do grupo + formulário nome + e-mail
+
+    U->>JOIN: Preenche campos → clica EXECUTAR PROTOCOLO DE INSCRIÇÃO
+    JOIN->>API: apiPost('/groups_join.php', {code, name, email})
+    API->>JOIN_PHP: POST /groups_join.php
+    JOIN_PHP->>JOIN_PHP: INSERT participant + dispara e-mail de convite
+    JOIN_PHP-->>API: {ok:true}
+    API-->>JOIN: sucesso
+    JOIN-->>U: Protocolo Iniciado — verifique seu e-mail
+```
+
+---
+
+## Estados de Sessão Admin
+
+```mermaid
+stateDiagram-v2
+    [*] --> checking : App.jsx monta\napiGet('/admin_me.php')
+    checking --> authenticated : cookie válido\n→ setAdmin(data)
+    checking --> unauthenticated : 401 / erro\n→ setAdmin(null)
+    unauthenticated --> authenticated : login bem-sucedido\napiPost('/admin_login.php')
+    authenticated --> unauthenticated : logout\napiPost('/admin_logout.php')\nsetAdmin(null)
+```
+
+---
+
+## Invariantes de Segurança (SA-01)
+
+| Invariante | Implementação |
+|---|---|
+| Sessão via cookie HttpOnly | PHP `session_start()` + `Set-Cookie: HttpOnly` |
+| `admin_me.php` chamado em todo mount | `useEffect([], [route])` no App.jsx |
+| Logout via POST antes de limpar estado | `handleLogout()` chama endpoint antes de `setAdmin(null)` |
+| Credenciais nunca em `localStorage` | Apenas cookie de sessão — nenhum token no browser storage |
+
+---
+
+## 🔄 Ação Requerida — Obsidian Mirror
+
+```
+╔══════════════════════════════════════════════════════╗
+║  ⚑  AÇÃO REQUERIDA · MIRROR OBSIDIAN                ║
+╠══════════════════════════════════════════════════════╣
+║  Módulo: portaria_auth                               ║
+║  Arquivo: docs/modules/portaria_auth.md              ║
+║  Draw.io: docs/arquitetura.drawio (swimlane SA-01)   ║
+║                                                      ║
+║  Após qualquer alteração em:                         ║
+║  AdminAuth.jsx · admin_login.php · admin_me.php      ║
+║  admin_logout.php · admin_register.php               ║
+║                                                      ║
+║  1. Atualizar swimlane SA-01 no drawio               ║
+║  2. Refletir mudança neste arquivo Mermaid           ║
+║  3. Copiar bloco Mermaid atualizado para o vault     ║
+║  4. Exportar PNG do drawio para vault                ║
+╚══════════════════════════════════════════════════════╝
+```
+
+--- FIM DE ./docs/modules/portaria_auth.md ---
+
+--- ARQUIVO: ./docs/modules/orquestrador_grupo.md ---
+---
+module: orquestrador_grupo
+domain: SA-02 · O Orquestrador de Grupo
+components:
+  active: [AdminDashboard.jsx, InvitePage.jsx, JoinGroup.jsx]
+  legacy: [EmailStep.jsx, MembersStep.jsx, ResultsStep.jsx]
+endpoints:
+  [groups_create.php, groups_list.php, groups_detail.php, groups_delete.php,
+   groups_invite.php, groups_get_public.php, groups_join.php,
+   participants_delete.php, participants_resend_invite.php,
+   invite.php, invite_confirm.php, mailer.php]
+last_updated: 2026-06-28
+---
+
+# Módulo: Orquestrador de Grupo (SA-02)
+
+> **Aviso de redesign:** `EmailStep.jsx`, `MembersStep.jsx` e `ResultsStep.jsx` são
+> componentes **legados** — não são importados pelo fluxo ativo. O `AdminDashboard.jsx`
+> implementa toda a lógica diretamente com formulários inline. Manter os arquivos legados
+> durante o redesign; a lógica de negócio vive no backend PHP.
+
+---
+
+## Diagrama 1 — Ciclo de Vida do Grupo e Gestão de Participantes
+
+```mermaid
+flowchart TD
+    subgraph ADMIN["AdminDashboard.jsx · view state"]
+        VIEW_LIST["view = 'list'\nLista de grupos"]
+        VIEW_CREATE["view = 'create'\nFormulário de criação"]
+        VIEW_DETAIL["view = 'detail'\nDetalhe + participantes"]
+    end
+
+    subgraph CREATE["Criação de Grupo"]
+        FORM["Form: título · descrição\ndraw_date · budget_limit"]
+        POST_CREATE["POST /groups_create.php"]
+        RES_CREATE["Grupo criado\nstatus = 'open'\ndharma_code gerado (6 chars)"]
+    end
+
+    subgraph MEMBERS["Gestão de Participantes (pending list)"]
+        INPUT_NE["Input: nome + email"]
+        VALIDATE_EMAIL{"email\ncontém '@'?"}
+        ADD_PENDING["addPendingParticipant()\npush → pendingParticipants[]"]
+        REMOVE_PENDING["removePendingParticipant(id)\nfilter → pendingParticipants[]"]
+        ERR_EMAIL["setError: 'Email invalido'"]
+    end
+
+    subgraph SEND_INVITE["Envio de Convites"]
+        BTN_INVITE["Botão: ENVIAR CONVITES (n)"]
+        POST_INVITE["POST /groups_invite.php\n{group_id, participants[]}"]
+        PHP_INSERT["INSERT participants\nstatus='invited'\ninvite_token = random_token(24)"]
+        PHP_MAIL["mailer.php → SMTP\nEmail Dharma Initiative\nLink: /invite?token=<uuid>"]
+        RES_INVITE["{sent: [], failed: []}"]
+        CLEAR_PENDING["setPendingParticipants([])"]
+        RELOAD_DETAIL["loadGroupDetail()"]
+    end
+
+    subgraph DELETE_P["Remover Participante"]
+        BTN_DEL["[REMOVER] hover\nno item da lista"]
+        CONFIRM_DEL{"grupo já\nsorteado?"}
+        WARN_DRAWN["Alert: sorteio será\ncancelado!\nTokens invalidados."]
+        WARN_OPEN["Confirm padrão"]
+        POST_DEL["POST /participants_delete.php\n{participant_id}"]
+    end
+
+    subgraph RESEND["Reenvio"]
+        BTN_RESEND_INV["REENVIAR CONVITE\n(status: invited / link_clicked)"]
+        BTN_RESEND_DRW["REENVIAR SORTEIO\n(status: token_sent / revealed)"]
+        POST_RESEND_INV["POST /participants_resend_invite.php"]
+        POST_RESEND_DRW["POST /participants_resend_draw.php"]
+    end
+
+    subgraph STATUS_MAP["Status dos Participantes (tabela)"]
+        S1["invited → CONVITE ENVIADO"]
+        S2["link_clicked → LINK CLICADO"]
+        S3["confirmed → CONFIRMADO"]
+        S4["token_sent → TOKEN ENVIADO"]
+        S5["revealed → REVELADO"]
+    end
+
+    VIEW_LIST -->|"+ NOVO GRUPO"| VIEW_CREATE
+    VIEW_LIST -->|"clica no grupo"| VIEW_DETAIL
+    VIEW_CREATE --> FORM --> POST_CREATE --> RES_CREATE
+    RES_CREATE -->|"setSelectedGroupId\nsetView('detail')"| VIEW_DETAIL
+
+    VIEW_DETAIL --> INPUT_NE --> VALIDATE_EMAIL
+    VALIDATE_EMAIL -->|"sim"| ADD_PENDING
+    VALIDATE_EMAIL -->|"não"| ERR_EMAIL
+    ADD_PENDING -->|"[REMOVER] inline"| REMOVE_PENDING
+
+    ADD_PENDING --> BTN_INVITE --> POST_INVITE
+    POST_INVITE --> PHP_INSERT --> PHP_MAIL --> RES_INVITE
+    RES_INVITE --> CLEAR_PENDING --> RELOAD_DETAIL
+
+    VIEW_DETAIL --> BTN_DEL --> CONFIRM_DEL
+    CONFIRM_DEL -->|"sim (drawn)"| WARN_DRAWN --> POST_DEL
+    CONFIRM_DEL -->|"não (open)"| WARN_OPEN --> POST_DEL
+    POST_DEL --> RELOAD_DETAIL
+
+    VIEW_DETAIL --> BTN_RESEND_INV --> POST_RESEND_INV
+    VIEW_DETAIL --> BTN_RESEND_DRW --> POST_RESEND_DRW
+
+    VIEW_DETAIL -.-> STATUS_MAP
+```
+
+---
+
+## Diagrama 2 — Fluxo de Confirmação de Convite (InvitePage.jsx)
+
+```mermaid
+sequenceDiagram
+    actor P as Participante
+    participant EMAIL as Caixa de E-mail
+    participant B as Browser /invite?token=UUID
+    participant I as InvitePage.jsx
+    participant API_INV as invite.php
+    participant API_CONF as invite_confirm.php
+    participant DB as MySQL
+
+    P->>EMAIL: Recebe e-mail Dharma Initiative
+    EMAIL-->>P: Link /invite?token=UUID
+
+    P->>B: Clica no link
+    B->>I: mount(token=UUID)
+    I->>API_INV: GET /invite.php?token=UUID
+    API_INV->>DB: SELECT participant, group WHERE invite_token=UUID
+    DB-->>API_INV: {participant: {name, email, status}, group: {title, description}}
+    API_INV-->>I: {participant, group}
+
+    alt status = 'confirmed'
+        I-->>P: "✔ Participação confirmada. Aguarde o sorteio."
+    else status = 'invited' ou 'link_clicked'
+        I-->>P: Exibe dados do grupo + botão CONFIRMAR PARTICIPAÇÃO
+        P->>I: Clica em CONFIRMAR PARTICIPAÇÃO
+        I->>API_CONF: POST /invite_confirm.php {token: UUID}
+        API_CONF->>DB: UPDATE participants SET status='confirmed' WHERE invite_token=UUID
+        DB-->>API_CONF: OK
+        API_CONF-->>I: {ok: true}
+        I-->>P: "✔ Participação confirmada. Aguarde o sorteio."
+    end
+
+    alt token inválido ou não encontrado
+        API_INV-->>I: {ok: false, error: 'Participante nao encontrado'}
+        I-->>P: "✖ Participante nao encontrado" (texto vermelho CRT)
+    end
+```
+
+---
+
+## Diagrama 3 — Auto-Inscrição via Dharma Code (JoinGroup.jsx)
+
+```mermaid
+sequenceDiagram
+    actor U as Usuário externo
+    participant B as Browser /join/<dharma_code>
+    participant J as JoinGroup.jsx
+    participant API_PUB as groups_get_public.php
+    participant API_JOIN as groups_join.php
+    participant DB as MySQL
+
+    U->>B: Acessa link público compartilhado pelo admin
+    Note over B,J: getJoinCode() extrai último segmento do pathname
+
+    B->>J: mount(code = <dharma_code>)
+    J->>API_PUB: GET /groups_get_public.php?code=<dharma_code>
+    API_PUB->>DB: SELECT group WHERE dharma_code=code AND status='open'
+    DB-->>API_PUB: {group: {title, description, draw_date, budget_limit}}
+    API_PUB-->>J: {group: {...}}
+    J-->>U: Exibe grupo + formulário (nome + e-mail)
+
+    U->>J: Preenche nome e e-mail → clica EXECUTAR PROTOCOLO DE INSCRIÇÃO
+    J->>API_JOIN: POST /groups_join.php {code, name, email}
+    API_JOIN->>DB: INSERT participant (status='invited')\n+ dispara e-mail de convite
+    DB-->>API_JOIN: OK
+    API_JOIN-->>J: {ok: true}
+    J-->>U: "Protocolo Iniciado — verifique seu e-mail"
+
+    alt dharma_code inválido ou grupo fechado
+        API_PUB-->>J: {ok: false, error: 'Grupo nao encontrado'}
+        J-->>U: Tela de erro com "Sistema Interrompido"
+    end
+
+    alt nome ou e-mail inválido no envio
+        API_JOIN-->>J: {ok: false, error: 'Dados invalidos'}
+        J-->>U: Exibe erro inline no formulário
+    end
+```
+
+---
+
+## Componentes Legados (manter durante o redesign)
+
+> Estes componentes existem no codebase mas **não estão importados** no fluxo ativo.
+> Preservar a lógica de negócio embutida — pode ser reativada ou servir de referência.
+
+| Componente | Lógica preservada | Estado atual |
+|---|---|---|
+| `EmailStep.jsx` | Input de email do organizador, validação via `onKeyDown` | Não importado |
+| `MembersStep.jsx` | Textarea de nomes (1/linha), contagem, validação mín. 2, botão de sorteio | Não importado |
+| `ResultsStep.jsx` | Lista de resultados com links copiáveis por participante | Não importado |
+
+**Regra para o redesign:** as regras de negócio (mín. 2 participantes, validação de email,
+estado pending antes do envio em lote) devem ser mantidas no novo design.
+
+---
+
+## Estados do Grupo (status field)
+
+```mermaid
+stateDiagram-v2
+    [*] --> open : groups_create.php\ndharma_code gerado
+    open --> drawn : groups_draw.php\n(min. 2 confirmados)
+    open --> cancelled : groups_delete.php
+    drawn --> cancelled : groups_delete.php\n(invalida todos os tokens)
+    drawn --> open : participants_delete.php\n(se grupo já sorteado)
+```
+
+---
+
+## 🔄 Ação Requerida — Obsidian Mirror
+
+```
+╔══════════════════════════════════════════════════════╗
+║  ⚑  AÇÃO REQUERIDA · MIRROR OBSIDIAN                ║
+╠══════════════════════════════════════════════════════╣
+║  Módulo: orquestrador_grupo                          ║
+║  Arquivo: docs/modules/orquestrador_grupo.md         ║
+║  Draw.io: docs/arquitetura.drawio (swimlane SA-02)   ║
+║                                                      ║
+║  Após qualquer alteração em:                         ║
+║  AdminDashboard.jsx · groups_*.php · invite*.php     ║
+║                                                      ║
+║  1. Atualizar swimlane SA-02 no drawio               ║
+║  2. Refletir mudança neste arquivo Mermaid           ║
+║  3. Copiar bloco Mermaid atualizado para o vault     ║
+║  4. Exportar PNG do drawio para vault                ║
+╚══════════════════════════════════════════════════════╝
+```
+
+--- FIM DE ./docs/modules/orquestrador_grupo.md ---
+
 --- ARQUIVO: ./docs/modules/funcionalidades.md ---
 ---
 module: funcionalidades
@@ -19618,95 +20881,107 @@ Para garantir que o Administrador NÃO saiba o resultado:
 ---
 project: AmigoSecreto
 type: Central de Contexto LLM
-version: 1.2.0
+version: 1.3.0
 last_updated: 2026-06-28
+ai_agnostic: true
 ---
 
-# DOCS_FOR_LLM.MD — Central de Contexto, Preflight e Governança
+# DOCS_FOR_LLM.MD — Contexto Operacional e Governança
 
-> Leia `agent.md` antes deste arquivo. Este documento complementa a Constituição com
-> contexto operacional, mapa de sub-agentes e as regras do Mirror Obsidian.
+> Leia `agent.md` antes deste arquivo. Aqui estão os sub-agentes, o Preflight e o Mirror
+> Obsidian. **Não inclua este arquivo inteiro em prompts de codificação** — use apenas trechos
+> ou seções específicas. Máximo útil por prompt: agent.md + um módulo de `docs/modules/`.
 
 ---
 
 ## SEÇÃO 1 — Rotina de Preflight (Obrigatória)
 
-Execute este checklist **antes de qualquer sessão de codificação**. Anexe ao prompt inicial
-apenas os itens marcados como `[INCLUIR NO PROMPT]`.
+Execute antes de qualquer sessão de codificação. `[INCLUIR NO PROMPT]` = copiar para o
+contexto da IA. Os demais são verificações locais do desenvolvedor.
 
 ```
-PREFLIGHT CHECKLIST — AmigoSecreto
-====================================
+PREFLIGHT — AmigoSecreto v1.3
+══════════════════════════════════════════════════════════════
 
 [ ] 1. CONSTITUIÇÃO CARREGADA
-        Arquivo: @agent.md
+        Arquivo: agent.md
         [INCLUIR NO PROMPT]
 
 [ ] 2. MÓDULO MERMAID DO CONTEXTO
-        Arquivo: @docs/modules/<modulo_relevante>.md
+        Arquivo: docs/modules/<modulo_relevante>.md
+        Regra: apenas o módulo do domínio afetado — nunca todos de uma vez.
+        Se o módulo não existir: criar antes de codificar (ver agent.md §8).
         [INCLUIR NO PROMPT]
-        Regra: inclua APENAS o módulo afetado pela task, nunca todos.
 
-[ ] 2.5 SKILL CLAUDE CODE SELECIONADA
-        Consultar tabela de skills (agent.md §4 / docs_for_llm.md §6).
-        Invocar com /nome-da-skill ANTES de gerar código.
-        | Domínio da task         | Skill a invocar             |
-        |-------------------------|-----------------------------|
-        | Segurança / deploy      | /007                        |
-        | Code review / novo PHP  | /cc-skill-security-review   |
-        | Diagrama docs/modules/  | /mermaid-expert             |
-        | Componente React        | /react-best-practices       |
-        | Endpoint PHP novo       | /php-pro                    |
+[ ] 3. VERIFICAÇÃO DE DRIFT
+        Confirmar que o módulo Mermaid (item 2) reflete o estado atual do código.
+        Executar localmente:
+
+          git log --oneline -5 -- <arquivos mapeados no módulo>
+
+        Se houver commits nos arquivos de código SEM commit correspondente
+        no arquivo .md do módulo: PARAR e avisar o desenvolvedor para
+        atualizar o diagrama antes de continuar a sessão.
+
+        Arquivos por módulo:
+          menu_inicial.md     → App.jsx, InvitePage.jsx, JoinGroup.jsx,
+                                AdminDashboard.jsx, api/invite.php,
+                                api/invite_confirm.php, api/groups_join.php
+          dependencias_react.md → qualquer arquivo em src/
+          sorteio.md (futuro) → groups_draw.php, reveal.php, crypto.js,
+                                secretSanta.js, RevealPage.jsx
+          chat_anonimo.md (futuro) → ChatAnonimo.jsx, chat_get.php, chat_send.php
+        [EXECUTAR LOCALMENTE — não incluir no prompt]
+
+[ ] 4. SKILL DE IA SELECIONADA
+        Consultar docs/modules/skills_catalog.md para selecionar e invocar
+        a skill adequada ao domínio da task antes de gerar código.
         [INVOCAR ANTES DO PROMPT DE CÓDIGO]
 
-[ ] 3. ROTA / COMPONENTE IDENTIFICADO
-        Confirmar qual rota (App.jsx) e componente principal serão alterados.
-        Registrar aqui antes de abrir o editor.
+[ ] 5. ROTA / COMPONENTE IDENTIFICADO
+        Qual rota (App.jsx) e componente principal serão alterados?
         [NÃO INCLUIR — uso interno do dev]
 
-[ ] 4. ENDPOINT PHP IDENTIFICADO
-        Confirmar qual(is) arquivo(s) em /api/*.php serão tocados.
+[ ] 6. ENDPOINT PHP IDENTIFICADO
+        Qual(is) arquivo(s) em api/*.php serão tocados?
         [NÃO INCLUIR — uso interno do dev]
 
-[ ] 5. IMPACTO DE SEGURANÇA AVALIADO
+[ ] 7. IMPACTO DE SEGURANÇA
         A mudança toca: tokens? sessão? criptografia? SQL?
-        Se sim: incluir seção "Segurança" do agent.md no prompt.
-        [CONDICIONAL]
+        Se sim: skill 007 obrigatória (ver skills_catalog.md).
+        [CONDICIONAL — incluir seção Segurança do agent.md no prompt]
 
-[ ] 6. VARIÁVEIS DE AMBIENTE VERIFICADAS
-        .env e .env.local estão corretos para o ambiente alvo?
+[ ] 8. VARIÁVEIS DE AMBIENTE
+        .env e .env.local corretos para o ambiente alvo?
         VITE_API_BASE_URL aponta para o backend correto?
         [NÃO INCLUIR — verificação local]
 
-[ ] 7. BUILD SEM ERROS
-        Rodar: npm run lint && npm run build
-        Confirmar zero erros antes de iniciar codificação.
+[ ] 9. BUILD LIMPO
+        npm run lint && npm run build → zero erros.
         [NÃO INCLUIR — CI/local]
 
-[ ] 8. OBSIDIAN MIRROR CHECK
-        O módulo Mermaid correspondente está atualizado no cofre?
-        Se não: atualizar ANTES de gerar código (ver Seção 4).
+[ ] 10. OBSIDIAN MIRROR CHECK
+        O módulo Mermaid foi sincronizado no cofre após a última sessão?
+        Se não: atualizar antes de iniciar nova codificação (ver Seção 4).
         [NÃO INCLUIR — lembrete ao dev]
-```
 
-**Regra de Economia de Tokens:**
-Nunca inclua `docs_for_llm.md` inteiro em um prompt de codificação. Inclua apenas:
-- `@agent.md` (sempre)
-- `@docs/modules/<modulo>.md` (somente o módulo relevante)
-- Trechos específicos desta seção se necessário (copie o bloco, não o arquivo todo)
+══════════════════════════════════════════════════════════════
+REGRA DE ECONOMIA: prompt ideal = agent.md + 1 módulo Mermaid.
+Nunca incluir este arquivo por inteiro.
+```
 
 ---
 
 ## SEÇÃO 2 — Mapa de Sub-agentes Lógicos
 
-Os sub-agentes são **personas de contexto**, não processos separados. Quando ativar um,
-inclua no prompt apenas os arquivos do domínio daquele agente.
+Sub-agentes são **personas de contexto** — não processos separados. Ao trabalhar em um
+domínio, incluir no prompt apenas os arquivos listados naquele sub-agente.
 
 ---
 
 ### SA-01 · A PORTARIA
 
-**Responsabilidade:** Autenticação e gestão de sessão do administrador.
+**Responsabilidade:** Autenticação e sessão do administrador.
 
 **Arquivos de domínio:**
 ```
@@ -19717,29 +20992,24 @@ api/admin_me.php
 api/admin_register.php
 ```
 
-**Fluxo principal:**
+**Fluxo:**
 ```
 App.jsx resolveRoute() → route='admin'
-  → apiGet('/admin_me.php') → [cookie de sessão presente?]
-    ├── SIM → setAdmin(data.admin) → renderiza AdminDashboard
-    └── NÃO → renderiza AdminAuth → onAuth(admin) → setAdmin
+  → apiGet('/admin_me.php') → [cookie presente?]
+    ├── SIM → setAdmin() → AdminDashboard
+    └── NÃO → AdminAuth → onAuth() → setAdmin
 ```
 
 **Invariantes:**
-- Sessão mantida por cookie HTTP-only (PHP `session_start()`).
-- `admin_me.php` é chamado em todo mount do App na rota admin.
-- Logout chama `admin_logout.php` via POST antes de limpar estado local.
-
-**Perguntas que ativam este agente:**
-- "Como implementar 2FA?"
-- "Adicionar novo campo ao perfil de admin"
-- "Logout automático por inatividade"
+- Sessão via cookie HTTP-only (`session_start()` no PHP).
+- `admin_me.php` chamado em todo mount do App na rota admin.
+- Logout via POST em `admin_logout.php` antes de limpar estado local.
 
 ---
 
-### SA-02 · O ORQUESTRADOR DE GRUPO
+### SA-02 · O ORQUESTRADOR
 
-**Responsabilidade:** Ciclo de vida completo de grupos e participantes.
+**Responsabilidade:** Ciclo de vida de grupos e participantes.
 
 **Arquivos de domínio:**
 ```
@@ -19749,50 +21019,34 @@ src/components/EmailStep.jsx
 src/components/StepIndicator.jsx
 src/components/InvitePage.jsx
 src/components/JoinGroup.jsx
-api/groups_create.php
-api/groups_delete.php
-api/groups_detail.php
-api/groups_get_public.php
-api/groups_invite.php
-api/groups_join.php
-api/groups_list.php
-api/invite.php
-api/invite_confirm.php
-api/participants_delete.php
-api/participants_resend_invite.php
-api/mailer.php
+api/groups_create.php   api/groups_delete.php
+api/groups_detail.php   api/groups_get_public.php
+api/groups_invite.php   api/groups_join.php
+api/groups_list.php     api/invite.php
+api/invite_confirm.php  api/participants_delete.php
+api/participants_resend_invite.php  api/mailer.php
 ```
 
-**Fluxo de criação de grupo (steps do AdminDashboard):**
+**Fluxos:**
 ```
-EmailStep → MembersStep → ResultsStep
-```
+Criação:   EmailStep → MembersStep → ResultsStep
 
-**Fluxo de convite:**
-```
-admin envia convite via groups_invite.php
-  → mailer.php gera email com link /invite?token=<uuid>
-  → InvitePage.jsx valida token via invite.php
-  → participante confirma via invite_confirm.php
-```
+Convite:   groups_invite.php → mailer.php → email /invite?token=UUID
+           → InvitePage.jsx → invite.php → invite_confirm.php
 
-**Fluxo de adesão pública (Dharma Code):**
-```
-admin compartilha link /join?dharma=<code>
-  → JoinGroup.jsx captura dharma code
-  → groups_join.php valida e adiciona participante
+Adesão:    /join?dharma=CODE → JoinGroup.jsx → groups_join.php
 ```
 
 **Invariantes:**
-- Tokens de convite são UUIDs gerados pelo PHP, armazenados em `participants.invite_token`.
-- Um grupo só pode ser sorteado após todos os convites confirmados (status `confirmed`).
-- `mailer.php` usa SMTP configurado em `api/.env` (não em `.env` do frontend).
+- Tokens de convite são UUIDs gerados no PHP, em `participants.invite_token`.
+- Grupo só pode ser sorteado com todos os convites `confirmed`.
+- SMTP configurado exclusivamente em `api/.env`.
 
 ---
 
 ### SA-03 · O JUIZ
 
-**Responsabilidade:** Sorteio, revelação e criptografia de resultados.
+**Responsabilidade:** Sorteio, revelação e criptografia.
 
 **Arquivos de domínio:**
 ```
@@ -19801,42 +21055,38 @@ src/lib/crypto.js
 src/components/RevealPage.jsx
 src/components/RevealStep.jsx
 src/components/ResultsStep.jsx
-api/draw.php
-api/groups_draw.php
-api/reveal.php
-api/reveal_confirm.php
+api/draw.php              api/groups_draw.php
+api/reveal.php            api/reveal_confirm.php
 api/participants_resend_draw.php
 database/schema.mysql.sql
 ```
 
 **Fluxo de sorteio:**
 ```
-AdminDashboard → aciona groups_draw.php
+AdminDashboard → groups_draw.php
   → PHP busca participantes confirmados
-  → Executa lógica de derangement (server-side, espelho do secretSanta.js)
-  → Criptografa cada resultado com AES-GCM (chave = token único do participante)
-  → Armazena encrypted_name + iv por participante
-  → Dispara emails com link /reveal?token=<token>
+  → Derangement server-side (espelho de secretSanta.js)
+  → AES-GCM: encripta nome do sorteado (chave = token do participante)
+  → Armazena encrypted_name + iv
+  → Dispara emails com /reveal?token=<token>
 ```
 
 **Fluxo de revelação:**
 ```
-RevealPage.jsx recebe ?token=
-  → apiGet('/reveal.php?token=') → {encrypted_name, iv, token_hint}
+RevealPage.jsx ← ?token=
+  → GET /reveal.php → {encrypted_name, iv}
   → decryptName(encrypted_name, iv, token) [crypto.js]
-  → Exibe nome do amigo secreto
-  → reveal_confirm.php marca como revelado
+  → Exibe nome → POST /reveal_confirm.php
 ```
 
-**Invariante crítica:**
-O servidor **nunca** envia o nome em texto claro. A chave AES é derivada do token do
-participante, que só existe no link enviado ao email — nunca no banco de dados como chave.
+**Invariante crítica:** o servidor **jamais** envia o nome em texto claro. A chave AES
+existe apenas no link enviado ao email — nunca armazenada no banco como chave legível.
 
 ---
 
 ### SA-04 · A SOMBRA
 
-**Responsabilidade:** Canal de comunicação anônima entre participantes.
+**Responsabilidade:** Canal anônimo entre participantes.
 
 **Arquivos de domínio:**
 ```
@@ -19847,15 +21097,13 @@ api/chat_send.php
 
 **Fluxo:**
 ```
-/chat?token=<token_participante>
-  → ChatAnonimo.jsx valida token
-  → Polling de chat_get.php (mensagens do grupo)
-  → chat_send.php envia mensagem sem revelar identidade
+/chat?token= → ChatAnonimo.jsx
+  → Polling: GET /chat_get.php (mensagens do grupo)
+  → POST /chat_send.php (sem revelar identidade do remetente)
 ```
 
-**Invariante:** O `receiver_id` na tabela `chat_messages` permite mensagens direcionadas
-a um participante específico sem revelar o remetente. A identidade só é conhecida pelo
-servidor — o frontend exibe apenas apelidos ou "Anônimo".
+**Invariante:** `receiver_id` em `chat_messages` permite mensagens direcionadas sem
+expor o remetente. Frontend exibe apenas "Anônimo".
 
 ---
 
@@ -19864,107 +21112,92 @@ servidor — o frontend exibe apenas apelidos ou "Anônimo".
 ```
 App.jsx
   ├── TerminalPanel.jsx ← ThemeContext.jsx ← themes.js
-  ├── AdminAuth.jsx ← api.js
-  ├── AdminDashboard.jsx ← api.js
+  ├── AdminAuth.jsx     ← api.js                          [SA-01]
+  ├── AdminDashboard.jsx ← api.js                         [SA-02]
   │     ├── MembersStep.jsx
   │     ├── EmailStep.jsx
-  │     ├── StepIndicator.jsx
   │     └── ResultsStep.jsx
-  ├── InvitePage.jsx ← api.js
-  ├── RevealPage.jsx ← api.js ← crypto.js
-  ├── JoinGroup.jsx ← api.js
-  └── ChatAnonimo.jsx ← api.js
+  ├── InvitePage.jsx    ← api.js                          [SA-02]
+  ├── JoinGroup.jsx     ← api.js                          [SA-02]
+  ├── RevealPage.jsx    ← api.js ← crypto.js              [SA-03]
+  └── ChatAnonimo.jsx   ← api.js                          [SA-04]
 ```
 
-**Arquivo central de menor toque, maior impacto:**
-- `src/lib/api.js` — qualquer alteração afeta todas as rotas
-- `src/contexts/ThemeContext.jsx` — qualquer alteração afeta toda a UI
-- `api/bootstrap.php` — inicialização de todos os endpoints PHP
+**Arquivos de maior impacto (alterar com máxima cautela):**
+
+| Arquivo               | Dependentes diretos | Skill obrigatória antes de alterar |
+|-----------------------|---------------------|------------------------------------|
+| `src/lib/api.js`      | 7 (todas as rotas)  | `cc-skill-security-review`         |
+| `ThemeContext.jsx`    | 3                   | —                                  |
+| `TerminalPanel.jsx`   | 2                   | —                                  |
+| `src/lib/crypto.js`   | 1 (RevealPage)      | `007` obrigatório                  |
 
 ---
 
 ## SEÇÃO 4 — Diretriz do Mirror Obsidian
 
-### Objetivo
+### Quando sincronizar (obrigatório)
 
-Manter um **espelho fiel** do conhecimento do projeto no cofre pessoal do Obsidian,
-preservando histórico de decisões e contexto que o git diff não captura.
+| Evento                              | Ação no Obsidian                                  |
+|-------------------------------------|---------------------------------------------------|
+| Nova feature implementada           | Atualizar nota do módulo + nota de decisão        |
+| Diagrama drawio alterado            | Exportar PNG + atualizar Mermaid do módulo        |
+| Nova skill catalogada               | Atualizar `skills_catalog.md` do vault            |
+| Bug crítico corrigido               | `incidents/YYYY-MM-DD-<bug>.md`                   |
+| Schema de banco alterado            | `database/schema.md` no vault                     |
+| Variável de ambiente adicionada     | `infra/env-vars.md` no vault                      |
 
-### Quando o Mirror É Obrigatório
-
-O desenvolvedor DEVE atualizar o Obsidian nos seguintes eventos:
-
-| Evento                              | Ação no Obsidian                                      |
-|-------------------------------------|-------------------------------------------------------|
-| Nova feature implementada           | Atualizar nota do módulo + adicionar nota de decisão  |
-| Diagrama drawio alterado            | Exportar PNG para o vault + atualizar Mermaid do módulo |
-| Novo sub-agente ou skill catalogado | Adicionar entrada em `agent.md` do vault              |
-| Bug crítico corrigido               | Registrar em nota `incidents/YYYY-MM-DD-<bug>.md`     |
-| Schema de banco alterado            | Atualizar nota `database/schema.md` no vault          |
-| Variável de ambiente adicionada     | Atualizar nota `infra/env-vars.md` no vault           |
-
-### Estrutura Recomendada do Vault (Obsidian)
+### Estrutura do Vault Obsidian
 
 ```
 AmigoSecreto/
-├── 00-constituicao/
-│   └── agent.md          ← espelho de ./agent.md
-├── 01-modulos/
-│   ├── menu_inicial.md   ← espelho de docs/modules/menu_inicial.md
-│   └── [outros módulos]
+├── 00-constituicao/   → agent.md (espelho)
+├── 01-modulos/        → docs/modules/*.md (espelhos)
 ├── 02-arquitetura/
-│   ├── macro.png         ← export do arquitetura.drawio
-│   └── decisoes/
-│       └── YYYY-MM-DD-<decisao>.md
-├── 03-banco/
-│   └── schema.md
-├── 04-infra/
-│   └── env-vars.md
-└── 05-incidents/
-    └── YYYY-MM-DD-<bug>.md
+│   ├── macro.png      → export do arquitetura.drawio
+│   └── decisoes/      → YYYY-MM-DD-<decisao>.md
+├── 03-banco/          → schema.md
+├── 04-infra/          → env-vars.md
+└── 05-incidents/      → YYYY-MM-DD-<bug>.md
 ```
 
-### Formato de Bloco para Sync
-
-Use sempre blocos Markdown limpos, sem frontmatter de ferramentas específicas, para garantir
-portabilidade máxima:
+### Formato de bloco para sync (Markdown limpo e portável)
 
 ~~~markdown
-# [Nome do Módulo] — [Data]
+# [Módulo] — [Data]
 
 ## Contexto
-[Por que essa decisão/mudança foi feita]
+[Por que essa mudança foi feita]
 
 ## O que mudou
 [Descrição técnica concisa]
 
 ## Arquivos afetados
-- `caminho/arquivo.jsx` — [motivo]
+- `caminho/arquivo.jsx` — motivo
 
 ## Diagrama
 ```mermaid
-[bloco mermaid copiado de docs/modules/]
+[bloco copiado de docs/modules/]
 ```
 
 ## Próximos passos
-- [ ] [item pendente]
+- [ ] item pendente
 ~~~
 
 ### Aviso de Ação Requerida (AiR)
 
-Quando a IA completar uma implementação, ela DEVE emitir o seguinte bloco ao final da resposta
-se houver impacto em módulos documentados:
+Emitir ao final de qualquer implementação que afete módulos documentados:
 
 ```
 ╔══════════════════════════════════════════════════════╗
 ║  ⚑  AÇÃO REQUERIDA · MIRROR OBSIDIAN                ║
 ╠══════════════════════════════════════════════════════╣
-║  Módulo afetado: [nome do módulo]                    ║
+║  Módulo afetado : [nome do módulo]                   ║
 ║  Arquivo Mermaid: docs/modules/[modulo].md           ║
-║  Diagrama drawio: docs/arquitetura.drawio            ║
+║  Draw.io        : docs/arquitetura.drawio            ║
 ║                                                      ║
-║  Antes de fazer commit:                              ║
-║  1. Atualizar diagrama no drawio (VS Code ext.)      ║
+║  Antes do commit:                                    ║
+║  1. Atualizar drawio (ext. VS Code)                  ║
 ║  2. Refletir mudança no Mermaid do módulo            ║
 ║  3. Copiar bloco Mermaid para vault Obsidian         ║
 ║  4. Exportar PNG do drawio para vault                ║
@@ -19973,283 +21206,88 @@ se houver impacto em módulos documentados:
 
 ---
 
-## SEÇÃO 5 — Manual Operacional do Desenvolvedor
+## SEÇÃO 5 — Manual Operacional (Draw.io → Mermaid → IA → Obsidian)
 
-### Draw.io + Mermaid + Obsidian · Pipeline Oficial
+Pipeline obrigatório para toda feature ou alteração significativa.
 
-Este é o fluxo de trabalho **obrigatório** para toda feature ou alteração significativa.
-Features implementadas fora deste pipeline introduzem dívida de documentação.
+### Passo 1 · Idealização Visual (Draw.io)
 
----
+**Onde:** `docs/arquitetura.drawio` via extensão `hediet.vscode-drawio` no VS Code.
 
-#### PASSO 1 · Idealização Visual (Draw.io)
+- Desenhe o fluxo antes de qualquer código
+- Swimlanes: Frontend (React) / Backend (PHP) / Database (MySQL)
+- Nomes dos shapes = nomes exatos dos componentes e endpoints
 
-**Onde:** `docs/arquitetura.drawio` via extensão **Draw.io Integration** no VS Code
-(`hediet.vscode-drawio`)
-
-**O que fazer:**
-- Abra o arquivo `.drawio` no VS Code (abre como editor visual)
-- Desenhe ou altere o fluxo da feature no diagrama macro
-- Use swimlanes para separar: Frontend (React), Backend (PHP), Database (MySQL)
-- Nomeie cada shape com o nome exato do componente/endpoint
-
-**Regra:** Nenhuma linha de código é escrita antes que o fluxo exista no drawio.
-O drawio é a única fonte de verdade visual — não use papel, Figma ou outras ferramentas.
-
----
-
-#### PASSO 2 · Tradução Sintática (Mermaid)
+### Passo 2 · Tradução para Mermaid
 
 **Onde:** `docs/modules/<nome_do_modulo>.md`
 
-**O que fazer:**
-- Extraia o pedaço do drawio referente à feature/módulo afetado
-- Converta para diagrama Mermaid (`flowchart TD` ou `sequenceDiagram`)
-- Crie ou atualize o arquivo `.md` correspondente em `docs/modules/`
-- Use nomes de nós que correspondam exatamente aos componentes React e endpoints PHP
+- Extraia o trecho do drawio referente ao módulo afetado
+- Um arquivo por domínio funcional — não misturar SA-02 com SA-03 no mesmo arquivo
+- Nomes dos nós = nomes exatos dos componentes (`InvitePage.jsx`, `invite.php`)
 
-**Regra:** Cada arquivo em `docs/modules/` mapeia exatamente um domínio funcional
-(ex: `menu_inicial.md`, `sorteio.md`, `chat_anonimo.md`). Não misture domínios em um arquivo.
+### Passo 3 · Preflight + Skill + Prompt
 
----
-
-#### PASSO 3 · Execução Isolada — Preflight (LLM)
-
-**Onde:** Prompt ao LLM (Claude Code ou similar)
-
-**O que incluir no prompt:**
+**Sequência:**
 ```
-@agent.md
-@docs/modules/<modulo_relevante>.md
-
-[Descrição da task específica]
-[Trechos de código atuais apenas se necessário]
+1. Executar Preflight (Seção 1 deste arquivo)
+2. Verificar drift (item 3 do Preflight)
+3. Ativar skill adequada (docs/modules/skills_catalog.md)
+4. Enviar ao modelo: @agent.md + @docs/modules/<modulo>.md
 ```
 
-**Antes do prompt, invocar a skill adequada:**
+**Prompt mínimo eficiente:**
 ```
-/007                      ← se a task toca segurança, tokens, deploy
-/cc-skill-security-review ← se é code review de PR
-/mermaid-expert           ← se vai gerar/atualizar diagrama
-/react-best-practices     ← se vai criar/otimizar componente React
-/php-pro                  ← se vai criar/refatorar endpoint PHP
+[conteúdo de agent.md]
+[conteúdo de docs/modules/<modulo>.md]
+
+Task: [descrição objetiva do que implementar]
 ```
 
-**O que NÃO incluir:**
-- `docs/docs_for_llm.md` inteiro
-- Múltiplos módulos Mermaid não relacionados
-- Histórico de chat anterior não relevante
-- Arquivos de configuração (`.env`, `vite.config.js`) sem necessidade
+Nunca incluir este arquivo (`docs_for_llm.md`) por inteiro no prompt.
 
-**Benefício:** O contexto reduzido diminui consumo de tokens em ~60-70% comparado a incluir
-todo o projeto, mantendo precisão porque o Mermaid já captura o fluxo completo.
+### Passo 4 · Sincronização Obsidian
 
----
+Imediatamente após o commit, antes de iniciar a próxima task:
+1. Copiar Mermaid atualizado para o vault
+2. Exportar PNG do drawio (File → Export no Draw.io)
+3. Criar nota de decisão se houver escolha arquitetural nova
 
-#### PASSO 4 · Sincronização Externa (Obsidian)
-
-**Onde:** Vault pessoal do Obsidian (ver estrutura na Seção 4)
-
-**Quando:** Imediatamente após o commit da feature, antes de iniciar a próxima task.
-
-**O que fazer:**
-1. Copie o bloco Mermaid atualizado do `docs/modules/<modulo>.md` para a nota correspondente
-   no vault
-2. Exporte o `docs/arquitetura.drawio` como PNG via File → Export (no Draw.io do VS Code)
-   e salve em `02-arquitetura/macro.png` no vault
-3. Se houver decisão de arquitetura nova: crie nota em `02-arquitetura/decisoes/`
-4. Atualize o espelho de `agent.md` no vault se novos skills foram catalogados
-
-**Regra:** O vault Obsidian é o **arquivo histórico humano** — ele guarda o *porquê* das
-decisões. O git guarda o *o quê*. Os dois são complementares e não substituíveis.
-
----
-
-### Resumo Visual do Pipeline
+### Pipeline Visual
 
 ```
 Feature Request
       │
       ▼
 ┌─────────────────────┐
-│  1. Draw.io         │  Fluxo visual macro no arquitetura.drawio
-│     (VS Code ext.)  │  ← Sem código antes deste passo
+│  1. Draw.io         │  Fluxo visual no arquitetura.drawio
+│  (VS Code ext.)     │  Sem código antes deste passo
 └─────────┬───────────┘
           │
           ▼
 ┌─────────────────────┐
-│  2. Mermaid         │  Tradução sintática em docs/modules/<modulo>.md
-│     (docs/modules/) │  /mermaid-expert ← skill para gerar diagrama
+│  2. Mermaid         │  docs/modules/<modulo>.md
+│  (docs/modules/)    │  skill: mermaid-expert
 └─────────┬───────────┘
           │
           ▼
 ┌─────────────────────┐
-│  3. Skill + Preflight│  /007 ou /react-best-practices ou /php-pro
-│     (Claude Code)   │  depois: @agent.md + @docs/modules/<modulo>.md
+│  3. Preflight + IA  │  Drift check → Skill → @agent.md + @modulo.md
+│  (Claude/Cursor/…)  │  skills_catalog.md define qual skill usar
 └─────────┬───────────┘
           │
           ▼
 ┌─────────────────────┐
-│  3.5 Security Gate  │  /cc-skill-security-review antes do merge
-│     (pré-merge)     │  ← checklist rápido de segurança
+│  3.5 Security Gate  │  cc-skill-security-review antes do merge
+│  (pré-merge)        │  007 obrigatório antes de deploy
 └─────────┬───────────┘
           │
           ▼
 ┌─────────────────────┐
-│  4. Obsidian Sync   │  Mermaid + PNG drawio + notas de decisão
-│     (vault pessoal) │  ← Memória histórica humana
+│  4. Obsidian Sync   │  Mermaid + PNG + notas de decisão
+│  (vault pessoal)    │  Memória histórica humana
 └─────────────────────┘
 ```
-
----
-
-## SEÇÃO 6 — Catálogo de Skills Claude Code
-
-Skills instaladas em `.claude/skills/`. Invoque com `/nome-da-skill` no Claude Code.
-Detalhamento de cada skill no contexto específico deste projeto.
-
----
-
-### /007 — Auditor de Segurança
-
-**Instalada em:** `.claude/skills/007/`
-**Risk level:** `critical` | **Idioma:** Português
-
-**Triggers obrigatórios para este projeto:**
-- Qualquer alteração em `src/lib/crypto.js`
-- Qualquer alteração em `api/reveal.php`, `api/invite_confirm.php`, `api/groups_draw.php`
-- Qualquer alteração em `api/admin_login.php`, `api/db.php`, `api/cors.php`
-- Novo endpoint PHP sendo criado
-- Antes de qualquer deploy para produção (Netlify / HostGator)
-
-**Modos relevantes:**
-
-| Modo | Como acionar | Uso neste projeto |
-|---|---|---|
-| `Audit` | `audite api/` | Auditoria completa da camada PHP antes de deploy |
-| `Approve` | `aprove api/groups_draw.php` | Veredito se endpoint está pronto para prod |
-| `Threat-Model` | `threat-model src/lib/crypto.js` | STRIDE na lógica AES-GCM |
-| `Incident` | `incidente: token vazado` | Playbook se token de reveal/invite vazar |
-| `Checklist` | `checklist APIs` | Checklist técnico focado em endpoints PHP |
-
-**Superfície de ataque crítica (focar o 007 aqui):**
-- `AES-GCM` em `crypto.js` — chave derivada de token único via SHA-256
-- Tokens UUID em `participants.invite_token` e `participants.reveal_token`
-- Cookie de sessão admin cruzando domínios (Netlify ↔ HostGator) via CORS
-- PDO prepared statements em todos os endpoints PHP
-- SMTP credentials em `api/.env` (nunca no `.env` do frontend)
-
-**Score mínimo aceitável para deploy:** 70/100 (Aprovado com ressalvas)
-
----
-
-### /cc-skill-security-review — Checklist de Segurança Diário
-
-**Instalada em:** `.claude/skills/cc-skill-security-review/`
-**Risk level:** `safe` | **Uso:** rotineiro, pré-PR
-
-**Quando usar neste projeto:**
-- Antes de mergear qualquer PR que toque a camada `api/`
-- Ao modificar `src/lib/api.js` (ponto de impacto máximo — afeta todas as rotas)
-- Ao adicionar variáveis de ambiente em `.env` ou `.env.local`
-- Como gate rápido quando o `/007` completo seria excessivo
-
-**Checklist priorizado para este projeto:**
-
-```
-[ ] Tokens nunca expostos em logs ou mensagens de erro da API PHP
-[ ] Todo SQL novo usa PDO prepared statements (zero concatenação)
-[ ] CORS restrito ao domínio do frontend (APP_ORIGIN em api/.env)
-[ ] Nenhum segredo em src/ — apenas VITE_API_BASE_URL é seguro expor
-[ ] Cookies de sessão com HttpOnly + SameSite configurados
-[ ] Mensagens de erro da API são genéricas ao usuário (sem stack trace)
-[ ] Rate limiting verificado em endpoints de envio de email
-```
-
-**Diferença do /007:** O `cc-skill-security-review` é um checklist operacional (5-10 min).
-O `/007` é uma auditoria estruturada de 6 fases (30+ min). Use o segundo antes de deploys.
-
----
-
-### /mermaid-expert — Especialista em Diagramas
-
-**Instalada em:** `.claude/skills/mermaid-expert/`
-**Risk level:** `safe`
-
-**Quando usar neste projeto:**
-- Ao criar novo arquivo em `docs/modules/`
-- Ao atualizar diagrama existente após implementação de feature
-- Ao traduzir fluxo do `docs/arquitetura.drawio` para sintaxe Mermaid
-- Ao gerar `sequenceDiagram` de novos endpoints PHP
-
-**Tipos de diagrama por contexto do projeto:**
-
-| Contexto | Tipo Mermaid | Arquivo de referência |
-|---|---|---|
-| Fluxo de rota / navegação | `flowchart TD` | `menu_inicial.md` |
-| Frontend ↔ API ↔ DB | `sequenceDiagram` | `menu_inicial.md` (InvitePage) |
-| Schema de banco | `erDiagram` | a criar: `banco.md` |
-| Estados de grupo | `stateDiagram-v2` | a criar: `grupo_lifecycle.md` |
-| Arquitetura macro | `C4Context` ou swimlane | `arquitetura.drawio` |
-
-**Regra de nomenclatura dos nós:** sempre usar o nome exato do componente ou endpoint
-(`AdminDashboard.jsx`, `groups_draw.php`) para garantir rastreabilidade.
-
----
-
-### /react-best-practices — Padrões React
-
-**Instalada em:** `.claude/skills/react-best-practices/`
-**Risk level:** `safe`
-
-**Quando usar neste projeto:**
-- Ao criar componente novo em `src/components/`
-- Ao otimizar `AdminDashboard.jsx` (múltiplas chamadas API em mount)
-- Ao otimizar `ChatAnonimo.jsx` (polling manual com setInterval)
-- Ao reduzir re-renders desnecessários detectados em profiler
-
-**Regras que NÃO se aplicam — projeto usa Vite SPA, não Next.js:**
-- `server-*` (Server Components, RSC, React.cache) — ignorar
-- `async-suspense-boundaries` — sem SSR aqui
-- `server-after-nonblocking` — não existe no Vite
-
-**Regras de alta relevância:**
-
-| Regra | Aplicação no projeto |
-|---|---|
-| `rerender-memo` | `AdminDashboard` renderiza lista de grupos — memoize itens da lista |
-| `rerender-functional-setstate` | Callbacks em `ChatAnonimo` (setState dentro de polling) |
-| `rerender-lazy-state-init` | Inicialização de estado pesado em qualquer componente |
-| `bundle-dynamic-imports` | Se `AdminDashboard` crescer — considerar lazy loading |
-| `client-swr-dedup` | Substituir polling manual do chat por SWR com `refreshInterval` |
-
----
-
-### /php-pro — PHP Idiomático
-
-**Instalada em:** `.claude/skills/php-pro/`
-**Risk level:** `unknown`
-
-**Quando usar neste projeto:**
-- Ao criar novo endpoint PHP em `api/`
-- Ao refatorar `mailer.php` (lógica SMTP com envio em lote)
-- Ao otimizar queries com múltiplos JOINs (`groups_detail.php`)
-- Ao implementar features do roadmap com lógica PHP mais complexa
-
-**Padrões relevantes para o projeto:**
-
-| Padrão | Aplicação |
-|---|---|
-| Generators | Processar lista grande de participantes no sorteio sem carregar tudo em memória |
-| `SplPriorityQueue` | Se implementar fila de reenvio de emails |
-| PDO `FETCH_ASSOC` | Já em uso — manter; evitar `FETCH_OBJ` sem necessidade |
-| `match` expression (PHP 8) | Substituir `switch` em lógica de status dos grupos |
-| Named arguments | Melhorar legibilidade nas chamadas ao `mailer.php` |
-
-**Invariante do projeto:** cada endpoint é um arquivo `.php` isolado.
-O `/php-pro` **não deve** propor consolidação em controllers ou frameworks — isso violaria
-a arquitetura de endpoints simples definida em `agent.md §5`.
-
 
 --- FIM DE ./docs/docs_for_llm.md ---
 

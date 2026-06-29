@@ -30,3 +30,4 @@ api/.env
 *.sw?
 out.txt
 .env
+contexto_projeto.txt

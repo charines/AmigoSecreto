@@ -197,6 +197,84 @@ stateDiagram-v2
 
 ---
 
+## Diagrama 4 — Processo de Revelação (Flowchart · Visão do Usuário)
+
+```mermaid
+flowchart TD
+    classDef crtNode    fill:#0d1f0d,stroke:#57ff84,color:#57ff84
+    classDef crtDecide  fill:#0a0a1e,stroke:#57ff84,color:#57ff84
+    classDef crtError   fill:#200000,stroke:#ff4444,color:#ff4444
+    classDef crtCrypto  fill:#0a001f,stroke:#a78bfa,color:#c4b5fd
+    classDef crtAnim    fill:#1a1000,stroke:#f6ad55,color:#f6ad55
+    classDef crtConfirm fill:#001a10,stroke:#34d399,color:#34d399
+
+    subgraph ENTRY["📥 Entrada — URL gerada pelo groups_draw.php"]
+        URL(["Browser: /reveal\n?token=revealToken\n&code=chaveAES"])
+        MOUNT["RevealPage.jsx monta\ntoken ← prop revealToken\ncode  ← URLSearchParams.get('code')"]
+    end
+
+    subgraph FETCH["🌐 Busca de Dados Criptografados"]
+        API_CALL["apiGet('/reveal.php?token=revealToken')\nlib/api.js com credentials:include"]
+        API_OK["{payload:{encrypted_b64, iv_b64}\n giver:{name}\n group:{title}}"]
+        API_ERR["✖ token inválido ou não encontrado\nExibe erro em vermelho CRT\nNÃO renderiza RevealStep"]
+    end
+
+    subgraph TRIGGER["⚡ Gatilho de Revelação"]
+        HAS_CODE{"code presente\nna URL?"}
+        AUTO_REV["autoRevealed = true\nhandleReveal() via useEffect\nrevelação automática"]
+        MANUAL_UI["Exibe input Código secreto\n+ botão REVELAR AMIGO SECRETO"]
+        USER_CODE["Usuário digita código\nclica REVELAR"]
+    end
+
+    subgraph DECRYPT_BOX["🔐 Descriptografia — lib/crypto.js · decryptName()"]
+        TRIM["code.trim()\nvalida string não-vazia"]
+        SHA["SHA-256(code)\n→ keyBytes 32 bytes raw"]
+        IMPORT["crypto.subtle.importKey(\n  'raw', keyBytes,\n  AES-GCM, false, ['decrypt']\n)"]
+        B64["base64ToBytes(encrypted_b64) → Uint8Array\nbase64ToBytes(iv_b64)      → Uint8Array iv"]
+        GCM["crypto.subtle.decrypt(\n  {name:'AES-GCM', iv},\n  CryptoKey, payload\n)"]
+        DECODE["textDecoder.decode(result)\n→ nome do amigo secreto plaintext"]
+        DEC_ERR["✖ tag GCM inválida\n'Codigo invalido ou expirado'\nExibe em vermelho CRT"]
+    end
+
+    subgraph CONFIRM_BOX["✅ Confirmação no Backend"]
+        POST_CONF["apiPost('/reveal_confirm.php',\n{token: revealToken})"]
+        DB_UP["UPDATE participants\nSET status='revealed'"]
+        SET_STATE["setRevealed({from: giver.name, to: nome})\n→ renderiza RevealStep"]
+    end
+
+    subgraph ANIM_BOX["🖥 RevealStep.jsx — Typewriter próprio (2 fases)"]
+        NOTE_CORR>"⚠ RevealStep NÃO usa StepIndicator.\nTypewriter é setInterval inline.\nStepIndicator fica em TerminalPanel\ne é suprimido nesta rota (showSteps=false)."]
+        PH_D["FASE 1 · 'decrypt'\nsetInterval 36ms — digita char a char\n'DECRIPTOGRAFANDO RESULTADO SEGURO...'"]
+        FAKE_LOG["Após 12+ chars — fake log lines:\n› VERIFICANDO INTEGRIDADE SHA256_AES256...\n› CONSULTANDO BANCO DE DADOS SEGURO...\n› VALIDANDO TOKEN DE SESSÃO ÚNICA..."]
+        DONE_WAIT["Mensagem completa → clearInterval\nsetTimeout(950ms) → phase='reveal'"]
+        PH_R["FASE 2 · 'reveal'\nanimate-fade-in-up\nNome uppercase 5xl/6xl\nEfeito glitch CRT + bloom glow radial"]
+        CHAT_BTN["Botão ENVIAR MENSAGEM ANÔNIMA\nwindow.location.href =\n/chat?token=revealToken"]
+    end
+
+    URL --> MOUNT --> API_CALL
+    API_CALL --> API_OK
+    API_CALL --> API_ERR
+    API_OK --> HAS_CODE
+    HAS_CODE -->|"sim"| AUTO_REV
+    HAS_CODE -->|"não"| MANUAL_UI --> USER_CODE
+    AUTO_REV --> TRIM
+    USER_CODE --> TRIM
+    TRIM --> SHA --> IMPORT --> B64 --> GCM
+    GCM -->|"sucesso"| DECODE
+    GCM -->|"falha tag inválida"| DEC_ERR
+    DECODE --> POST_CONF --> DB_UP --> SET_STATE
+    SET_STATE --> NOTE_CORR --> PH_D --> FAKE_LOG --> DONE_WAIT --> PH_R --> CHAT_BTN
+
+    class URL,MOUNT,API_OK crtNode
+    class HAS_CODE crtDecide
+    class API_ERR,DEC_ERR crtError
+    class SHA,IMPORT,B64,GCM,DECODE crtCrypto
+    class PH_D,FAKE_LOG,DONE_WAIT,PH_R,CHAT_BTN crtAnim
+    class POST_CONF,DB_UP,SET_STATE crtConfirm
+```
+
+---
+
 ## 🔄 Ação Requerida — Obsidian Mirror
 
 ```
