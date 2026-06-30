@@ -1,54 +1,48 @@
 ---
 module: funcionalidades
-domain: SA-01 (Portaria) + SA-02 (Orquestrador) + SA-03 (O Juiz)
-status: snapshot — versão v1 histórica (fluxo pré-autenticação admin)
+domain: SA-01 (Portaria) + SA-02 (Orquestrador) + SA-03 (O Juiz) + SA-04 (A Sombra)
+status: canonical — estado atual em producao
 moved_from: funcionalidade.md
-last_updated: 2026-06-28
+last_updated: 2026-06-30
 ---
 
 # Funcionalidades atuais do sistema
 
 ## Visao geral
-O sistema e um gerenciador de Amigo Secreto com interface web em React (Vite) e backend em PHP com MySQL. O fluxo principal e: informar email do organizador, informar participantes, realizar sorteio, gerar links individuais e revelar o resultado por link.
+O sistema e uma plataforma de Amigo Secreto com painel administrativo autenticado, convites por token, confirmacao de participantes, sorteio com criptografia, revelacao individual por link e chat anonimo.
 
-## Fluxo do usuario (frontend)
-- Passo 1: o organizador informa seu email e a sessao e iniciada.
-- Passo 2: o organizador insere a lista de participantes (um nome por linha).
-- Passo 3: o sistema executa o sorteio e gera um link unico para cada participante.
-- Passo 4: cada participante abre seu link e visualiza seu amigo secreto.
+## Rotas de usuario
+- `/`: login/admin + dashboard de grupos.
+- `/invite?token=`: confirmacao de convite.
+- `/reveal?token=&code=`: revelacao do amigo secreto.
+- `/join?dharma=`: entrada no grupo por codigo/link.
+- `/chat?token=`: chat anonimo entre participantes.
+- `/reset-password?token=`: redefinicao de senha de admin.
 
-## Regras e validacoes no frontend
-- Email do organizador e validado por formato basico (precisa conter '@').
-- A lista precisa ter no minimo 2 participantes.
-- O sorteio evita que a pessoa tire a si mesma; a funcao tenta embaralhar ate 500 vezes.
-- O email do organizador e salvo no `localStorage` para manter a sessao no navegador.
+## Fluxo administrativo (SA-01 + SA-02)
+- Admin autentica por sessao com cookie (`admin_login.php`, `admin_me.php`, `admin_logout.php`).
+- Admin cria grupo, adiciona participantes e dispara convites.
+- Convites sao enviados por email com token unico por participante.
+- Dashboard exibe progresso por status: `invited`, `link_clicked`, `confirmed`, `token_sent`, `revealed`.
 
-## Sorteio e persistencia (backend)
-- Endpoint `POST /api/draw.php` recebe `owner_email` e `participants` (array com `name` e `secret_friend_name`).
-- O backend cria um grupo (`groups`) e grava os participantes (`participants`) com o nome do amigo secreto.
-- Retorna os IDs dos participantes, usados para formar links individuais (ex.: `/?id=123`).
+## Fluxo de sorteio e revelacao (SA-03)
+- Sorteio ocorre no backend (`groups_draw.php`) para participantes `confirmed`.
+- O nome sorteado e criptografado com AES-256-GCM e chave derivada de token unico.
+- Participante recebe link de revelacao e codigo de acesso.
+- Frontend decripta localmente via Web Crypto (`src/lib/crypto.js`).
+- Backend confirma visualizacao (`reveal_confirm.php`) e atualiza status.
 
-## Revelacao do resultado (backend)
-- Endpoint `GET /api/reveal.php?id=ID` valida o ID, busca participante e grupo no banco, checa se o grupo esta ativo e retorna `from` e `to` (quem tirou quem).
-- O endpoint marca o participante como `viewed = 1`.
+## Fluxo de chat anonimo (SA-04)
+- Participante acessa `/chat?token=`.
+- Frontend faz polling (`chat_get.php`) e envio (`chat_send.php`).
+- Interface exibe remetente como anonimo.
 
-## Banco de dados
-- Tabelas: `groups` (email do organizador e status) e `participants` (participantes, amigo secreto e status de visualizacao).
-- Relacionamento: `participants.group_id` referencia `groups.id`.
-
-## Interface e experiencia
-- UI com estilo de terminal/CRT.
-- Indicadores de etapa e mensagens de erro inline.
-- Botao de copiar link individual para a area de transferencia.
-- Animacoes de revelacao do resultado.
-
-## Integracoes e configuracao
-- O frontend exige `VITE_API_BASE_URL` apontando para a API PHP.
-- O backend permite configurar CORS via `APP_ORIGIN`.
-- Configuracoes de email/IMAP existem no arquivo de config, mas nao ha uso efetivo no fluxo atual.
+## Persistencia e infraestrutura
+- Banco MySQL com tabelas para admins, grupos, participantes, resultados de sorteio e mensagens.
+- Frontend usa `VITE_API_BASE_URL`.
+- Backend usa CORS configuravel e SMTP/IMAP para envio de mensagens.
 
 ## O que nao existe hoje
-- Envios automaticos de email.
-- Autenticacao forte (OTP, login, tokens).
-- Painel para gerenciar ou encerrar grupos.
-- Regras adicionais de sorteio (ex.: evitar pares especificos).
+- Regra de exclusao de pares (ex.: casal nao pode se tirar).
+- Suite de testes automatizados ampla (ha scripts pontuais, sem gate unico de testes).
+- Rate limiting dedicado para endpoints publicos.

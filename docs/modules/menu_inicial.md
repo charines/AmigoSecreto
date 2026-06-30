@@ -1,13 +1,19 @@
 ---
 module: menu_inicial
 domain: SA-01 (Portaria) + SA-02 (Orquestrador de Grupo)
-components: [App.jsx, TerminalPanel.jsx, AdminAuth.jsx, AdminDashboard.jsx, InvitePage.jsx, JoinGroup.jsx]
-endpoints: [admin_me.php, admin_login.php, invite.php, invite_confirm.php, groups_join.php]
-last_updated: 2026-06-28
+components: [App.jsx, AdminAuth.jsx, ForgotPassword.jsx, ResetPassword.jsx, AdminDashboard.jsx, InvitePage.jsx, JoinGroup.jsx]
+endpoints: [admin_me.php, admin_login.php, admin_forgot_password.php, admin_reset_password.php, invite.php, invite_confirm.php, groups_join.php]
+last_updated: 2026-06-29
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — AdminAuth, AdminDashboard e RevealPage
-  passaram a ter layout próprio (full-page). TerminalPanel mantido apenas para:
-  estados de erro sem token, rota /invite e estado de checking inicial.
+  passaram a ter layout próprio (full-page).
+update_note: >
+  2026-06-29 · Migração completa para Neo-Brutalist: InvitePage.jsx e JoinGroup.jsx
+  redesenhados (full-page, sem wrapper). TerminalPanel.jsx, StepIndicator.jsx e
+  RetroTyping.jsx removidos do projeto — App.jsx agora usa um componente local
+  StatusScreen (Neo-Brutalist) para os estados de erro/loading sem rota dedicada.
+  Sistema de troca de tema CRT (ThemeContext.jsx, themes/themes.js, `?style=`)
+  removido por completo: não há mais nenhuma tela com design antigo CRT.
 ---
 
 # Módulo: Menu Inicial — Fluxo de Entrada e Self-Invitation

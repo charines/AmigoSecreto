@@ -2,7 +2,7 @@
 
 **Leia `agent.md` ANTES de qualquer resposta de código.** É a fonte única de verdade do projeto.
 
-## Preflight Obrigatório (6 passos)
+## Preflight Obrigatório (8 passos)
 
 1. `@agent.md` carregado e validado nesta sessão
 2. `@docs/modules/<modulo_relevante>.md` carregado — apenas o módulo afetado pela task
@@ -10,6 +10,8 @@
 4. Skill de IA ativada conforme `docs/modules/skills_catalog.md` (invocar antes do código)
 5. Impacto de segurança avaliado — toca tokens, crypto, SQL ou sessão? → skill `007` obrigatória
 6. Build limpo confirmado: `npm run lint && npm run build`
+7. Teste da mudança executado e evidência registrada (automático ou script/manual reproduzível)
+8. Toda decisão técnica ancorada em referência `arquivo:linha` (sem isso, tratar como hipótese)
 
 > **Atalho:** `./preflight.sh` executa os passos 1, 2, 3 e 6 automaticamente.
 
@@ -29,8 +31,8 @@ Saída: relatório ✓ / ✗ / ⚠ por passo. Exit code ≠ 0 se houver erro blo
 ./sync_obsidian.sh                # copia docs modificados para o vault
 ./sync_obsidian.sh --dry-run      # preview sem gravar nada
 ```
-Destino: `/home/dsktop-cwmlq04/Obsidian/Memorias/AmigoSecreto/docs/`  
-Convenção de nomes: `docs/modules/foo.md` → `docs__modules__foo.md` (path plano com `__`)  
+Destino: `/home/dsktop-cwmlq04/Obsidian/Memorias/AmigoSecreto/docs/`
+Convenção de nomes: `docs/modules/foo.md` → `docs__modules__foo.md` (path plano com `__`)
 Copia apenas arquivos com conteúdo diferente do vault (sem sobrescrever sem mudança).
 
 > Executar `./sync_obsidian.sh` após qualquer alteração em `docs/` ou `agent.md`.
@@ -44,3 +46,19 @@ Copia apenas arquivos com conteúdo diferente do vault (sem sobrescrever sem mud
 - Sem código sem módulo Mermaid — se não existir, criar o módulo antes
 
 > Documentação completa: `docs/docs_for_llm.md` · Skills: `docs/modules/skills_catalog.md`
+
+## 🤖 Guia de Roteamento Multi-IA (Economia de Tokens)
+
+Para maximizar a eficiência e gastar o mínimo de tokens entre os modelos, siga estritamente esta divisão de tarefas:
+
+### 1. Google Gemini (Flash / Pro) -> O "Operador de Contexto Longo"
+- **Quando usar:** Varreduras em lote, leitura de logs extensos do `preflight.sh`, ou quando precisar correlacionar o código PHP antigo (`migrate_v2.php` etc.) com o atual.
+- **Regra de Custo:** Use a janela de contexto gigante do Gemini para analisar impactos, mas exija que ele responda em tópicos curtos.
+
+### 2. OpenAI GPT (4o / 5) -> O "Gerador de Código Cirúrgico"
+- **Quando usar:** Criar componentes de UI Neo-Brutalist ou aplicar correções diretas nos endpoints PHP.
+- **Regra de Custo:** Force o GPT a responder estritamente usando blocos `diff` ou apenas a função alterada. Nunca envie o `agent.md` completo para o GPT; passe apenas o arquivo `docs/modules/<modulo>.md` relevante.
+
+### 3. Anthropic Claude (Sonnet / Code) -> O "Arquiteto e Auditor"
+- **Quando usar:** Refatorações complexas de criptografia (`secretSanta.js`), lógica de sorteio e execução via CLI (`Claude Code`).
+- **Regra de Custo:** Ative o Prompt Caching no Claude fixando este `CLAUDE.md` e o `agent.md` no bloco de leitura rápida.

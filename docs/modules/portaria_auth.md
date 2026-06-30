@@ -9,7 +9,7 @@ endpoints:
 note: >
   Documento de jornada — cobre a entrada completa do usuário desde o acesso à URL
   até as ações do SA-02. Detalhes internos do SA-02 em orquestrador_grupo.md.
-last_updated: 2026-06-28
+last_updated: 2026-06-30
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — AdminAuth.jsx layout full-page próprio.
   App.jsx renderiza AdminAuth diretamente, sem TerminalPanel.
@@ -115,17 +115,17 @@ sequenceDiagram
     end
 
     %% ── FASE 5: Auto-inscrição via Dharma Code ──────────────────
-    Note over JOIN: Rota alternativa: /join/DHARMA_CODE
+    Note over JOIN: Rota alternativa: /join?dharma=DHARMA_CODE
     U->>JOIN: Acessa link público compartilhado pelo admin
-    JOIN->>JOIN: getJoinCode()<br/>extrai último segmento do pathname
-    JOIN->>API: apiGet('/groups_get_public.php?code=DHARMA_CODE')
+    JOIN->>JOIN: lê query param `dharma`
+    JOIN->>API: apiGet('/groups_get_public.php?dharma=DHARMA_CODE')
     API->>JOIN_PHP: GET /groups_get_public.php
     JOIN_PHP-->>API: {group: {title, description, draw_date, budget_limit}}
     API-->>JOIN: dados públicos do grupo
     JOIN-->>U: Info do grupo + formulário nome + e-mail
 
     U->>JOIN: Preenche campos → clica EXECUTAR PROTOCOLO DE INSCRIÇÃO
-    JOIN->>API: apiPost('/groups_join.php', {code, name, email})
+    JOIN->>API: apiPost('/groups_join.php', {dharma, name, email})
     API->>JOIN_PHP: POST /groups_join.php
     JOIN_PHP->>JOIN_PHP: INSERT participant + dispara e-mail de convite
     JOIN_PHP-->>API: {ok:true}

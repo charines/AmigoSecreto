@@ -1,8 +1,8 @@
 ---
 project: AmigoSecreto
 type: Central de Contexto LLM
-version: 1.3.0
-last_updated: 2026-06-28
+version: 1.4.0
+last_updated: 2026-06-30
 ai_agnostic: true
 ---
 
@@ -20,7 +20,7 @@ Execute antes de qualquer sessão de codificação. `[INCLUIR NO PROMPT]` = copi
 contexto da IA. Os demais são verificações locais do desenvolvedor.
 
 ```
-PREFLIGHT — AmigoSecreto v1.3
+PREFLIGHT — AmigoSecreto v1.4
 ══════════════════════════════════════════════════════════════
 
 [ ] 1. CONSTITUIÇÃO CARREGADA
@@ -80,7 +80,25 @@ PREFLIGHT — AmigoSecreto v1.3
         npm run lint && npm run build → zero erros.
         [NÃO INCLUIR — CI/local]
 
-[ ] 10. OBSIDIAN MIRROR CHECK
+[ ] 10. TESTE DA MUDANÇA
+        Executar teste automatizado relevante ao escopo.
+        Se não houver teste automatizado no escopo, executar script/manual reproduzivel
+        e registrar evidência objetiva (comando + resultado).
+        [NÃO INCLUIR — CI/local]
+
+[ ] 11. EVIDÊNCIAS DA ENTREGA
+        Registrar no resumo técnico:
+          - comandos executados
+          - resultado (sucesso/falha)
+          - riscos residuais
+        [NÃO INCLUIR — uso interno do dev]
+
+[ ] 12. REFERÊNCIAS TÉCNICAS EXPLÍCITAS
+        Toda decisão técnica deve citar `arquivo:linha` que a sustenta.
+        Sem citação verificável, tratar como hipótese e validar antes de codar.
+        [INCLUIR NO PROMPT]
+
+[ ] 13. OBSIDIAN MIRROR CHECK
         O módulo Mermaid foi sincronizado no cofre após a última sessão?
         Se não: atualizar antes de iniciar nova codificação (ver Seção 4).
         [NÃO INCLUIR — lembrete ao dev]
@@ -408,3 +426,24 @@ Feature Request
 │  (vault pessoal)    │  Memória histórica humana
 └─────────────────────┘
 ```
+
+---
+
+## SEÇÃO 6 — Definition of Done (DoD) e Evidências
+
+Uma task só pode ser considerada concluída quando TODOS os itens abaixo forem verdadeiros:
+
+1. Escopo implementado nos arquivos corretos, sem alteração fora do domínio da task.
+2. Drift validado para o módulo Mermaid afetado.
+3. `npm run lint` sem erros.
+4. `npm run build` sem erros.
+5. Teste do comportamento alterado executado e documentado.
+6. Resumo final com evidências objetivas:
+   - comando executado
+   - resultado observado
+   - arquivos tocados
+   - riscos residuais
+7. Toda afirmação técnica relevante ancorada em citação `arquivo:linha`.
+
+Regra de bloqueio:
+- Se um item do DoD falhar, a entrega deve ser marcada como parcial e o motivo explicitado.

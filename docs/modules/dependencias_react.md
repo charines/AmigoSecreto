@@ -3,11 +3,14 @@ module: dependencias_react
 domain: Todos os sub-agentes (visão transversal)
 components: todos os src/
 generated_from: react-map.json (madge)
-last_updated: 2026-06-28
+last_updated: 2026-06-30
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — ChatAnonimo, AdminAuth, AdminDashboard e
   RevealPage removeram a dependência de TerminalPanel. TerminalPanel agora tem
   apenas 1 dependente direto (App.jsx, para estados de erro/loading/invite).
+update_note: >
+  2026-06-30 · App inclui rota /reset-password e componente ResetPassword.jsx.
+  AdminAuth importa ForgotPassword.jsx para recuperação de senha no mesmo fluxo.
 ---
 
 # Módulo: Mapa de Dependências React
@@ -38,6 +41,8 @@ flowchart TD
 
     subgraph SA01["SA-01 · Portaria"]
         AUTH["AdminAuth.jsx"]
+        FORGOT["ForgotPassword.jsx"]
+        RESET["ResetPassword.jsx"]
     end
 
     subgraph SA02["SA-02 · Orquestrador de Grupo"]
@@ -80,9 +85,13 @@ flowchart TD
     APP --> REVEAL_P
     APP --> PANEL
     APP --> API
+    APP --> RESET
 
     %% SA-01
     AUTH --> API
+    AUTH --> FORGOT
+    FORGOT --> API
+    RESET --> API
 
     %% SA-02
     DASH --> API
@@ -116,7 +125,7 @@ de alterar.
 
 | Arquivo | Dependentes diretos | Impacto | Observação |
 |---|---|---|---|
-| `lib/api.js` | 7 (App + todos os SA) | **CRÍTICO** | Toca tudo — qualquer mudança exige teste em todas as rotas |
+| `lib/api.js` | 9 (App + todos os SA + recuperação de senha) | **CRÍTICO** | Toca tudo — qualquer mudança exige teste em todas as rotas |
 | `ThemeContext.jsx` | 3 (main, TerminalPanel, RetroTyping) | **ALTO** | Afeta toda a UI visual |
 | `TerminalPanel.jsx` | 1 (App) | **MÉDIO** | Usado só para erros/loading/invite (pós-redesign) |
 | `RetroTyping.jsx` | 1 (TerminalPanel) | **MÉDIO** | Via TerminalPanel, afeta indiretamente tudo |

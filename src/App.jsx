@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import TerminalPanel from './components/TerminalPanel';
 import AdminAuth from './components/AdminAuth';
 import AdminDashboard from './components/AdminDashboard';
 import InvitePage from './components/InvitePage';
@@ -8,6 +7,30 @@ import JoinGroup from './components/JoinGroup';
 import ChatAnonimo from './components/ChatAnonimo';
 import ResetPassword from './components/ResetPassword';
 import { apiGet, apiPost, API_BASE_URL } from './lib/api';
+
+function StatusScreen({ icon, spinning, message, isError }) {
+  return (
+    <div className="min-h-screen flex items-center justify-center px-5" style={{ fontFamily: 'var(--font-nb)' }}>
+      <div
+        className={`nb-card p-6 max-w-sm w-full flex items-center gap-3 ${
+          isError ? 'bg-error-container' : ''
+        }`}
+      >
+        <span
+          className={`material-symbols-outlined text-2xl ${spinning ? 'animate-spin' : ''} ${
+            isError ? 'text-on-error-container' : 'text-primary'
+          }`}
+          style={{ fontVariationSettings: "'FILL' 1" }}
+        >
+          {icon}
+        </span>
+        <p className={`text-sm font-bold ${isError ? 'text-on-error-container' : 'text-on-surface'}`}>
+          {message}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 function resolveRoute() {
   const path = window.location.pathname;
@@ -54,26 +77,14 @@ export default function App() {
   }, [route]);
 
   if (!API_BASE_URL) {
-    return (
-      <TerminalPanel step="auth">
-        <p className="text-crt-red text-[10px] tracking-wider uppercase">
-          ✖ API nao configurada (VITE_API_BASE_URL).
-        </p>
-      </TerminalPanel>
-    );
+    return <StatusScreen icon="error" message="API não configurada (VITE_API_BASE_URL)." isError />;
   }
 
   if (route === 'invite') {
-    return (
-      <TerminalPanel step="invite" showSteps={false}>
-        {token ? (
-          <InvitePage token={token} />
-        ) : (
-          <p className="text-crt-red text-[10px] tracking-wider uppercase">
-            ✖ Token de convite ausente.
-          </p>
-        )}
-      </TerminalPanel>
+    return token ? (
+      <InvitePage token={token} />
+    ) : (
+      <StatusScreen icon="error" message="Token de convite ausente." isError />
     );
   }
 
@@ -81,11 +92,7 @@ export default function App() {
     return token ? (
       <RevealPage token={token} />
     ) : (
-      <TerminalPanel step="reveal" showSteps={false}>
-        <p className="text-crt-red text-[10px] tracking-wider uppercase">
-          ✖ Token de revelacao ausente.
-        </p>
-      </TerminalPanel>
+      <StatusScreen icon="error" message="Token de revelação ausente." isError />
     );
   }
   if (route === 'join') {
@@ -101,20 +108,12 @@ export default function App() {
     return token ? (
       <ChatAnonimo token={token} />
     ) : (
-      <TerminalPanel step="chat" showSteps={false}>
-        <p className="text-crt-red text-[10px] tracking-wider uppercase">
-          ✖ Token de chat ausente.
-        </p>
-      </TerminalPanel>
+      <StatusScreen icon="error" message="Token de chat ausente." isError />
     );
   }
 
   if (checking) {
-    return (
-      <TerminalPanel step="auth">
-        <p className="text-[10px] opacity-60">Carregando sessao...</p>
-      </TerminalPanel>
-    );
+    return <StatusScreen icon="autorenew" spinning message="Carregando sessão..." />;
   }
 
   const handleLogout = async () => {

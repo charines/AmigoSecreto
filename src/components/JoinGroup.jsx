@@ -44,122 +44,158 @@ export default function JoinGroup() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-black text-crt-green flex items-center justify-center p-4">
-        <div className="text-xs tracking-[0.5em] animate-pulse uppercase">Estabelecendo Conexão...</div>
-      </div>
-    );
-  }
-
-  if (error && !group) {
-    return (
-      <div className="min-h-screen bg-black text-crt-red flex items-center justify-center p-4">
-        <div className="crt-panel border-crt-red p-8 max-w-md w-full bg-crt-red/5">
-          <div className="text-[10px] tracking-[0.2em] uppercase mb-4 opacity-70">Sistema Interrompido</div>
-          <p className="text-sm uppercase leading-relaxed font-bold">{error}</p>
-          <a href="/" className="inline-block mt-6 text-[10px] border border-crt-red px-4 py-2 hover:bg-crt-red/10 transition-colors uppercase">Voltar ao Inicio</a>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-black text-crt-green flex flex-col items-center justify-center p-4 py-12">
-      <div className="max-w-2xl w-full space-y-8">
-        {/* Header Style Lost */}
-        <div className="flex flex-col items-center space-y-4 mb-12">
-          <div className="w-16 h-16 border-4 border-crt-green rounded-full flex items-center justify-center font-bold text-2xl tracking-tighter">
-            <span className="relative -top-1">DH</span>
-          </div>
-          <div className="text-center space-y-1">
-            <h1 className="text-xs tracking-[0.6em] uppercase opacity-40">Dharma Initiative</h1>
-            <div className="text-[8px] tracking-[0.4em] uppercase opacity-20">Station 3: The Swan</div>
-          </div>
+    <div className="min-h-screen flex flex-col overflow-x-hidden" style={{ fontFamily: 'var(--font-nb)' }}>
+      <div className="dot-pattern fixed inset-0 z-0" />
+
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[10%] left-[5%] opacity-20 nb-float">
+          <span className="material-symbols-outlined text-primary" style={{ fontSize: '100px', fontVariationSettings: "'FILL' 1" }}>
+            group_add
+          </span>
         </div>
-
-        {!success ? (
-          <div className="crt-panel border-crt-green/40 p-8 space-y-8 bg-crt-green/5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-crt-green/10">
-              <div className="h-full bg-crt-green/40 animate-progress" style={{ width: '30%' }}></div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="text-[10px] tracking-[0.3em] uppercase opacity-60">Mensagem do Sistema:</div>
-              <p className="text-lg uppercase tracking-tight leading-tight">
-                VOCÊ FOI SELECIONADO PARA PARTICIPAR DO <span className="text-crt-green-bright font-bold">"{group.title}"</span>.
-              </p>
-              {group.description && (
-                <p className="text-xs opacity-60 uppercase leading-relaxed italic border-l-2 border-crt-green/20 pl-4">
-                  {group.description}
-                </p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 text-[10px] uppercase opacity-50">
-              <div className="border border-crt-green/20 p-2 text-center">
-                <div>Data do Evento</div>
-                <div className="text-crt-green-bright mt-1 font-bold">{group.draw_date || 'A DEFINIR'}</div>
-              </div>
-              <div className="border border-crt-green/20 p-2 text-center">
-                <div>Limite Budget</div>
-                <div className="text-crt-green-bright mt-1 font-bold">{group.budget_limit ? `R$ ${group.budget_limit}` : 'N/A'}</div>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4 pt-4 border-t border-crt-green/10">
-              <div className="text-[10px] tracking-[0.2em] uppercase opacity-60">Preencha suas credenciais:</div>
-              <div className="space-y-4">
-                <input
-                  className="crt-input w-full p-4 text-sm"
-                  placeholder="NOME COMPLETO"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-                <input
-                  className="crt-input w-full p-4 text-sm"
-                  type="email"
-                  placeholder="ENDEREÇO DE E-MAIL"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              
-              {error && <p className="text-[10px] text-crt-red uppercase font-bold tracking-wider">{error}</p>}
-
-              <button 
-                type="submit" 
-                className={`crt-btn w-full py-4 text-sm font-bold shadow-[0_0_20px_rgba(57,255,132,0.1)] ${joining ? 'opacity-50' : ''}`}
-                disabled={joining}
-              >
-                {joining ? 'PROCESSANDO...' : 'EXECUTAR PROTOCOLO DE INSCRICAO'}
-              </button>
-            </form>
-          </div>
-        ) : (
-          <div className="crt-panel border-crt-green p-10 space-y-8 bg-crt-green/5 text-center">
-            <div className="text-crt-green-bright text-4xl mb-4">✓</div>
-            <h2 className="text-xl uppercase tracking-wider font-bold">Protocolo Iniciado</h2>
-            <div className="space-y-4 text-xs uppercase leading-relaxed opacity-80">
-              <p>Suas credenciais foram aceitas pelo sistema.</p>
-              <p>Um link de confirmação foi enviado para:</p>
-              <p className="text-white font-bold tracking-[0.1em]">{email}</p>
-              <p className="opacity-40 text-[9px]">Verifique também sua caixa de spam.</p>
-            </div>
-            <div className="pt-8 w-1/2 mx-auto border-t border-crt-green/10">
-              <div className="text-[8px] tracking-[1em] opacity-30">4 8 15 16 23 42</div>
-            </div>
-          </div>
-        )}
-
-        <div className="text-center">
-          <div className="text-[8px] tracking-[2em] uppercase opacity-10 hover:opacity-100 transition-opacity cursor-default inline-block">
-            NAMASTE
-          </div>
+        <div className="absolute top-[40%] right-[4%] opacity-15" style={{ animation: 'nb-float 3.5s ease-in-out infinite 1s' }}>
+          <span className="material-symbols-outlined text-secondary-container" style={{ fontSize: '80px', fontVariationSettings: "'FILL' 1" }}>
+            card_giftcard
+          </span>
+        </div>
+        <div className="absolute bottom-[15%] left-[8%] opacity-15" style={{ animation: 'nb-float 4s ease-in-out infinite 2s' }}>
+          <span className="material-symbols-outlined text-tertiary-container" style={{ fontSize: '72px', fontVariationSettings: "'FILL' 1" }}>
+            auto_awesome
+          </span>
         </div>
       </div>
+
+      <header className="nb-header relative z-10">
+        <div className="flex items-center gap-2">
+          <span className="material-symbols-outlined text-primary text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+            redeem
+          </span>
+          <h1 className="text-[1.75rem] leading-tight font-black text-primary italic">
+            AmigoSecreto
+          </h1>
+        </div>
+        <span className="text-xs font-bold text-on-surface-variant border-2 border-(--color-nb-ink) px-3 py-1 rounded-full nb-shadow-sm bg-white">
+          ENTRAR
+        </span>
+      </header>
+
+      <main className="relative z-10 flex-1 flex items-center justify-center px-5 py-10">
+        <div className="w-full max-w-sm space-y-6">
+          {loading && (
+            <div className="nb-card p-6 flex items-center justify-center gap-2 text-on-surface-variant font-semibold">
+              <span className="material-symbols-outlined animate-spin">autorenew</span>
+              Carregando grupo...
+            </div>
+          )}
+
+          {!loading && error && !group && (
+            <div className="space-y-4">
+              <div className="bg-error-container border-2 border-error rounded-xl p-4">
+                <p className="text-on-error-container text-sm font-bold">✖ {error}</p>
+              </div>
+              <a
+                href="/"
+                className="block text-center w-full py-3 rounded-xl border-2 border-(--color-nb-ink) bg-surface-container font-extrabold text-sm text-on-surface hover:bg-surface-container-high transition-colors nb-shadow-sm nb-press"
+              >
+                Voltar ao início
+              </a>
+            </div>
+          )}
+
+          {!loading && group && !success && (
+            <>
+              <div className="text-center space-y-1">
+                <h2 className="text-[2.25rem] leading-tight font-black text-on-background" style={{ textShadow: '2px 2px 0px var(--color-nb-ink)' }}>
+                  Você foi convidado!
+                </h2>
+                <p className="text-on-surface-variant font-semibold text-base">
+                  Participe do grupo "{group.title}"
+                </p>
+                {group.description && (
+                  <p className="text-on-surface-variant/70 text-sm">{group.description}</p>
+                )}
+              </div>
+
+              <div className="nb-card p-6 space-y-4">
+                <form className="space-y-4" onSubmit={handleSubmit}>
+                  <div className="space-y-1">
+                    <label className="text-xs font-extrabold text-on-surface uppercase tracking-wider">
+                      Nome
+                    </label>
+                    <input
+                      className="nb-input w-full p-3 rounded-xl text-sm text-on-surface"
+                      placeholder="Seu nome completo"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      autoComplete="name"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-extrabold text-on-surface uppercase tracking-wider">
+                      E-mail
+                    </label>
+                    <input
+                      className="nb-input w-full p-3 rounded-xl text-sm text-on-surface"
+                      type="email"
+                      placeholder="seu@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      autoComplete="email"
+                    />
+                  </div>
+
+                  {error && (
+                    <div className="bg-error-container border-2 border-error rounded-xl p-3">
+                      <p className="text-on-error-container text-sm font-bold">✖ {error}</p>
+                    </div>
+                  )}
+
+                  <button
+                    className="nb-btn-primary w-full py-4 rounded-xl text-base flex items-center justify-center gap-2"
+                    type="submit"
+                    disabled={joining}
+                  >
+                    {joining ? (
+                      <>
+                        <span className="material-symbols-outlined text-xl animate-spin">autorenew</span>
+                        PROCESSANDO...
+                      </>
+                    ) : (
+                      <>
+                        <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                          group_add
+                        </span>
+                        ENTRAR NO GRUPO
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
+            </>
+          )}
+
+          {success && (
+            <div className="nb-card p-8 space-y-4 text-center">
+              <span className="material-symbols-outlined text-primary" style={{ fontSize: '64px', fontVariationSettings: "'FILL' 1" }}>
+                celebration
+              </span>
+              <h2 className="text-2xl font-black text-on-background">Inscrição enviada!</h2>
+              <p className="text-on-surface-variant font-semibold text-sm">
+                Aguarde o convite de confirmação no seu e-mail:
+              </p>
+              <p className="text-on-surface font-bold text-sm">{email}</p>
+            </div>
+          )}
+
+          <p className="text-center text-[10px] text-on-surface-variant/40 font-bold uppercase tracking-widest">
+            4 8 15 16 23 42
+          </p>
+        </div>
+      </main>
     </div>
   );
 }

@@ -1,23 +1,11 @@
 /* ─── Google Fonts (must precede @import "tailwindcss") ────── */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=UnifrakturMaguntia&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,600;0,700;0,800;0,900;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
 @import "tailwindcss";
 
-/* ─── Tailwind design tokens (retro defaults) ───────────────── */
+/* ─── Tailwind design tokens — Neo-Brutalist (AmigoSecreto) ── */
 @theme {
-  --color-crt-green:  #39ff84;
-  --color-crt-red:    #ff4444;
-  --color-crt-amber:  #ffbb00;
-  --color-crt-bg:     #020904;
-  --color-crt-panel:  #040d07;
-
-  /* Legacy aliases */
-  --color-terminal-green:  #39ff84;
-  --color-terminal-border: #0d2818;
-
-  /* ── Neo-Brutalist Palette (AmigoSecreto redesign) ── */
   --color-nb-ink:                    #181a2e;
   --color-nb-bg:                     #fbf8ff;
   --color-primary:                   #b7102a;
@@ -72,205 +60,18 @@
   --font-nb: 'Nunito Sans', system-ui, sans-serif;
 }
 
-/* ─── Per-theme CSS variable overrides ──────────────────────── */
-/* Applied to <html data-theme="X"> so they beat @theme :root   */
-
-html[data-theme="retro"] {
-  --color-crt-green:       #39ff84;
-  --color-crt-red:         #ff4444;
-  --color-crt-amber:       #ffbb00;
-  --color-crt-bg:          #020904;
-  --color-crt-panel:       #040d07;
-  --color-terminal-green:  #39ff84;
-  --color-terminal-border: #0d2818;
-
-  /* Raw RGB triplets for rgb(var(…) / alpha) usage */
-  --color-crt-green-raw: 57 255 132;
-  --color-crt-red-raw:   255 68 68;
-  --color-crt-amber-raw: 255 187 0;
-
-  /* Typography */
-  --theme-font:         'JetBrains Mono', 'Courier New', monospace;
-  --theme-display-font: 'JetBrains Mono', 'Courier New', monospace;
-}
-
-html[data-theme="easter"] {
-  --color-crt-green:       #c4a0ff;
-  --color-crt-red:         #ff6b9d;
-  --color-crt-amber:       #e8c85a;
-  --color-crt-bg:          #0e0820;
-  --color-crt-panel:       #150d2a;
-  --color-terminal-green:  #c4a0ff;
-  --color-terminal-border: #2a1a4e;
-
-  --color-crt-green-raw: 196 160 255;
-  --color-crt-red-raw:   255 107 157;
-  --color-crt-amber-raw: 232 200 90;
-
-  --theme-font:         'Cinzel', Georgia, serif;
-  --theme-display-font: 'Cinzel', Georgia, serif;
-}
-
-html[data-theme="merry"] {
-  --color-crt-green:       #d4af37;
-  --color-crt-red:         #c41e3a;
-  --color-crt-amber:       #ff8c42;
-  --color-crt-bg:          #060106;
-  --color-crt-panel:       #0f0408;
-  --color-terminal-green:  #d4af37;
-  --color-terminal-border: #2a1a0a;
-
-  --color-crt-green-raw: 212 175 55;
-  --color-crt-red-raw:   196 30 58;
-  --color-crt-amber-raw: 255 140 66;
-
-  --theme-font:         'Cinzel', Georgia, serif;
-  --theme-display-font: 'UnifrakturMaguntia', serif;
-}
-
 /* ─── Base ─────────────────────────────────────────────────── */
 @layer base {
   *, *::before, *::after { box-sizing: border-box; }
 
   body {
-    background-color: var(--color-crt-bg);
-    color: var(--color-crt-green);
-    font-family: var(--theme-font, 'JetBrains Mono', 'Courier New', monospace);
+    background-color: var(--color-nb-bg);
+    color: var(--color-on-background);
+    font-family: var(--font-nb);
     overflow-x: hidden;
     min-height: 100vh;
-    transition: background-color 0.4s ease, color 0.4s ease;
   }
 
-  /* Static scanlines grid — retro only */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent          0px,
-      transparent          2px,
-      rgba(0, 0, 0, 0.07)  2px,
-      rgba(0, 0, 0, 0.07)  3px
-    );
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 1;
-    transition: opacity 0.4s ease;
-  }
-
-  /* Hide scanlines for themed variants */
-  html[data-theme="easter"] body::before,
-  html[data-theme="merry"]  body::before {
-    opacity: 0;
-  }
-
-  /* Vignette — darkens screen corners */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(
-      ellipse at 50% 50%,
-      transparent 45%,
-      rgba(0, 0, 0, 0.7) 100%
-    );
-    pointer-events: none;
-    z-index: 999;
-  }
-
-  /* Thin themed scrollbar */
-  ::-webkit-scrollbar        { width: 3px; height: 3px; }
-  ::-webkit-scrollbar-track  { background: transparent; }
-  ::-webkit-scrollbar-thumb  {
-    background: rgb(var(--color-crt-green-raw, 57 255 132) / 0.25);
-    border-radius: 2px;
-  }
-}
-
-/* ─── Component classes ─────────────────────────────────────── */
-@layer components {
-  /* Glowing text utility */
-  .crt-glow-text {
-    text-shadow:
-      0 0 8px var(--color-crt-green),
-      0 0 20px rgb(var(--color-crt-green-raw, 57 255 132) / 0.25);
-  }
-
-  /* Terminal input / textarea */
-  .crt-input {
-    background:  rgb(var(--color-crt-green-raw, 57 255 132) / 0.03);
-    border:      1px solid rgb(var(--color-crt-green-raw, 57 255 132) / 0.2);
-    color:       var(--color-crt-green);
-    font-family: var(--theme-font, 'JetBrains Mono', monospace);
-    caret-color: var(--color-crt-green);
-    outline:     none;
-    transition:  border-color 0.2s, box-shadow 0.2s;
-  }
-
-  .crt-input:focus {
-    border-color: rgb(var(--color-crt-green-raw, 57 255 132) / 0.5);
-    box-shadow:   0 0 14px rgb(var(--color-crt-green-raw, 57 255 132) / 0.06);
-  }
-
-  /* Primary button */
-  .crt-btn {
-    border:          1px solid var(--color-crt-green);
-    color:           var(--color-crt-green);
-    background:      transparent;
-    font-family:     var(--theme-font, 'JetBrains Mono', monospace);
-    font-weight:     700;
-    font-size:       0.75rem;
-    letter-spacing:  0.22em;
-    text-transform:  uppercase;
-    padding:         0.75rem 1.5rem;
-    cursor:          pointer;
-    transition:      background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
-    text-shadow:     0 0 8px var(--color-crt-green);
-    width:           100%;
-    display:         block;
-  }
-
-  .crt-btn:hover:not(:disabled) {
-    background:  var(--color-crt-green);
-    color:       var(--color-crt-bg);
-    text-shadow: none;
-    box-shadow:  0 0 24px rgb(var(--color-crt-green-raw, 57 255 132) / 0.3);
-  }
-
-  .crt-btn:disabled {
-    opacity: 0.3;
-    cursor:  not-allowed;
-  }
-
-  /* Secondary / icon button */
-  .crt-btn-sm {
-    border:         1px solid rgb(var(--color-crt-green-raw, 57 255 132) / 0.25);
-    color:          rgb(var(--color-crt-green-raw, 57 255 132) / 0.65);
-    background:     transparent;
-    font-family:    var(--theme-font, 'JetBrains Mono', monospace);
-    font-size:      0.625rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding:        0.375rem 0.75rem;
-    cursor:         pointer;
-    transition:     all 0.15s ease;
-  }
-
-  .crt-btn-sm:hover {
-    border-color: var(--color-crt-green);
-    color:        var(--color-crt-green);
-  }
-
-  .crt-btn-sm.copied {
-    background:   var(--color-crt-green);
-    border-color: var(--color-crt-green);
-    color:        var(--color-crt-bg);
-  }
-}
-
-/* ─── Neo-Brutalist utilities ──────────────────────────────── */
-@layer base {
   .material-symbols-outlined {
     font-family: 'Material Symbols Outlined';
     font-weight: normal;
@@ -288,6 +89,7 @@ html[data-theme="merry"] {
   }
 }
 
+/* ─── Neo-Brutalist component classes ───────────────────────── */
 @layer components {
   .nb-shadow     { box-shadow: 4px 4px 0px 0px var(--color-nb-ink); }
   .nb-shadow-sm  { box-shadow: 2px 2px 0px 0px var(--color-nb-ink); }
@@ -405,80 +207,9 @@ html[data-theme="merry"] {
   .nb-float { animation: nb-float 4s ease-in-out infinite; }
 }
 
-/* ─── Moving scanline / theme sweep ────────────────────────── */
-.scanline-sweep {
-  position:   fixed;
-  top:        -4px;
-  left:       0;
-  right:      0;
-  height:     4px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgb(var(--color-crt-green-raw, 57 255 132) / 0.07),
-    transparent
-  );
-  animation:       crt-sweep 8s linear infinite;
-  pointer-events:  none;
-  z-index:         998;
-}
-
-/* Easter: slower, softer bloom sweep */
-html[data-theme="easter"] .scanline-sweep {
-  height:    12px;
-  animation: crt-sweep 12s ease-in-out infinite;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgb(var(--color-crt-green-raw) / 0.04),
-    transparent
-  );
-}
-
-/* Merry: warm comet sweep */
-html[data-theme="merry"] .scanline-sweep {
-  height:    8px;
-  animation: crt-sweep 10s linear infinite;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgb(var(--color-crt-green-raw) / 0.06),
-    transparent
-  );
-}
-
 /* ─── Keyframes ─────────────────────────────────────────────── */
-@keyframes crt-sweep {
-  from { transform: translateY(0); }
-  to   { transform: translateY(100vh); }
-}
-
-@keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0);    }
-}
-
-@keyframes glitch-reveal {
-  0%   { opacity: 0;   clip-path: inset(70% 0 0 0);    }
-  20%  { opacity: 0.6; clip-path: inset(30% 0 50% 0);  }
-  45%  { opacity: 1;   clip-path: inset(0 0 65% 0);    }
-  65%  { opacity: 0.9; clip-path: inset(15% 0 10% 0);  }
-  85%  { opacity: 1;   clip-path: inset(3% 0 3% 0);    }
-  100% { opacity: 1;   clip-path: inset(0 0 0 0);      }
-}
-
+/* `blink` é referenciado via animation inline em RevealStep.jsx */
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
 }
-
-@keyframes crt-progress {
-  0%   { transform: translateX(-100%); }
-  50%  { transform: translateX(0); }
-  100% { transform: translateX(100%); }
-}
-
-.animate-fade-in-up    { animation: fade-in-up    0.5s ease forwards; }
-.animate-glitch-reveal { animation: glitch-reveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.animate-blink         { animation: blink 1s step-end infinite; }
-.animate-progress      { animation: crt-progress 3s linear infinite; }

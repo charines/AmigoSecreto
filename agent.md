@@ -1,8 +1,8 @@
 ---
 role: Senior Platform Engineer & Software Architect
 project: AmigoSecreto
-version: 1.3.0
-last_updated: 2026-06-28
+version: 1.4.0
+last_updated: 2026-06-30
 ai_agnostic: true
 ---
 
@@ -173,6 +173,8 @@ Skills instaladas em `.claude/skills/`. Para instruções de invocação por fer
    `rgb(var(--color-crt-*-raw) / <opacidade>)`.
 7. **PHP API:** cada endpoint é um arquivo `.php` isolado. Use `bootstrap.php` para
    inicialização e `cors.php` para headers CORS. Não criar controllers genéricos.
+8. **Anti-delírio técnico:** toda decisão de implementação deve citar evidência em
+   formato `arquivo:linha`. Sem citação verificável, trate como hipótese e valide antes.
 
 ---
 
@@ -222,3 +224,14 @@ ANTES DE QUALQUER LINHA DE CÓDIGO:
 
 Violações desta regra resultam em código gerado sem contexto arquitetural suficiente
 e devem ser rejeitadas pelo desenvolvedor.
+
+---
+
+## 9. Definition of Done (DoD)
+
+Uma tarefa so pode ser declarada concluida quando:
+1. `npm run lint` e `npm run build` passam sem erro.
+2. O comportamento alterado foi testado (automatizado quando existir; manual/script quando nao existir).
+3. O resumo final registra evidencias objetivas (comando + resultado).
+4. Riscos residuais e limites de validacao sao explicitados.
+5. O racional tecnico cita `arquivo:linha` para cada afirmacao critica.
