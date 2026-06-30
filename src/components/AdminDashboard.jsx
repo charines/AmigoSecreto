@@ -157,11 +157,24 @@ export default function AdminDashboard({ admin, onLogout }) {
     setNotice('');
     setError('');
     try {
+      let formattedBudget = groupForm.budget_limit.trim();
+      if (formattedBudget) {
+        const num = parseFloat(formattedBudget.replace(/\./g, '').replace(',', '.'));
+        if (!isNaN(num)) {
+          formattedBudget = num.toFixed(2);
+        }
+      }
+
+      let formattedDate = groupForm.draw_date;
+      if (formattedDate && formattedDate.includes('T')) {
+        formattedDate = formattedDate.replace('T', ' ') + ':00';
+      }
+
       const payload = {
         title: groupForm.title.trim(),
         description: groupForm.description.trim(),
-        draw_date: groupForm.draw_date,
-        budget_limit: groupForm.budget_limit,
+        draw_date: formattedDate,
+        budget_limit: formattedBudget,
       };
       const data = await apiPost('/groups_create.php', payload);
       setGroupForm({ title: '', description: '', draw_date: '', budget_limit: '' });
@@ -530,21 +543,47 @@ export default function AdminDashboard({ admin, onLogout }) {
             value={groupForm.description}
             onChange={(e) => setGroupForm((prev) => ({ ...prev, description: e.target.value }))}
           />
-          <input
-            className="nb-input w-full p-3 rounded-xl text-sm text-on-surface"
-            style={{ fontFamily: 'var(--font-nb)' }}
-            type="text"
-            placeholder="Data do evento (ex: 25/11/2026 10:30)"
-            value={groupForm.draw_date}
-            onChange={(e) => setGroupForm((prev) => ({ ...prev, draw_date: e.target.value }))}
-          />
-          <input
-            className="nb-input w-full p-3 rounded-xl text-sm text-on-surface"
-            style={{ fontFamily: 'var(--font-nb)' }}
-            placeholder="Budget (ex: 100.00)"
-            value={groupForm.budget_limit}
-            onChange={(e) => setGroupForm((prev) => ({ ...prev, budget_limit: e.target.value }))}
-          />
+          <div className="space-y-1">
+            <label className="text-xs font-extrabold text-on-surface uppercase tracking-wider pl-1">
+              Data do Evento
+            </label>
+            <input
+              className="nb-input w-full p-3 rounded-xl text-sm text-on-surface"
+              style={{ fontFamily: 'var(--font-nb)' }}
+              type="datetime-local"
+              value={groupForm.draw_date}
+              onChange={(e) => setGroupForm((prev) => ({ ...prev, draw_date: e.target.value }))}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-extrabold text-on-surface uppercase tracking-wider pl-1">
+              Orçamento (Opcional)
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant font-bold">R$</span>
+              <input
+                className="nb-input w-full p-3 pl-9 rounded-xl text-sm text-on-surface"
+                style={{ fontFamily: 'var(--font-nb)' }}
+                type="text"
+                inputMode="numeric"
+                placeholder="0,00"
+                value={groupForm.budget_limit}
+                onChange={(e) => {
+                  let value = e.target.value.replace(/\D/g, '');
+                  if (!value) {
+                    setGroupForm((prev) => ({ ...prev, budget_limit: '' }));
+                    return;
+                  }
+                  const floatValue = parseFloat(value) / 100;
+                  const formatted = new Intl.NumberFormat('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }).format(floatValue);
+                  setGroupForm((prev) => ({ ...prev, budget_limit: formatted }));
+                }}
+              />
+            </div>
+          </div>
           <button
             className="nb-btn-primary w-full py-4 rounded-xl text-base"
             type="submit"

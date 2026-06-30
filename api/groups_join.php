@@ -64,27 +64,32 @@ $mailConfig = $config['mail'] ?? [];
 $imapConfig = $config['imap'] ?? [];
 
 $inviteLink = $baseUrl . '/invite?token=' . $inviteToken;
-$subject = 'DHARMA INITIATIVE: Protocolo de Ativacao [' . $group['title'] . ']';
+$subject = '🎁 [PROJETO AMIGO SECRETO] Você foi selecionado para uma nova iniciativa!';
 
 $bodyLines = [
-    'DHARMA INITIATIVE - STATION 3: THE SWAN',
-    'SYSTEM_STATUS: REGISTRATION_RECEIVED',
-    'IDENTITY_CONFIRMATION_REQUIRED: TRUE',
-    '---------------------------------------',
+    'Olá, sobrevivente do dia a dia!',
     '',
-    'RECIPIENT_NAME: ' . strtoupper($name),
-    'ASSIGNED_GROUP: ' . strtoupper($group['title']),
+    'Chegou aquela época do ano. Fomos convocados para fazer parte de um experimento social altamente confidencial: o Amigo Secreto.',
     '',
-    'VOCE FOI SELECIONADO PARA PARTICIPAR DO PROTOCOLO "' . strtoupper($group['title']) . '".',
+    'Sua missão, caso decida aceitá-la, é participar dessa dinâmica para fortalecer os laços da nossa própria "estação". Não se preocupe, nenhum avião caiu e ninguém vai precisar carregar pedras na ilha, é apenas uma brincadeira saudável! 😉',
     '',
-    'CONFIRME SUA IDENTIDADE E PARTICIPACAO ACESSANDO O TERMINAL ABAIXO:',
+    '📋 Detalhes do Protocolo:',
+    '    O Projeto: ' . $group['title'],
+    '    Status do Sistema: Ativo e aguardando sua confirmação.',
+    '    Fase Atual: ' . ($group['description'] ?: 'Testando data e hora do sistema.'),
+    '',
+    '🔑 Instruções para Confirmação:',
+    'Para garantir que o seu nome entre na urna eletrônica e o sistema não entre em colapso, clique no link seguro abaixo para confirmar sua participação:',
+    '',
+    '🔗 ACESSE O TERMINAL AQUI PARA CONFIRMAR',
     $inviteLink,
     '',
-    '---------------------------------------',
-    'AVISO: A FALTA DE CONFIRMAÇÃO PODE COMPROMETER O EXPERIMENTO.',
+    '    ⚠️ AVISO DO SISTEMA (CÓDIGO DE ACESSO: 4 8 15 16 23 42)',
+    '    Por favor, confirme o quanto antes. Não queremos que o contador chegue a zero e o alarme comece a tocar, certo? Mantenha a ordem do protocolo.',
     '',
-    '4 8 15 16 23 42',
-    'NAMASTE.',
+    'Agradecemos a sua colaboração cientifica para o sucesso deste projeto.',
+    '',
+    'Namaste.'
 ];
 
 try {

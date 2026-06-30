@@ -49,32 +49,35 @@ if ($baseUrl === '') {
 }
 
 $revealLink = $baseUrl . '/reveal?token=' . urlencode($row['reveal_token']) . '&code=' . urlencode($row['token_raw']);
-$subject = 'DHARMA INITIATIVE: Re-transmissao de Chave de Decriptacao [' . $row['group_title'] . ']';
+$subject = '🎁 [PROJETO AMIGO SECRETO] Reenvio da sua chave de acesso! ' . $row['group_title'];
 $bodyLines = [
-    'DHARMA INITIATIVE - STATION 3: THE SWAN',
-    'SYSTEM_STATUS: ALERT - DATA_RECOVERY',
-    'ENCRYPTION_RECOVERY: IN_PROGRESS',
-    '---------------------------------------',
+    'Olá, sobrevivente do dia a dia!',
     '',
-    'RECIPIENT_ID: ' . strtoupper($row['name']),
-    'ASSIGNED_GROUP: ' . strtoupper($row['group_title']),
-    'PROJECT_OVERVIEW: ' . ($row['group_description'] ? strtoupper($row['group_description']) : 'N/A'),
-    'EVENT_TIMELINE: ' . ($row['group_draw_date'] ? $row['group_draw_date'] : 'PENDING'),
-    'ASSIGNMENT_STATUS: WAITING_FOR_REVELATION',
+    'Parece que a sua chave de acesso ao Amigo Secreto se perdeu no espaço-tempo, mas a nossa equipe de comunicações conseguiu recuperar o seu acesso ao terminal!',
     '',
-    '---------------------------------------',
+    'Não se preocupe, nenhum avião caiu e ninguém vai precisar carregar pedras na ilha, isso é apenas o reenvio do seu par do Amigo Secreto para o grupo "' . $row['group_title'] . '". 😉',
     '',
-    'ESTE E UM REENVIO DA CHAVE DE DECRIPTACAO PARA O SEU AMIGO SECRETO NO GRUPO "' . strtoupper($row['group_title']) . '".',
+    '📋 Detalhes do Protocolo:',
+    '    Participante Selecionado: ' . $row['name'],
+    '    Grupo Atual: ' . $row['group_title'],
+    '    Descrição do Projeto: ' . ($row['group_description'] ?: 'N/A'),
+    '    Linha do Tempo (Data do Evento): ' . ($row['group_draw_date'] ?: 'N/A'),
     '',
-    'ABRA O TERMINAL DE REVELACAO:',
+    '🔑 Instruções para Visualização:',
+    'Para descobrir quem tu tiraste e garantir que o sistema não entre em colapso, clica no link seguro abaixo para aceder ao terminal:',
+    '',
+    '🔗 ACESSE O TERMINAL AQUI PARA REVELAR',
     $revealLink,
     '',
-    'CODIGO_DE_DECRIPTACAO_RECUPERADO:',
-    $row['token_raw'],
+    'Caso o sistema peça para validar a tua identidade, o teu código de decodificação é:',
+    '👉 ' . $row['token_raw'],
     '',
-    '---------------------------------------',
-    '4 8 15 16 23 42',
-    'NAMASTE.',
+    '    ⚠️ AVISO DO SISTEMA (CÓDIGO DE ACESSO: 4 8 15 16 23 42)',
+    '    Por favor, guarda bem este e-mail. Não queremos que o contador chegue a zero e o alarme comece a tocar, certo? Mantenha a ordem do protocolo.',
+    '',
+    'Agradecemos a tua colaboração científica para o sucesso deste projeto.',
+    '',
+    'Namaste.'
 ];
 
 try {

@@ -82,32 +82,31 @@ $failed = [];
 
 foreach ($created as $p) {
     $inviteLink = $baseUrl . '/invite?token=' . urlencode($p['invite_token']);
-    $subject = 'DHARMA INITIATIVE: Convite para Amigo Secreto [' . $group['title'] . ']';
+    $subject = '🎁 [PROJETO AMIGO SECRETO] Você foi selecionado para uma nova iniciativa!';
     $bodyLines = [
-        'DHARMA INITIATIVE - STATION 3: THE SWAN',
-        'SYSTEM_STATUS: ACTIVE',
-        'ENCRYPTION_LEVEL: 256-BIT',
-        '---------------------------------------',
+        'Olá, sobrevivente do dia a dia!',
         '',
-        'INVITATION_PROTOCOL: ' . strtoupper($p['name']),
-        'ASSIGNED_GROUP: ' . strtoupper($group['title']),
-        'PROJECT_OVERVIEW: ' . ($group['description'] ? strtoupper($group['description']) : 'N/A'),
-        'EVENT_TIMELINE: ' . ($group['draw_date'] ? $group['draw_date'] : 'PENDING'),
-        'SYSTEM_ACCESS_CODE: 4 8 15 16 23 42',
+        'Chegou aquela época do ano. Fomos convocados para fazer parte de um experimento social altamente confidencial: o Amigo Secreto.',
         '',
-        '---------------------------------------',
+        'Sua missão, caso decida aceitá-la, é participar dessa dinâmica para fortalecer os laços da nossa própria "estação". Não se preocupe, nenhum avião caiu e ninguém vai precisar carregar pedras na ilha, é apenas uma brincadeira saudável! 😉',
         '',
-        'VOCE FOI SELECIONADO PARA PARTICIPAR DO PROJETO AMIGO SECRETO.',
-        'A CONFIRMACAO E OBRIGATORIA PARA A MANUTENCAO DO PROTOCOLO.',
+        '📋 Detalhes do Protocolo:',
+        '    O Projeto: ' . $group['title'],
+        '    Status do Sistema: Ativo e aguardando sua confirmação.',
+        '    Fase Atual: ' . ($group['description'] ?: 'Testando data e hora do sistema.'),
         '',
-        'ACESSE O TERMINAL ABAIXO PARA CONFIRMAR:',
+        '🔑 Instruções para Confirmação:',
+        'Para garantir que o seu nome entre na urna eletrônica e o sistema não entre em colapso, clique no link seguro abaixo para confirmar sua participação:',
+        '',
+        '🔗 ACESSE O TERMINAL AQUI PARA CONFIRMAR',
         $inviteLink,
         '',
-        '---------------------------------------',
-        'AVISO: NAO PERMITA QUE O CONTADOR CHEGUE A ZERO.',
-        'OS NUMEROS DEVEM SER RESPEITADOS: 4 8 15 16 23 42',
+        '    ⚠️ AVISO DO SISTEMA (CÓDIGO DE ACESSO: 4 8 15 16 23 42)',
+        '    Por favor, confirme o quanto antes. Não queremos que o contador chegue a zero e o alarme comece a tocar, certo? Mantenha a ordem do protocolo.',
         '',
-        'NAMASTE.',
+        'Agradecemos a sua colaboração cientifica para o sucesso deste projeto.',
+        '',
+        'Namaste.'
     ];
 
     try {

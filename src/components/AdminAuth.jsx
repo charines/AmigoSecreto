@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { apiPost } from '../lib/api';
+import { API_BASE_URL } from '../lib/api';
 import ForgotPassword from './ForgotPassword';
 
 export default function AdminAuth({ onAuth }) {
@@ -9,6 +10,27 @@ export default function AdminAuth({ onAuth }) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Health check — 'checking' | 'all_good' | 'server_only' | 'offline'
+  const [health, setHealth] = useState('checking');
+
+  useEffect(() => {
+    if (!API_BASE_URL) { setHealth('offline'); return; }
+    const controller = new AbortController();
+    const checkHealth = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/ping.php`, {
+          signal: controller.signal,
+        });
+        const data = await res.json();
+        setHealth(data.db ? 'all_good' : 'server_only');
+      } catch {
+        setHealth('offline');
+      }
+    };
+    checkHealth();
+    return () => controller.abort();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -216,6 +238,34 @@ export default function AdminAuth({ onAuth }) {
           </div>
 
           </>}
+
+          {/* Indicador de saúde da conexão */}
+          <div className="flex items-center justify-center gap-2 py-2">
+            {health === 'checking' && (
+              <>
+                <span className="inline-block w-2.5 h-2.5 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-secondary-container)' }} />
+                <span className="text-xs font-bold text-on-surface-variant/60">Conectando ao servidor...</span>
+              </>
+            )}
+            {health === 'all_good' && (
+              <>
+                <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#16a34a' }} />
+                <span className="text-xs font-bold text-on-surface-variant/60">Tudo pronto!</span>
+              </>
+            )}
+            {health === 'server_only' && (
+              <>
+                <span className="inline-block w-2.5 h-2.5 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-secondary-container)' }} />
+                <span className="text-xs font-bold text-on-surface-variant/60">Servidor acordando, aguarde um momento...</span>
+              </>
+            )}
+            {health === 'offline' && (
+              <>
+                <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ backgroundColor: 'var(--color-error)' }} />
+                <span className="text-xs font-bold text-on-surface-variant/60">Servidor indisponível no momento</span>
+              </>
+            )}
+          </div>
 
           {/* Rodapé */}
           <p className="text-center text-[10px] text-on-surface-variant/40 font-bold uppercase tracking-widest">

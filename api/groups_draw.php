@@ -27,7 +27,7 @@ function encrypt_name(string $name, string $token): array
 $admin = require_admin();
 $input = json_input();
 
-$groupId = (int)($input['group_id'] ?? 0);
+$groupId = (int) ($input['group_id'] ?? 0);
 if ($groupId <= 0) {
     json_response(['ok' => false, 'error' => 'Grupo invalido'], 400);
 }
@@ -36,7 +36,7 @@ $pdo = db();
 $stmt = $pdo->prepare(
     'SELECT id, title, description, draw_date, status FROM `groups` WHERE id = ? AND admin_id = ? LIMIT 1'
 );
-$stmt->execute([$groupId, (int)$admin['id']]);
+$stmt->execute([$groupId, (int) $admin['id']]);
 $group = $stmt->fetch();
 if (!$group) {
     json_response(['ok' => false, 'error' => 'Grupo nao encontrado'], 404);
@@ -93,19 +93,19 @@ try {
         $receiver = $pair['receiver'];
         $token = random_token(24);
         $revealToken = random_token(24);
-        $enc = encrypt_name((string)$receiver['name'], $token);
+        $enc = encrypt_name((string) $receiver['name'], $token);
         $stmtInsert->execute([
             $groupId,
-            (int)$giver['id'],
+            (int) $giver['id'],
             $enc['payload_b64'],
             $enc['iv_b64'],
             hash('sha256', $token),
             $token,
-            (int)$receiver['id'],
+            (int) $receiver['id'],
         ]);
-        $stmtUpdate->execute([$revealToken, (int)$giver['id']]);
+        $stmtUpdate->execute([$revealToken, (int) $giver['id']]);
         $results[] = [
-            'participant_id' => (int)$giver['id'],
+            'participant_id' => (int) $giver['id'],
             'name' => $giver['name'],
             'email' => $giver['email'],
             'reveal_token' => $revealToken,
@@ -117,8 +117,7 @@ try {
     $stmtGroup->execute(['drawn', $groupId]);
 
     $pdo->commit();
-}
-catch (Throwable $e) {
+} catch (Throwable $e) {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
@@ -133,36 +132,35 @@ $now = date('Y-m-d H:i:s');
 
 foreach ($results as $row) {
     $revealLink = $baseUrl . '/reveal?token=' . urlencode($row['reveal_token']) . '&code=' . urlencode($row['token']);
-    $subject = 'DHARMA INITIATIVE: Amigo Secreto Calculado [' . $group['title'] . ']';
+    $subject = '🎁 [PROJETO AMIGO SECRETO] O sorteio foi realizado! Descubra quem você tirou ' . $group['title'];
     $bodyLines = [
-        'DHARMA INITIATIVE - STATION 3: THE SWAN',
-        'SYSTEM_STATUS: EXECUTION_COMPLETE',
-        'DATA_DECRYPTION_REQUIRED: TRUE',
-        '---------------------------------------',
+        'Olá, sobrevivente do dia a dia!',
         '',
-        'RECIPIENT_ID: ' . strtoupper($row['name']),
-        'ASSIGNED_GROUP: ' . strtoupper($group['title']),
-        'PROJECT_OVERVIEW: ' . ($group['description'] ? strtoupper($group['description']) : 'N/A'),
-        'EVENT_TIMELINE: ' . ($group['draw_date'] ? $group['draw_date'] : 'PENDING'),
-        'SECURITY_CODE: 4 8 15 16 23 42',
+        'Grandes notícias! Os algoritmos do nosso terminal processaram os dados e o sorteio do grupo "' . $group['title'] . '" foi finalizado com sucesso! Você foi escolhido para uma missão muito importante.',
         '',
-        '---------------------------------------',
+        'Não se preocupe: nenhum avião caiu e ninguém vai precisar carregar pedras na ilha. É hora de descobrir quem é o seu Amigo Secreto! 😉',
         '',
-        'O SORTEIO DO GRUPO "' . strtoupper($group['title']) . '" FOI FINALIZADO.',
-        'SOUBEMOS QUE VOCE FOI ESCOLHIDO PARA UMA MISSAO IMPORTANTE.',
+        '📋 Detalhes do Protocolo:',
+        '    Participante Selecionado: ' . $row['name'],
+        '    Grupo Atual: ' . $group['title'],
+        '    Descrição do Projeto: ' . ($group['description'] ?: 'N/A'),
+        '    Linha do Tempo (Data do Evento): ' . ($group['draw_date'] ?: 'N/A'),
         '',
-        'ACESSE O LINK DE REVELACAO E INSIRA O CODIGO ABAIXO:',
+        '🔑 Instruções para Revelação:',
+        'Para que o sistema não entre em colapso e você saiba quem tirou, clique no link seguro abaixo para acessar o terminal:',
+        '',
+        '🔗 ACESSE O TERMINAL AQUI PARA REVELAR',
         $revealLink,
         '',
-        'CODIGO_DE_ACESSO_UNICO:',
-        $row['token'],
+        'Caso o sistema peça para validar o seu acesso, use este código:',
+        '👉 ' . $row['token'],
         '',
-        '---------------------------------------',
-        'AVISO: ESTA MENSAGEM SE AUTO-DESTRUIRA (NAO REALMENTE).',
-        'APRECIE O MOMENTO. EXECUTE O PROTOCOLO.',
+        '    ⚠️ AVISO DO SISTEMA (CÓDIGO DE ACESSO: 4 8 15 16 23 42)',
+        '    Esta mensagem não vai se autodestruir, mas guarde-a com cuidado. Não queremos que o contador chegue a zero e o alarme comece a tocar, certo? Mantenha a ordem do protocolo.',
         '',
-        '4 8 15 16 23 42',
-        'NAMASTE.',
+        'Agradecemos a sua colaboração científica para o sucesso deste projeto.',
+        '',
+        'Namaste.'
     ];
 
     try {
@@ -171,9 +169,8 @@ foreach ($results as $row) {
         $stmt = $pdo->prepare(
             "UPDATE participants SET status = 'token_sent', token_sent_at = ? WHERE id = ?"
         );
-        $stmt->execute([$now, (int)$row['participant_id']]);
-    }
-    catch (Throwable $e) {
+        $stmt->execute([$now, (int) $row['participant_id']]);
+    } catch (Throwable $e) {
         $failed[] = ['email' => $row['email'], 'error' => $e->getMessage()];
     }
 }

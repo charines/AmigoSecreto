@@ -48,31 +48,31 @@ if ($baseUrl === '') {
 }
 
 $inviteLink = $baseUrl . '/invite?token=' . urlencode($row['invite_token']);
-$subject = 'DHARMA INITIATIVE: Re-transmissao de Protocolo Amigo Secreto [' . $row['group_title'] . ']';
+$subject = '🎁 [PROJETO AMIGO SECRETO] Você foi selecionado para uma nova iniciativa! (Reenvio)';
 $bodyLines = [
-    'DHARMA INITIATIVE - STATION 3: THE SWAN',
-    'SYSTEM_STATUS: WARNING - PENDING_INVITATION',
-    'RE-TRANSMISSION_STATUS: ACTIVE',
-    '---------------------------------------',
+    'Olá, sobrevivente do dia a dia!',
     '',
-    'INVITATION_PROTOCOL: ' . strtoupper($row['name']),
-    'ASSIGNED_GROUP: ' . strtoupper($row['group_title']),
-    'PROJECT_OVERVIEW: ' . ($row['group_description'] ? strtoupper($row['group_description']) : 'N/A'),
-    'EVENT_TIMELINE: ' . ($row['group_draw_date'] ? $row['group_draw_date'] : 'PENDING'),
+    'Chegou aquela época do ano. Fomos convocados para fazer parte de um experimento social altamente confidencial: o Amigo Secreto.',
     '',
-    '---------------------------------------',
+    'Sua missão, caso decida aceitá-la, é participar dessa dinâmica para fortalecer os laços da nossa própria "estação". Não se preocupe, nenhum avião caiu e ninguém vai precisar carregar pedras na ilha, é apenas uma brincadeira saudável! 😉',
     '',
-    'ESTE E UM REENVIO DO PROTOCOLO DE CONVITE PARA O PROJETO AMIGO SECRETO.',
-    'SUA CONFIRMACAO E CRITICA PARA O SUCESSO DA OPERACAO.',
+    '📋 Detalhes do Protocolo:',
+    '    O Projeto: ' . $row['group_title'],
+    '    Status do Sistema: Ativo e aguardando sua confirmação.',
+    '    Fase Atual: ' . ($row['group_description'] ?: 'Testando data e hora do sistema.'),
     '',
-    'ACESSE O TERMINAL IMEDIATAMENTE:',
+    '🔑 Instruções para Confirmação:',
+    'Para garantir que o seu nome entre na urna eletrônica e o sistema não entre em colapso, clique no link seguro abaixo para confirmar sua participação:',
+    '',
+    '🔗 ACESSE O TERMINAL AQUI PARA CONFIRMAR',
     $inviteLink,
     '',
-    '---------------------------------------',
-    'AVISO: OS NUMEROS DEVEM SER RESPEITADOS.',
-    '4 8 15 16 23 42',
+    '    ⚠️ AVISO DO SISTEMA (CÓDIGO DE ACESSO: 4 8 15 16 23 42)',
+    '    Por favor, confirme o quanto antes. Não queremos que o contador chegue a zero e o alarme comece a tocar, certo? Mantenha a ordem do protocolo.',
     '',
-    'NAMASTE.',
+    'Agradecemos a sua colaboração cientifica para o sucesso deste projeto.',
+    '',
+    'Namaste.'
 ];
 
 try {
