@@ -3,26 +3,26 @@ module: orquestrador_grupo
 domain: SA-02 · O Orquestrador de Grupo
 components:
   active: [AdminDashboard.jsx, InvitePage.jsx, JoinGroup.jsx]
-  legacy: [EmailStep.jsx, MembersStep.jsx, ResultsStep.jsx]
 endpoints:
   [groups_create.php, groups_list.php, groups_detail.php, groups_delete.php,
    groups_invite.php, groups_get_public.php, groups_join.php,
    participants_delete.php, participants_resend_invite.php,
    invite.php, invite_confirm.php, mailer.php]
-last_updated: 2026-06-28
+last_updated: 2026-06-29
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — AdminDashboard.jsx (3 views) passou a
   ter layout full-page próprio. App.jsx renderiza o componente diretamente,
   sem TerminalPanel wrapper. Toda lógica de negócio (grupos, participantes,
   convites, sorteio, delete, resend) permanece 100% intacta.
+update_note: >
+  2026-06-29 · InvitePage.jsx e JoinGroup.jsx migrados para Neo-Brutalist
+  (full-page, sem texto/cor CRT). EmailStep.jsx, MembersStep.jsx e
+  ResultsStep.jsx — antes listados como "legados" — foram REMOVIDOS do
+  projeto: zero importadores confirmados, lógica já reimplementada inline em
+  AdminDashboard.jsx.
 ---
 
 # Módulo: Orquestrador de Grupo (SA-02)
-
-> **Aviso de redesign:** `EmailStep.jsx`, `MembersStep.jsx` e `ResultsStep.jsx` são
-> componentes **legados** — não são importados pelo fluxo ativo. O `AdminDashboard.jsx`
-> implementa toda a lógica diretamente com formulários inline. Manter os arquivos legados
-> durante o redesign; a lógica de negócio vive no backend PHP.
 
 ---
 
@@ -146,7 +146,7 @@ sequenceDiagram
 
     alt token inválido ou não encontrado
         API_INV-->>I: {ok: false, error: 'Participante nao encontrado'}
-        I-->>P: "✖ Participante nao encontrado" (texto vermelho CRT)
+        I-->>P: "✖ Participante nao encontrado" (card Neo-Brutalist bg-error-container)
     end
 ```
 
@@ -182,7 +182,7 @@ sequenceDiagram
 
     alt dharma_code inválido ou grupo fechado
         API_PUB-->>J: {ok: false, error: 'Grupo nao encontrado'}
-        J-->>U: Tela de erro com "Sistema Interrompido"
+        J-->>U: Card de erro Neo-Brutalist (bg-error-container) + botão "Voltar ao início"
     end
 
     alt nome ou e-mail inválido no envio
@@ -190,22 +190,6 @@ sequenceDiagram
         J-->>U: Exibe erro inline no formulário
     end
 ```
-
----
-
-## Componentes Legados (manter durante o redesign)
-
-> Estes componentes existem no codebase mas **não estão importados** no fluxo ativo.
-> Preservar a lógica de negócio embutida — pode ser reativada ou servir de referência.
-
-| Componente | Lógica preservada | Estado atual |
-|---|---|---|
-| `EmailStep.jsx` | Input de email do organizador, validação via `onKeyDown` | Não importado |
-| `MembersStep.jsx` | Textarea de nomes (1/linha), contagem, validação mín. 2, botão de sorteio | Não importado |
-| `ResultsStep.jsx` | Lista de resultados com links copiáveis por participante | Não importado |
-
-**Regra para o redesign:** as regras de negócio (mín. 2 participantes, validação de email,
-estado pending antes do envio em lote) devem ser mantidas no novo design.
 
 ---
 

@@ -1,23 +1,28 @@
 ---
 module: juiz_sorteio
 domain: SA-03 · O Juiz
-components: [AdminDashboard.jsx, RevealPage.jsx, RevealStep.jsx, ResultsStep.jsx]
+components: [AdminDashboard.jsx, RevealPage.jsx, RevealStep.jsx]
 utils: [src/utils/secretSanta.js, src/lib/crypto.js]
 endpoints: [groups_draw.php, reveal.php, reveal_confirm.php, participants_resend_draw.php]
-last_updated: 2026-06-28
+last_updated: 2026-06-29
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — RevealPage.jsx e RevealStep.jsx com
-  layout full-page próprio. App.jsx renderiza RevealPage diretamente (sem
-  TerminalPanel). RevealStep mantém typewriter setInterval/36ms, DECRYPT_MSG
-  original e setTimeout 950ms. Lógica de crypto (decryptName, AES-GCM) e
-  API calls (reveal.php, reveal_confirm.php) 100% preservadas.
+  layout full-page próprio. App.jsx renderiza RevealPage diretamente. RevealStep
+  mantém typewriter setInterval/36ms, DECRYPT_MSG original e setTimeout 950ms.
+  Lógica de crypto (decryptName, AES-GCM) e API calls (reveal.php,
+  reveal_confirm.php) 100% preservadas. Erros exibidos em card Neo-Brutalist
+  (bg-error-container / text-on-error-container), não mais em "vermelho CRT".
+update_note: >
+  2026-06-29 · ResultsStep.jsx foi removido do projeto (zero importadores).
+  TerminalPanel.jsx e RetroTyping.jsx também foram removidos — não existe mais
+  nenhuma referência válida a eles no código.
 ---
 
 # Módulo: O Juiz — Sorteio e Revelação (SA-03)
 
-> **Achado crítico de redesign:** `RevealStep.jsx` possui seu próprio efeito typewriter
-> implementado com `setInterval` inline — **não usa `RetroTyping.jsx`**. O `RetroTyping.jsx`
-> pertence ao `TerminalPanel.jsx`. Ao redesenhar, manter os dois comportamentos separados.
+> **Achado crítico (histórico):** `RevealStep.jsx` possui seu próprio efeito typewriter
+> implementado com `setInterval` inline — nunca usou `RetroTyping.jsx` (componente que
+> pertencia ao extinto `TerminalPanel.jsx` e foi removido do projeto em 2026-06-29).
 
 > **Achado de segurança:** O link de revelação embute a chave de descriptografia diretamente
 > na URL (`?code=<token>`). O backend nunca recebe essa chave — ela existe apenas no e-mail
@@ -129,12 +134,12 @@ sequenceDiagram
 
     alt code inválido ou expirado
         CRYPTO-->>RP: Lança exceção (tag inválida)
-        RP-->>P: "✖ Codigo invalido ou expirado" (vermelho CRT)
+        RP-->>P: "✖ Codigo invalido ou expirado" (card Neo-Brutalist bg-error-container)
     end
 
     alt revealToken não encontrado no DB
         API_RV-->>RP: {ok: false, error: '...'}
-        RP-->>P: "✖ [mensagem de erro]" (vermelho CRT)
+        RP-->>P: "✖ [mensagem de erro]" (card Neo-Brutalist bg-error-container)
     end
 ```
 
@@ -222,7 +227,7 @@ flowchart TD
     subgraph FETCH["🌐 Busca de Dados Criptografados"]
         API_CALL["apiGet('/reveal.php?token=revealToken')\nlib/api.js com credentials:include"]
         API_OK["{payload:{encrypted_b64, iv_b64}\n giver:{name}\n group:{title}}"]
-        API_ERR["✖ token inválido ou não encontrado\nExibe erro em vermelho CRT\nNÃO renderiza RevealStep"]
+        API_ERR["✖ token inválido ou não encontrado\nExibe erro em card Neo-Brutalist\nNÃO renderiza RevealStep"]
     end
 
     subgraph TRIGGER["⚡ Gatilho de Revelação"]
@@ -239,7 +244,7 @@ flowchart TD
         B64["base64ToBytes(encrypted_b64) → Uint8Array\nbase64ToBytes(iv_b64)      → Uint8Array iv"]
         GCM["crypto.subtle.decrypt(\n  {name:'AES-GCM', iv},\n  CryptoKey, payload\n)"]
         DECODE["textDecoder.decode(result)\n→ nome do amigo secreto plaintext"]
-        DEC_ERR["✖ tag GCM inválida\n'Codigo invalido ou expirado'\nExibe em vermelho CRT"]
+        DEC_ERR["✖ tag GCM inválida\n'Codigo invalido ou expirado'\nExibe em card Neo-Brutalist"]
     end
 
     subgraph CONFIRM_BOX["✅ Confirmação no Backend"]
@@ -249,7 +254,7 @@ flowchart TD
     end
 
     subgraph ANIM_BOX["🖥 RevealStep.jsx — Typewriter próprio (2 fases)"]
-        NOTE_CORR>"⚠ RevealStep NÃO usa StepIndicator.\nTypewriter é setInterval inline.\nStepIndicator fica em TerminalPanel\ne é suprimido nesta rota (showSteps=false)."]
+        NOTE_CORR>"⚠ RevealStep tem typewriter próprio\n(setInterval inline) — nunca dependeu de\nStepIndicator/TerminalPanel, que foram\nremovidos do projeto em 2026-06-29."]
         PH_D["FASE 1 · 'decrypt'\nsetInterval 36ms — digita char a char\n'DECRIPTOGRAFANDO RESULTADO SEGURO...'"]
         FAKE_LOG["Após 12+ chars — fake log lines:\n› VERIFICANDO INTEGRIDADE SHA256_AES256...\n› CONSULTANDO BANCO DE DADOS SEGURO...\n› VALIDANDO TOKEN DE SESSÃO ÚNICA..."]
         DONE_WAIT["Mensagem completa → clearInterval\nsetTimeout(950ms) → phase='reveal'"]

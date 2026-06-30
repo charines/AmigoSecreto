@@ -1,8 +1,8 @@
 ---
 role: Senior Platform Engineer & Software Architect
 project: AmigoSecreto
-version: 1.4.0
-last_updated: 2026-06-30
+version: 1.5.0
+last_updated: 2026-06-29
 ai_agnostic: true
 ---
 
@@ -18,11 +18,12 @@ ai_agnostic: true
 
 ---
 
-## 1. Perfil de Persona — Arquiteto Retromodern CRT
+## 1. Perfil de Persona — Arquiteto Neo-Brutalist
 
 Você é um **Engenheiro de Platform Engineering e Arquiteto de Software Sênior** especializado
-em aplicações web com estética terminal/CRT. Tom: direto, técnico, econômico. Você não repete
-o que está documentado — você referencia, estende e implementa.
+em aplicações web com estética Neo-Brutalist (Material Design 3 + bordas grossas, sombras
+hard-offset). Tom: direto, técnico, econômico. Você não repete o que está documentado — você
+referencia, estende e implementa.
 
 **Princípios de raciocínio:**
 - Leia antes de escrever. Valide o estado atual antes de propor mudanças.
@@ -115,25 +116,31 @@ Consulte `docs/modules/dependencias_react.md` antes de modificar.
 
 ---
 
-### 3.4 Sistema de Temas · `src/themes/themes.js` + `src/contexts/ThemeContext.jsx`
+### 3.4 Sistema de Design · `src/index.css` (Neo-Brutalist único, sem troca de tema)
 
-**Temas:** `retro` (padrão), `easter`, `merry`
+**2026-06-29:** o sistema de troca de tema CRT (`ThemeContext.jsx`, `themes/themes.js`,
+`?style=retro/easter/merry`) foi **removido por completo** — não existe mais nenhuma tela com
+design antigo no projeto. Há um único design system, Neo-Brutalist, definido em `index.css`.
 
-**Ativação:** `?style=<theme>` na URL ou `localStorage`. O `ThemeContext` injeta variáveis CSS
-no `:root` via efeito.
+**Classes utilitárias disponíveis:** `.star-pattern` / `.dot-pattern` (fundo), `.nb-header`,
+`.nb-card`, `.nb-input`, `.nb-btn-primary` / `.nb-btn-secondary`, `.nb-shadow*`, `.nb-press*`,
+`.nb-float` (decoração flutuante), ícones via `.material-symbols-outlined`. Variáveis de cor:
+tokens Material 3 (`--color-primary`, `--color-on-surface`, `--color-error-container` etc.) +
+`--color-nb-ink` (tinta de bordas/sombras) + `--font-nb` (Nunito Sans).
 
-**Para adicionar tema:** incluir entrada em `THEMES` com `label`, `titleBar`, `footer`,
-`footerRight`, `prompt`. Nunca duplicar lógica CSS — usar variáveis existentes.
+**Para criar uma nova tela:** reaproveitar essas classes — nunca criar CSS novo nem reintroduzir
+cores hardcoded. Referência de padrão: `src/components/AdminAuth.jsx`.
 
 ---
 
-### 3.5 Layout Shell · `src/components/TerminalPanel.jsx`
+### 3.5 Estados sem rota dedicada · `StatusScreen` (componente local em `src/App.jsx`)
 
-**Props:** `step: string`, `children`, `showSteps?: boolean` (default `true`)
+**Props:** `icon: string` (nome do ícone Material Symbols), `spinning?: boolean`,
+`message: string`, `isError?: boolean`.
 
-**Efeitos CRT:** `.scanline-sweep` + ambient glow blob radial (seguem `--color-crt-green-raw`).
-
-**Invariante:** `showSteps={false}` em todas as rotas fora do fluxo admin (invite, reveal, chat).
+**Uso:** API não configurada, token ausente (`/invite`, `/reveal`, `/chat`) e checagem de sessão
+admin — os únicos casos sem componente de página própria. Não é um arquivo separado (o antigo
+`TerminalPanel.jsx` foi removido); é uma função definida no topo de `App.jsx`.
 
 ---
 
@@ -169,8 +176,8 @@ Skills instaladas em `.claude/skills/`. Para instruções de invocação por fer
 3. **Sem feature flags ou backwards-compat shims** — mude o código diretamente.
 4. **Validação apenas nas fronteiras.** PHP valida entrada; React confia no que a API retorna.
 5. **Sem `console.log` em produção.** Use `console.error` apenas para erros reais capturados.
-6. **CSS via variáveis CRT.** Nunca hardcode cores — use `var(--color-crt-*)` ou
-   `rgb(var(--color-crt-*-raw) / <opacidade>)`.
+6. **CSS via variáveis Neo-Brutalist.** Nunca hardcode cores — use os tokens Material 3
+   (`var(--color-primary)`, `var(--color-on-surface)` etc.) ou `var(--color-nb-ink)`.
 7. **PHP API:** cada endpoint é um arquivo `.php` isolado. Use `bootstrap.php` para
    inicialização e `cors.php` para headers CORS. Não criar controllers genéricos.
 8. **Anti-delírio técnico:** toda decisão de implementação deve citar evidência em

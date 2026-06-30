@@ -3,20 +3,25 @@ module: dependencias_react
 domain: Todos os sub-agentes (visão transversal)
 components: todos os src/
 generated_from: react-map.json (madge)
-last_updated: 2026-06-30
+last_updated: 2026-06-29
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — ChatAnonimo, AdminAuth, AdminDashboard e
-  RevealPage removeram a dependência de TerminalPanel. TerminalPanel agora tem
-  apenas 1 dependente direto (App.jsx, para estados de erro/loading/invite).
+  RevealPage removeram a dependência de TerminalPanel.
 update_note: >
-  2026-06-30 · App inclui rota /reset-password e componente ResetPassword.jsx.
-  AdminAuth importa ForgotPassword.jsx para recuperação de senha no mesmo fluxo.
+  2026-06-29 · Migração Neo-Brutalist concluída: InvitePage.jsx e JoinGroup.jsx
+  redesenhados (full-page). TerminalPanel.jsx, StepIndicator.jsx, RetroTyping.jsx,
+  ThemeContext.jsx e themes/themes.js foram REMOVIDOS do projeto (zero
+  importadores). App.jsx não depende mais de nenhum deles — define um componente
+  local `StatusScreen` para os estados de erro/loading. `main.jsx` não usa mais
+  `ThemeProvider`. EmailStep.jsx, MembersStep.jsx e ResultsStep.jsx também foram
+  removidos (código morto sem importadores, anterior à reescrita do
+  AdminDashboard.jsx como arquivo único).
 ---
 
 # Módulo: Mapa de Dependências React
 
 > **Contexto de uso:** Inclua este arquivo em prompts sobre impacto transversal de mudanças,
-> refatorações em arquivos centrais (`api.js`, `ThemeContext.jsx`) ou criação de novos componentes.
+> refatorações em arquivos centrais (`api.js`, `index.css`) ou criação de novos componentes.
 > Não inclua junto a módulos funcionais específicos — use um ou outro por prompt.
 
 ---
@@ -31,12 +36,7 @@ flowchart TD
 
     subgraph ROUTER["Roteamento"]
         APP["App.jsx"]
-    end
-
-    subgraph LAYOUT["Layout · Shell CRT"]
-        PANEL["TerminalPanel.jsx"]
-        RETRO["RetroTyping.jsx"]
-        STEP["StepIndicator.jsx"]
+        STATUS["StatusScreen\n(componente local, sem token/loading)"]
     end
 
     subgraph SA01["SA-01 · Portaria"]
@@ -65,15 +65,12 @@ flowchart TD
         CRYPTO["lib/crypto.js"]
     end
 
-    subgraph TEMA["Sistema de Temas"]
-        THEME_CTX["ThemeContext.jsx"]
-        THEMES["themes/themes.js"]
-        CSS["index.css"]
+    subgraph CSS_SUB["Estilos"]
+        CSS["index.css\n(Neo-Brutalist puro)"]
     end
 
     %% Entrypoint
     MAIN --> APP
-    MAIN --> THEME_CTX
     MAIN --> CSS
 
     %% Roteamento → Componentes
@@ -83,7 +80,7 @@ flowchart TD
     APP --> INVITE
     APP --> JOIN
     APP --> REVEAL_P
-    APP --> PANEL
+    APP --> STATUS
     APP --> API
     APP --> RESET
 
@@ -103,17 +100,8 @@ flowchart TD
     REVEAL_P --> API
     REVEAL_P --> CRYPTO
 
-    %% SA-04 (sem TerminalPanel após redesign 2026-06-28)
+    %% SA-04
     CHAT --> API
-
-    %% Layout Shell
-    PANEL --> RETRO
-    PANEL --> STEP
-    PANEL --> THEME_CTX
-    RETRO --> THEME_CTX
-
-    %% Tema
-    THEME_CTX --> THEMES
 ```
 
 ---
@@ -126,13 +114,8 @@ de alterar.
 | Arquivo | Dependentes diretos | Impacto | Observação |
 |---|---|---|---|
 | `lib/api.js` | 9 (App + todos os SA + recuperação de senha) | **CRÍTICO** | Toca tudo — qualquer mudança exige teste em todas as rotas |
-| `ThemeContext.jsx` | 3 (main, TerminalPanel, RetroTyping) | **ALTO** | Afeta toda a UI visual |
-| `TerminalPanel.jsx` | 1 (App) | **MÉDIO** | Usado só para erros/loading/invite (pós-redesign) |
-| `RetroTyping.jsx` | 1 (TerminalPanel) | **MÉDIO** | Via TerminalPanel, afeta indiretamente tudo |
 | `lib/crypto.js` | 1 (RevealPage) | **MÉDIO** | Impacto isolado mas crítico — segurança |
-| `themes/themes.js` | 1 (ThemeContext) | **BAIXO** | Mudança de dados sem lógica |
 | `RevealStep.jsx` | 1 (RevealPage) | **BAIXO** | Componente folha de apresentação |
-| `StepIndicator.jsx` | 1 (TerminalPanel) | **BAIXO** | Componente folha |
 
 ---
 
@@ -143,10 +126,8 @@ Arquivos que não importam nenhum outro módulo do projeto. Seguros para alterar
 ```
 lib/api.js          ← folha de chamadas externas (fetch)
 lib/crypto.js       ← folha de criptografia (Web Crypto API nativa)
-themes/themes.js    ← folha de dados (objeto de configuração)
-index.css           ← folha de estilos globais
+index.css           ← folha de estilos globais (100% Neo-Brutalist)
 RevealStep.jsx      ← folha de apresentação
-StepIndicator.jsx   ← folha de apresentação
 ```
 
 ---
@@ -154,13 +135,13 @@ StepIndicator.jsx   ← folha de apresentação
 ## Clusters de Mudança Segura
 
 Agrupa componentes que podem ser alterados juntos sem risco de efeito colateral entre clusters.
+Não há mais cluster de "Shell CRT" ou "Tema" — ambos foram removidos do projeto em 2026-06-29
+(ver `update_note` do frontmatter).
 
 | Cluster | Arquivos | Pode alterar sem afetar outro cluster? |
 |---|---|---|
-| A — Auth Admin | `AdminAuth.jsx` | Sim |
+| A — Auth Admin | `AdminAuth.jsx`, `ForgotPassword.jsx`, `ResetPassword.jsx` | Sim |
 | B — Grupo | `AdminDashboard.jsx`, `InvitePage.jsx`, `JoinGroup.jsx` | Sim |
 | C — Reveal | `RevealPage.jsx`, `RevealStep.jsx`, `crypto.js` | Sim |
-| D — Chat | `ChatAnonimo.jsx` | Sim (layout próprio Neo-Brutalist, não usa TerminalPanel) |
-| E — Shell | `TerminalPanel.jsx`, `RetroTyping.jsx`, `StepIndicator.jsx` | **Não** — afeta A, B, C, D via App |
-| F — Tema | `ThemeContext.jsx`, `themes.js` | **Não** — afeta E que afeta tudo |
-| G — API | `api.js` | **Não** — afeta todos os clusters |
+| D — Chat | `ChatAnonimo.jsx` | Sim (layout próprio Neo-Brutalist) |
+| E — API | `api.js` | **Não** — afeta todos os clusters |

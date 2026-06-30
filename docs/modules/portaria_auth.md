@@ -9,10 +9,15 @@ endpoints:
 note: >
   Documento de jornada — cobre a entrada completa do usuário desde o acesso à URL
   até as ações do SA-02. Detalhes internos do SA-02 em orquestrador_grupo.md.
-last_updated: 2026-06-30
+last_updated: 2026-06-29
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — AdminAuth.jsx layout full-page próprio.
   App.jsx renderiza AdminAuth diretamente, sem TerminalPanel.
+update_note: >
+  2026-06-29 · TerminalPanel.jsx, StepIndicator.jsx, RetroTyping.jsx e
+  ThemeContext.jsx foram REMOVIDOS do projeto (zero importadores). App.jsx usa
+  um componente local `StatusScreen` (Neo-Brutalist) para os estados de
+  checking/erro sem rota dedicada — não há mais nenhuma tela CRT no app.
 forgot_password_note: >
   2026-06-28 · Feature adicionada: Forgot Password completo.
   DB: colunas reset_token_hash + reset_expires em admins (migrate_v5.php).
@@ -74,7 +79,7 @@ sequenceDiagram
         else Credenciais inválidas
             LOGIN-->>API: {ok:false, error: 'Credenciais invalidas'}
             API-->>AUTH: throw Error
-            AUTH-->>U: ✖ Erro exibido em vermelho CRT
+            AUTH-->>U: ✖ Erro exibido em card Neo-Brutalist (bg-error-container)
         end
     end
 

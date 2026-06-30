@@ -1,8 +1,8 @@
 ---
 project: AmigoSecreto
 type: Central de Contexto LLM
-version: 1.4.0
-last_updated: 2026-06-30
+version: 1.5.0
+last_updated: 2026-06-29
 ai_agnostic: true
 ---
 
@@ -152,9 +152,6 @@ App.jsx resolveRoute() → route='admin'
 **Arquivos de domínio:**
 ```
 src/components/AdminDashboard.jsx
-src/components/MembersStep.jsx
-src/components/EmailStep.jsx
-src/components/StepIndicator.jsx
 src/components/InvitePage.jsx
 src/components/JoinGroup.jsx
 api/groups_create.php   api/groups_delete.php
@@ -167,13 +164,18 @@ api/participants_resend_invite.php  api/mailer.php
 
 **Fluxos:**
 ```
-Criação:   EmailStep → MembersStep → ResultsStep
+Criação:   AdminDashboard.jsx (view='create', formulário inline)
+           → POST groups_create.php
 
 Convite:   groups_invite.php → mailer.php → email /invite?token=UUID
            → InvitePage.jsx → invite.php → invite_confirm.php
 
-Adesão:    /join?dharma=CODE → JoinGroup.jsx → groups_join.php
+Adesão:    /join/<dharma_code> → JoinGroup.jsx → groups_join.php
 ```
+
+> 2026-06-29: `EmailStep.jsx`, `MembersStep.jsx` e `ResultsStep.jsx` foram removidos do
+> projeto (zero importadores) — a criação de grupo já vivia 100% inline em
+> `AdminDashboard.jsx` desde o redesign Neo-Brutalist.
 
 **Invariantes:**
 - Tokens de convite são UUIDs gerados no PHP, em `participants.invite_token`.
@@ -192,7 +194,6 @@ src/utils/secretSanta.js
 src/lib/crypto.js
 src/components/RevealPage.jsx
 src/components/RevealStep.jsx
-src/components/ResultsStep.jsx
 api/draw.php              api/groups_draw.php
 api/reveal.php            api/reveal_confirm.php
 api/participants_resend_draw.php
@@ -249,25 +250,24 @@ expor o remetente. Frontend exibe apenas "Anônimo".
 
 ```
 App.jsx
-  ├── TerminalPanel.jsx ← ThemeContext.jsx ← themes.js
+  ├── StatusScreen (componente local, sem token/loading/erro de API)
   ├── AdminAuth.jsx     ← api.js                          [SA-01]
   ├── AdminDashboard.jsx ← api.js                         [SA-02]
-  │     ├── MembersStep.jsx
-  │     ├── EmailStep.jsx
-  │     └── ResultsStep.jsx
   ├── InvitePage.jsx    ← api.js                          [SA-02]
   ├── JoinGroup.jsx     ← api.js                          [SA-02]
   ├── RevealPage.jsx    ← api.js ← crypto.js              [SA-03]
   └── ChatAnonimo.jsx   ← api.js                          [SA-04]
 ```
 
+> 2026-06-29: `TerminalPanel.jsx`, `StepIndicator.jsx`, `RetroTyping.jsx` e
+> `ThemeContext.jsx`/`themes.js` foram removidos do projeto (zero importadores). Não há
+> mais nenhum componente de tema/shell CRT — todas as telas são Neo-Brutalist.
+
 **Arquivos de maior impacto (alterar com máxima cautela):**
 
 | Arquivo               | Dependentes diretos | Skill obrigatória antes de alterar |
 |-----------------------|---------------------|------------------------------------|
 | `src/lib/api.js`      | 7 (todas as rotas)  | `cc-skill-security-review`         |
-| `ThemeContext.jsx`    | 3                   | —                                  |
-| `TerminalPanel.jsx`   | 2                   | —                                  |
 | `src/lib/crypto.js`   | 1 (RevealPage)      | `007` obrigatório                  |
 
 ---
