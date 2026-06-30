@@ -47,12 +47,12 @@ MODULE_FILES["orquestrador_grupo"]="src/components/AdminDashboard.jsx src/compon
 MODULE_FILES["juiz_sorteio"]="src/components/RevealPage.jsx src/components/RevealStep.jsx src/lib/crypto.js src/utils/secretSanta.js api/groups_draw.php api/reveal.php api/reveal_confirm.php api/participants_resend_draw.php"
 MODULE_FILES["chat_anonimo"]="src/components/ChatAnonimo.jsx api/chat_get.php api/chat_send.php"
 MODULE_FILES["menu_inicial"]="src/App.jsx src/components/InvitePage.jsx src/components/JoinGroup.jsx src/components/AdminDashboard.jsx"
-MODULE_FILES["dependencias_react"]="src/App.jsx src/components/TerminalPanel.jsx src/contexts/ThemeContext.jsx src/lib/api.js"
+MODULE_FILES["dependencias_react"]="src/App.jsx src/main.jsx src/lib/api.js src/lib/crypto.js src/index.css"
 
 # ── Header ─────────────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}══════════════════════════════════════════════${RESET}"
-echo -e "${BOLD}  PREFLIGHT · AmigoSecreto v1.3              ${RESET}"
+echo -e "${BOLD}  PREFLIGHT · AmigoSecreto v1.5              ${RESET}"
 echo -e "${BOLD}══════════════════════════════════════════════${RESET}"
 echo ""
 

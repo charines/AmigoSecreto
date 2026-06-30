@@ -20,7 +20,7 @@ Execute antes de qualquer sessão de codificação. `[INCLUIR NO PROMPT]` = copi
 contexto da IA. Os demais são verificações locais do desenvolvedor.
 
 ```
-PREFLIGHT — AmigoSecreto v1.4
+PREFLIGHT — AmigoSecreto v1.5
 ══════════════════════════════════════════════════════════════
 
 [ ] 1. CONSTITUIÇÃO CARREGADA

@@ -20,7 +20,7 @@ desenvolvedor e proponha a criação do módulo antes de qualquer código.
 
 ## Regras Invioláveis
 
-- CSS: exclusivamente via variáveis `var(--color-crt-*)` — nunca cores hardcoded
+- CSS: exclusivamente via tokens Material 3 (`var(--color-primary)`, `var(--color-on-surface)` etc.), `var(--color-nb-ink)` e classes `nb-*` — nunca cores hardcoded
 - Criptografia: `src/lib/crypto.js` usa AES-GCM + Web Crypto API nativa — não substituir
 - Sorteio: lógica sempre em `src/utils/secretSanta.js` ou PHP — nunca em componente visual
 - Tokens de convite/reveal: gerados no PHP — nunca no frontend
