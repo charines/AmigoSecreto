@@ -6,7 +6,7 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-VAULT="/home/dsktop-cwmlq04/Obsidian/Memorias/AmigoSecreto/docs"
+VAULT="${HOME}/Obsidian/Memorias/AmigoSecreto/docs"
 DRY_RUN=false
 COPIED=0
 SKIPPED=0

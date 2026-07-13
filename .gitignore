@@ -31,3 +31,11 @@ api/.env
 out.txt
 .env
 contexto_projeto.txt
+
+# Skills instaladas via symlink para ~/projects/DevSkills (reproduzíveis por /setup-projeto)
+# 007 é exceção: skill própria deste projeto, sem equivalente em DevSkills — continua versionada
+.claude/skills/cc-skill-security-review
+.claude/skills/mermaid-expert
+.claude/skills/php-pro
+.claude/skills/react-best-practices
+.claude/skills/constant-time-analysis

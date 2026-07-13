@@ -156,6 +156,7 @@ Skills instaladas em `.claude/skills/`. Para instruções de invocação por fer
 | 🥉     | `mermaid-expert`         | Diagramas `docs/modules/`  | Ao criar ou atualizar qualquer módulo Mermaid |
 | 4      | `react-best-practices`   | React 19 + Vite            | Ao criar componentes ou otimizar re-renders |
 | 5      | `php-pro`                | Endpoints PHP              | Ao criar ou refatorar arquivos em `api/` |
+| 6      | `constant-time-analysis` | Timing side-channels       | Complementa `007` em `crypto.js` · `reveal.php` · `admin_login.php` · `groups_draw.php` |
 
 **Regras de ativação (agnósticas de ferramenta):**
 
@@ -166,6 +167,8 @@ Skills instaladas em `.claude/skills/`. Para instruções de invocação por fer
    aplica a este projeto Vite puro).
 4. Uma skill por sessão de trabalho. Invocação múltipla dilui o contexto.
 5. Instruções completas de invocação por ferramenta: `docs/modules/skills_catalog.md`.
+6. `constant-time-analysis` roda junto com `007` (não conta como segunda skill) quando a
+   task envolve comparação de tokens/segredos com risco de timing leak.
 
 ---
 

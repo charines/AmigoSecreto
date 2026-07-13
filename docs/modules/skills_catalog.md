@@ -22,6 +22,7 @@ last_updated: 2026-06-28
 | Criar ou atualizar diagrama Mermaid      | `mermaid-expert`         |
 | Novo componente React, otimização UI     | `react-best-practices`   |
 | Novo endpoint PHP, refatoração backend   | `php-pro`                |
+| Timing side-channel em comparação de tokens/crypto | `constant-time-analysis` |
 
 **Regra:** uma skill por sessão de trabalho. Skills instaladas em `.claude/skills/`.
 
@@ -186,6 +187,31 @@ server-after-*        → não existe em Vite
 **Invariante:** cada endpoint é um arquivo `.php` isolado em `api/`. A skill `php-pro` não
 deve propor consolidação em controllers ou frameworks — isso viola a arquitetura definida
 em `agent.md §5`.
+
+---
+
+## 6 · `constant-time-analysis` — Timing Side-Channels
+
+**Arquivo:** `.claude/skills/constant-time-analysis/SKILL.md`
+**Risk level:** `unknown` | **Uso:** complementar à `007`, mesma sessão (não conta como skill separada)
+
+### Quando usar neste projeto
+
+- Junto com `007`, ao tocar comparação de segredos: `crypto.js` (chave derivada de token),
+  `reveal.php` / `invite_confirm.php` (comparação de `reveal_token`/`invite_token`),
+  `admin_login.php` (comparação de senha/hash).
+- Antes de qualquer refatoração em `groups_draw.php` que compare tokens ou IDs sensíveis.
+
+### O que verificar
+
+```
+Comparações de string com == ou === em vez de hash_equals()/timing-safe compare
+Branches condicionais cujo tempo de execução depende do valor do segredo
+Early-return em loops de comparação byte-a-byte
+```
+
+**Nota:** não substitui a `007` — audita um ângulo específico (vazamento por tempo de
+execução) que a `007` não cobre em profundidade.
 
 ---
 

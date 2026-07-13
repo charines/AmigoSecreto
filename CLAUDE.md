@@ -37,6 +37,15 @@ Copia apenas arquivos com conteúdo diferente do vault (sem sobrescrever sem mud
 
 > Executar `./sync_obsidian.sh` após qualquer alteração em `docs/` ou `agent.md`.
 
+### `scripts/snapshot.sh` — Snapshot completo para análise externa
+```bash
+./scripts/snapshot.sh             # gera snapshot em /tmp/snapshot_AmigoSecreto_<timestamp>.txt
+```
+Detecta arquivo de texto por conteúdo (inclui `.php` da API), trunca arquivos grandes e
+exclui segredos (`.env`, chaves, lockfiles) marcando-os como `[EXCLUÍDO]` sem despejar
+conteúdo. Substitui o antigo `contexto.sh`/`gera_contexto.py` (preservados como
+`scripts/*.bak-20260712` por referência).
+
 ## Regras Rápidas
 
 - Stack: React 19 + Vite 7 + TailwindCSS 4 · PHP 8 REST · MySQL 8
