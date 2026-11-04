@@ -71,3 +71,13 @@ Para maximizar a eficiência e gastar o mínimo de tokens entre os modelos, siga
 ### 3. Anthropic Claude (Sonnet / Code) -> O "Arquiteto e Auditor"
 - **Quando usar:** Refatorações complexas de criptografia (`secretSanta.js`), lógica de sorteio e execução via CLI (`Claude Code`).
 - **Regra de Custo:** Ative o Prompt Caching no Claude fixando este `CLAUDE.md` e o `agent.md` no bloco de leitura rápida.
+
+## Agent skills
+
+### Issue tracker
+
+Issues deste projeto vivem no GitHub Issues (`charines/AmigoSecreto`), via CLI `gh`. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Layout single-context: `GLOSSARY.md` + `docs/adr/` na raiz (criados sob demanda). See `docs/agents/domain.md`.

@@ -39,3 +39,17 @@ contexto_projeto.txt
 .claude/skills/php-pro
 .claude/skills/react-best-practices
 .claude/skills/constant-time-analysis
+
+# Skills instaladas via symlink para ~/projects/mattpocock-skills (fluxo spec → tickets → tdd → review-spec)
+.claude/skills/to-spec
+.claude/skills/to-tickets
+.claude/skills/implement
+.claude/skills/tdd
+.claude/skills/review-spec
+.claude/skills/retro
+.claude/skills/domain-modeling
+.claude/skills/codebase-design
+.claude/skills/grill-with-docs
+.claude/skills/setup-matt-pocock-skills
+.claude/skills/writing-for-agents
+.claude/skills/grilling
