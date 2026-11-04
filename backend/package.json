@@ -1,0 +1,16 @@
+{
+  "name": "amigosecreto-backend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.10.0",
+    "@vercel/node": "^3.2.0"
+  }
+}

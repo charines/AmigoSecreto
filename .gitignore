@@ -17,6 +17,7 @@ dist-ssr
 api/.env
 !.env.example
 .netlify/
+.vite/
 
 # Editor directories and files
 .vscode/*
