@@ -1,13 +1,31 @@
-// Stub minimo ate o ticket #5 (participantes e convites) trazer o nodemailer
-// completo. Mantem a mesma assinatura para os handlers que ja dependem de envio
-// de e-mail (forgot-password) nao precisarem mudar quando o mailer real entrar.
+import nodemailer from 'nodemailer';
+import type { BackendConfig } from './config.js';
+
 export type MailMessage = {
   to: string;
   subject: string;
   text: string;
 };
 
-export async function sendMail(message: MailMessage): Promise<void> {
-  // eslint-disable-next-line no-console
-  console.log(`[mailer stub] to=${message.to} subject=${message.subject}`);
+export function buildTransportOptions(mailConfig: BackendConfig['mail']) {
+  return {
+    host: mailConfig.host,
+    port: mailConfig.port,
+    secure: mailConfig.secure.toLowerCase() === 'ssl',
+    auth: { user: mailConfig.user, pass: mailConfig.pass },
+    connectionTimeout: mailConfig.timeout * 1000,
+  };
+}
+
+export function createSendMail(mailConfig: BackendConfig['mail']) {
+  const transport = nodemailer.createTransport(buildTransportOptions(mailConfig));
+
+  return async function sendMail(message: MailMessage): Promise<void> {
+    await transport.sendMail({
+      from: mailConfig.fromName ? `"${mailConfig.fromName}" <${mailConfig.from}>` : mailConfig.from,
+      to: message.to,
+      subject: message.subject,
+      text: message.text,
+    });
+  };
 }

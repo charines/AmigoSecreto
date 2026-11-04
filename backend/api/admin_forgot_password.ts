@@ -5,7 +5,7 @@ import { loadConfig } from '../lib/config.js';
 import { buildCorsResponse } from '../lib/cors.js';
 import { getPool } from '../lib/db.js';
 import { randomToken } from '../lib/session.js';
-import { sendMail, type MailMessage } from '../lib/mailer.js';
+import { createSendMail, type MailMessage } from '../lib/mailer.js';
 
 export type ForgotPasswordResult = {
   status: number;
@@ -70,7 +70,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const result = await forgotPassword(getPool(config), sendMail, String(req.body?.email ?? ''), config.app.baseUrl);
+  const result = await forgotPassword(
+    getPool(config),
+    createSendMail(config.mail),
+    String(req.body?.email ?? ''),
+    config.app.baseUrl,
+  );
   res.statusCode = result.status;
   res.end(JSON.stringify(result.body));
 }
