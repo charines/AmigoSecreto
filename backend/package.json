@@ -6,13 +6,17 @@
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",
     "lint": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:migrate": "tsx db/migrate.ts",
+    "smtp:diag": "tsx scripts/smtp-diag.ts",
+    "smtp:send-test": "tsx scripts/send-test-email.ts"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.10.0",
     "@types/nodemailer": "^8.0.2",
     "@vercel/node": "^3.2.0",
+    "tsx": "^4.23.15",
     "typescript": "^5.7.0",
     "vitest": "^5.1.0"
   },
