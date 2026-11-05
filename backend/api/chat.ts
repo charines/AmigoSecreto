@@ -1,22 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import type { Pool } from 'mysql2/promise';
 import { loadConfig } from '../lib/config.js';
 import { buildCorsResponse } from '../lib/cors.js';
-import { destroySession } from '../lib/sessionStore.js';
 import { getPool } from '../lib/db.js';
-import { readSessionToken } from '../lib/requestSession.js';
-
-export type LogoutResult = {
-  status: number;
-  body: { ok: boolean };
-};
-
-export async function logoutAdmin(pool: Pool, sessionToken: string | undefined): Promise<LogoutResult> {
-  if (sessionToken) {
-    await destroySession(pool, sessionToken);
-  }
-  return { status: 200, body: { ok: true } };
-}
+import { getChatMessages } from '../lib/handlers/chat_get.js';
+import { sendChatMessage } from '../lib/handlers/chat_send.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const config = loadConfig(process.env);
@@ -27,7 +14,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const result = await logoutAdmin(getPool(config), readSessionToken(req));
+  const pool = getPool(config);
+
+  if (req.method === 'POST') {
+    const result = await sendChatMessage(pool, {
+      token: String(req.body?.token ?? ''),
+      channel: String(req.body?.channel ?? ''),
+      texto: String(req.body?.texto ?? ''),
+    });
+    res.statusCode = result.status;
+    res.end(JSON.stringify(result.body));
+    return;
+  }
+
+  const result = await getChatMessages(pool, String(req.query?.token ?? ''));
   res.statusCode = result.status;
   res.end(JSON.stringify(result.body));
 }

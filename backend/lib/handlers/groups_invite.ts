@@ -1,13 +1,13 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import { loadConfig } from '../lib/config.js';
-import { buildCorsResponse } from '../lib/cors.js';
-import { getPool } from '../lib/db.js';
-import { requireAdmin } from '../lib/requireAdmin.js';
-import { readSessionToken } from '../lib/requestSession.js';
-import { randomToken } from '../lib/session.js';
-import { buildInviteEmail } from '../lib/inviteEmail.js';
-import { createSendMail, type MailMessage } from '../lib/mailer.js';
+import { loadConfig } from '../config.js';
+import { buildCorsResponse } from '../cors.js';
+import { getPool } from '../db.js';
+import { requireAdmin } from '../requireAdmin.js';
+import { readSessionToken } from '../requestSession.js';
+import { randomToken } from '../session.js';
+import { buildInviteEmail } from '../inviteEmail.js';
+import { createSendMail, type MailMessage } from '../mailer.js';
 
 export type ParticipantInput = { name: string; email: string };
 

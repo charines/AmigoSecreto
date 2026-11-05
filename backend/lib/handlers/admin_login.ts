@@ -1,11 +1,11 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { Pool, RowDataPacket } from 'mysql2/promise';
-import { loadConfig } from '../lib/config.js';
-import { buildCorsResponse } from '../lib/cors.js';
-import { buildSessionCookieOptions } from '../lib/session.js';
-import { createSession } from '../lib/sessionStore.js';
-import { getPool } from '../lib/db.js';
-import { verifyPassword } from '../lib/password.js';
+import { loadConfig } from '../config.js';
+import { buildCorsResponse } from '../cors.js';
+import { buildSessionCookieOptions } from '../session.js';
+import { createSession } from '../sessionStore.js';
+import { getPool } from '../db.js';
+import { verifyPassword } from '../password.js';
 
 export type LoginInput = {
   email: string;

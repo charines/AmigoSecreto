@@ -24,7 +24,7 @@ describe('loginAdmin', () => {
   });
 
   it('logs in with correct credentials and returns a session token', async () => {
-    const { hashPassword } = await import('../lib/password.js');
+    const { hashPassword } = await import('../password.js');
     const hash = await hashPassword('right-password');
     const pool = {
       query: vi

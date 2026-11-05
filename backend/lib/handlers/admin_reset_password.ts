@@ -1,10 +1,10 @@
 import { createHash } from 'node:crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { Pool, RowDataPacket } from 'mysql2/promise';
-import { loadConfig } from '../lib/config.js';
-import { buildCorsResponse } from '../lib/cors.js';
-import { getPool } from '../lib/db.js';
-import { hashPassword } from '../lib/password.js';
+import { loadConfig } from '../config.js';
+import { buildCorsResponse } from '../cors.js';
+import { getPool } from '../db.js';
+import { hashPassword } from '../password.js';
 
 export type ResetPasswordResult = {
   status: number;

@@ -3,6 +3,7 @@ import type { Pool, RowDataPacket } from 'mysql2/promise';
 import { loadConfig } from '../lib/config.js';
 import { buildCorsResponse } from '../lib/cors.js';
 import { getPool } from '../lib/db.js';
+import { confirmInvite } from '../lib/handlers/invite_confirm.js';
 
 export type InviteResult = {
   status: number;
@@ -67,6 +68,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.writeHead(cors.status ?? 200, cors.headers);
   if (cors.status === 204) {
     res.end();
+    return;
+  }
+
+  if (req.method === 'POST') {
+    const result = await confirmInvite(getPool(config), String(req.body?.token ?? ''));
+    res.statusCode = result.status;
+    res.end(JSON.stringify(result.body));
     return;
   }
 
