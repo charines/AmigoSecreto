@@ -19,7 +19,7 @@ export default function JoinGroup() {
   useEffect(() => {
     async function loadGroup() {
       try {
-        const data = await apiGet(`/groups_get_public.php?code=${code}`);
+        const data = await apiGet(`/api/groups?action=get_public&code=${code}`);
         setGroup(data.group);
       } catch (err) {
         setError(err.message);
@@ -35,7 +35,7 @@ export default function JoinGroup() {
     setJoining(true);
     setError('');
     try {
-      await apiPost('/groups_join.php', { code, name, email });
+      await apiPost('/api/groups?action=join', { code, name, email });
       setSuccess(true);
     } catch (err) {
       setError(err.message);

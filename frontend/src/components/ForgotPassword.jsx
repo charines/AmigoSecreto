@@ -12,7 +12,7 @@ export default function ForgotPassword({ onBack }) {
     setError('');
     setLoading(true);
     try {
-      await apiPost('/admin_forgot_password.php', { email: email.trim() });
+      await apiPost('/api/admin?action=forgot_password', { email: email.trim() });
       setSent(true);
     } catch (err) {
       setError(err.message);

@@ -20,7 +20,7 @@ export default function ChatAnonimo({ token }) {
 
   const loadMessages = async () => {
     try {
-      const res = await apiGet(`/chat_get.php?token=${encodeURIComponent(token)}`);
+      const res = await apiGet(`/api/chat?token=${encodeURIComponent(token)}`);
       if (res.ok) {
         setMessages(res.messages);
       }
@@ -49,7 +49,7 @@ export default function ChatAnonimo({ token }) {
     setInputText('');
 
     try {
-      const res = await apiPost('/chat_send.php', {
+      const res = await apiPost('/api/chat', {
         token,
         channel: activeTab,
         texto: textToSend

@@ -19,7 +19,7 @@ export default function AdminAuth({ onAuth }) {
     const controller = new AbortController();
     const checkHealth = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/ping.php`, {
+        const res = await fetch(`${API_BASE_URL}/api/ping`, {
           signal: controller.signal,
         });
         const data = await res.json();
@@ -41,7 +41,7 @@ export default function AdminAuth({ onAuth }) {
       const payload = mode === 'register'
         ? { name: name.trim(), email: email.trim(), password }
         : { email: email.trim(), password };
-      const data = await apiPost(mode === 'register' ? '/admin_register.php' : '/admin_login.php', payload);
+      const data = await apiPost(`/api/admin?action=${mode === 'register' ? 'register' : 'login'}`, payload);
       onAuth(data.admin);
     } catch (err) {
       setError(err.message);

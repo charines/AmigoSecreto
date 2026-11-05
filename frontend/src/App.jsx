@@ -65,7 +65,7 @@ export default function App() {
     const check = async () => {
       setChecking(true);
       try {
-        const data = await apiGet('/admin_me.php');
+        const data = await apiGet('/api/admin?action=me');
         setAdmin(data.admin);
       } catch {
         setAdmin(null);
@@ -118,7 +118,7 @@ export default function App() {
 
   const handleLogout = async () => {
     try {
-      await apiPost('/admin_logout.php', {});
+      await apiPost('/api/admin?action=logout', {});
     } catch {
       // ignore
     } finally {

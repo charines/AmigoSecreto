@@ -13,7 +13,7 @@ export default function InvitePage({ token }) {
       setError('');
       setLoading(true);
       try {
-        const res = await apiGet(`/invite.php?token=${encodeURIComponent(token)}`);
+        const res = await apiGet(`/api/invite?token=${encodeURIComponent(token)}`);
         setData(res);
         setConfirmed(res?.participant?.status === 'confirmed');
       } catch (err) {
@@ -29,7 +29,7 @@ export default function InvitePage({ token }) {
     setConfirming(true);
     setError('');
     try {
-      await apiPost('/invite_confirm.php', { token });
+      await apiPost('/api/invite', { token });
       setConfirmed(true);
     } catch (err) {
       setError(err.message);

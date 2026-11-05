@@ -24,7 +24,7 @@ export default function ResetPassword({ token }) {
 
     setLoading(true);
     try {
-      await apiPost('/admin_reset_password.php', { token, password });
+      await apiPost('/api/admin?action=reset_password', { token, password });
       setSuccess(true);
     } catch (err) {
       setError(err.message);

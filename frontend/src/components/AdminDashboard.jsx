@@ -92,7 +92,7 @@ export default function AdminDashboard({ admin, onLogout }) {
     setLoadingGroups(true);
     setError('');
     try {
-      const data = await apiGet('/groups_list.php');
+      const data = await apiGet('/api/groups?action=list');
       setGroups(data.groups || []);
     } catch (err) {
       setError(err.message);
@@ -106,7 +106,7 @@ export default function AdminDashboard({ admin, onLogout }) {
     setLoadingGroup(true);
     setError('');
     try {
-      const data = await apiGet(`/groups_detail.php?id=${groupId}`);
+      const data = await apiGet(`/api/groups?action=detail&id=${groupId}`);
       setSelectedGroup(data.group);
       setParticipants(data.participants || []);
     } catch (err) {
@@ -176,7 +176,7 @@ export default function AdminDashboard({ admin, onLogout }) {
         draw_date: formattedDate,
         budget_limit: formattedBudget,
       };
-      const data = await apiPost('/groups_create.php', payload);
+      const data = await apiPost('/api/groups?action=create', payload);
       setGroupForm({ title: '', description: '', draw_date: '', budget_limit: '' });
       await loadGroups();
       setSelectedGroupId(data.group.id);
@@ -217,7 +217,7 @@ export default function AdminDashboard({ admin, onLogout }) {
     setSendingSuccess(false);
 
     try {
-      const data = await apiPost('/groups_invite.php', {
+      const data = await apiPost('/api/groups?action=invite', {
         group_id: selectedGroupId,
         participants: pendingParticipants.map(({ name, email }) => ({ name, email })),
       });
@@ -243,7 +243,7 @@ export default function AdminDashboard({ admin, onLogout }) {
     setDrawStep(0);
 
     try {
-      const data = await apiPost('/groups_draw.php', { group_id: selectedGroupId });
+      const data = await apiPost('/api/groups_draw', { group_id: selectedGroupId });
       setDrawResult(data);
       await loadGroupDetail(selectedGroupId);
       await loadGroups();
@@ -259,7 +259,7 @@ export default function AdminDashboard({ admin, onLogout }) {
     e.stopPropagation();
     if (!window.confirm('TEM CERTEZA QUE DESEJA DELETAR ESTE GRUPO? ESTA ACO INTERROMPE TUDO E E IRREVERSIVEL.')) return;
     try {
-      await apiPost('/groups_delete.php', { group_id: groupId });
+      await apiPost('/api/groups?action=delete', { group_id: groupId });
       setNotice('Grupo deletado com sucesso.');
       loadGroups();
       if (selectedGroupId === groupId) {
@@ -276,7 +276,7 @@ export default function AdminDashboard({ admin, onLogout }) {
     setNotice('');
     setError('');
     try {
-      await apiPost('/participants_resend_invite.php', { participant_id: participantId });
+      await apiPost('/api/participants?action=resend_invite', { participant_id: participantId });
       setNotice('Convite reenviado com sucesso! Avise o participante para checar o spam.');
     } catch (err) {
       setError(err.message);
@@ -290,7 +290,7 @@ export default function AdminDashboard({ admin, onLogout }) {
     setNotice('');
     setError('');
     try {
-      await apiPost('/participants_resend_draw.php', { participant_id: participantId });
+      await apiPost('/api/participants?action=resend_draw', { participant_id: participantId });
       setNotice('Resultado do sorteio reenviado com sucesso! Avise o participante para checar o spam.');
     } catch (err) {
       setError(err.message);
@@ -308,7 +308,7 @@ export default function AdminDashboard({ admin, onLogout }) {
     if (!window.confirm(message)) return;
 
     try {
-      await apiPost('/participants_delete.php', { participant_id: participantId });
+      await apiPost('/api/participants?action=delete', { participant_id: participantId });
       setNotice('Participante removido com sucesso.');
       await loadGroupDetail(selectedGroupId);
       if (isDrawn) {

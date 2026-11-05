@@ -20,7 +20,7 @@ export default function RevealPage({ token }) {
       setLoading(true);
       setError('');
       try {
-        const res = await apiGet(`/reveal.php?token=${encodeURIComponent(token)}`);
+        const res = await apiGet(`/api/reveal?token=${encodeURIComponent(token)}`);
         setData(res);
       } catch (err) {
         setError(err.message);
@@ -45,7 +45,7 @@ export default function RevealPage({ token }) {
     try {
       const name = await decryptName(data.payload.encrypted, data.payload.iv_b64, cleaned);
       setRevealed({ from: data.giver.name, to: name });
-      await apiPost('/reveal_confirm.php', { token });
+      await apiPost('/api/reveal', { token });
     } catch (err) {
       setError('Codigo invalido ou expirado.');
     } finally {
