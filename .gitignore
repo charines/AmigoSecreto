@@ -54,3 +54,5 @@ contexto_projeto.txt
 .claude/skills/setup-matt-pocock-skills
 .claude/skills/writing-for-agents
 .claude/skills/grilling
+.vercel
+.env*
