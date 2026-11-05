@@ -25,8 +25,11 @@ function setSessionCookie(res: VercelResponse, sessionToken: string, config: Ret
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const config = loadConfig(process.env);
   const cors = buildCorsResponse(config.cors, req.method ?? 'GET');
-  res.writeHead(cors.status ?? 200, cors.headers);
+  for (const [key, value] of Object.entries(cors.headers)) {
+    res.setHeader(key, value);
+  }
   if (cors.status === 204) {
+    res.statusCode = 204;
     res.end();
     return;
   }
