@@ -1,0 +1,27 @@
+{
+  "rewrites": [
+    { "source": "/admin_login.php", "destination": "/api/admin?action=login" },
+    { "source": "/admin_logout.php", "destination": "/api/admin?action=logout" },
+    { "source": "/admin_me.php", "destination": "/api/admin?action=me" },
+    { "source": "/admin_register.php", "destination": "/api/admin?action=register" },
+    { "source": "/admin_forgot_password.php", "destination": "/api/admin?action=forgot_password" },
+    { "source": "/admin_reset_password.php", "destination": "/api/admin?action=reset_password" },
+    { "source": "/groups_create.php", "destination": "/api/groups?action=create" },
+    { "source": "/groups_list.php", "destination": "/api/groups?action=list" },
+    { "source": "/groups_detail.php", "destination": "/api/groups?action=detail" },
+    { "source": "/groups_delete.php", "destination": "/api/groups?action=delete" },
+    { "source": "/groups_invite.php", "destination": "/api/groups?action=invite" },
+    { "source": "/groups_get_public.php", "destination": "/api/groups?action=get_public" },
+    { "source": "/groups_join.php", "destination": "/api/groups?action=join" },
+    { "source": "/groups_draw.php", "destination": "/api/groups_draw" },
+    { "source": "/participants_delete.php", "destination": "/api/participants?action=delete" },
+    { "source": "/participants_resend_invite.php", "destination": "/api/participants?action=resend_invite" },
+    { "source": "/participants_resend_draw.php", "destination": "/api/participants?action=resend_draw" },
+    { "source": "/invite.php", "destination": "/api/invite" },
+    { "source": "/invite_confirm.php", "destination": "/api/invite" },
+    { "source": "/reveal.php", "destination": "/api/reveal" },
+    { "source": "/reveal_confirm.php", "destination": "/api/reveal" },
+    { "source": "/chat_get.php", "destination": "/api/chat" },
+    { "source": "/chat_send.php", "destination": "/api/chat" }
+  ]
+}

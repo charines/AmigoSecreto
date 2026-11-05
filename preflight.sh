@@ -41,13 +41,17 @@ warn() { echo -e "  ${WARN}  $*"; }
 info() { echo -e "  ${INFO}  $*"; }
 
 # ── Módulos → arquivos de domínio (para drift check) ──────────────
+# Nota: durante a migração para Vercel (frontend/ + backend/), cada módulo
+# mapeia tanto a API PHP legada (api/*.php, ainda em produção) quanto o
+# equivalente TypeScript já portado (backend/api/*.ts, backend/lib/*.ts).
 declare -A MODULE_FILES
-MODULE_FILES["portaria_auth"]="src/components/AdminAuth.jsx src/App.jsx api/admin_login.php api/admin_me.php api/admin_logout.php api/admin_register.php"
-MODULE_FILES["orquestrador_grupo"]="src/components/AdminDashboard.jsx src/components/InvitePage.jsx src/components/JoinGroup.jsx api/groups_create.php api/groups_invite.php api/groups_list.php api/groups_detail.php api/groups_delete.php api/participants_delete.php api/participants_resend_invite.php"
-MODULE_FILES["juiz_sorteio"]="src/components/RevealPage.jsx src/components/RevealStep.jsx src/lib/crypto.js src/utils/secretSanta.js api/groups_draw.php api/reveal.php api/reveal_confirm.php api/participants_resend_draw.php"
-MODULE_FILES["chat_anonimo"]="src/components/ChatAnonimo.jsx api/chat_get.php api/chat_send.php"
-MODULE_FILES["menu_inicial"]="src/App.jsx src/components/InvitePage.jsx src/components/JoinGroup.jsx src/components/AdminDashboard.jsx"
-MODULE_FILES["dependencias_react"]="src/App.jsx src/main.jsx src/lib/api.js src/lib/crypto.js src/index.css"
+MODULE_FILES["portaria_auth"]="frontend/src/components/AdminAuth.jsx frontend/src/App.jsx api/admin_login.php api/admin_me.php api/admin_logout.php api/admin_register.php backend/api/admin.ts backend/lib/handlers/admin_login.ts backend/lib/handlers/admin_me.ts backend/lib/handlers/admin_logout.ts backend/lib/handlers/admin_register.ts backend/lib/requireAdmin.ts backend/lib/sessionStore.ts"
+MODULE_FILES["orquestrador_grupo"]="frontend/src/components/AdminDashboard.jsx frontend/src/components/InvitePage.jsx frontend/src/components/JoinGroup.jsx api/groups_create.php api/groups_invite.php api/groups_list.php api/groups_detail.php api/groups_delete.php api/participants_delete.php api/participants_resend_invite.php backend/api/groups.ts backend/api/participants.ts backend/lib/handlers/groups_create.ts backend/lib/handlers/groups_invite.ts backend/lib/handlers/groups_list.ts backend/lib/handlers/groups_detail.ts backend/lib/handlers/groups_delete.ts backend/lib/handlers/participants_delete.ts backend/lib/handlers/participants_resend_invite.ts backend/lib/handlers/groups_join.ts backend/lib/handlers/groups_get_public.ts"
+MODULE_FILES["juiz_sorteio"]="frontend/src/components/RevealPage.jsx frontend/src/components/RevealStep.jsx frontend/src/lib/crypto.js frontend/src/utils/secretSanta.js api/groups_draw.php api/reveal.php api/reveal_confirm.php api/participants_resend_draw.php backend/api/groups_draw.ts backend/api/reveal.ts backend/lib/handlers/reveal_confirm.ts backend/lib/handlers/participants_resend_draw.ts backend/lib/drawCrypto.ts backend/lib/drawAlgorithm.ts"
+MODULE_FILES["chat_anonimo"]="frontend/src/components/ChatAnonimo.jsx api/chat_get.php api/chat_send.php backend/api/chat.ts backend/lib/handlers/chat_get.ts backend/lib/handlers/chat_send.ts backend/lib/chatFormat.ts"
+MODULE_FILES["menu_inicial"]="frontend/src/App.jsx frontend/src/components/InvitePage.jsx frontend/src/components/JoinGroup.jsx frontend/src/components/AdminDashboard.jsx"
+MODULE_FILES["dependencias_react"]="frontend/src/App.jsx frontend/src/main.jsx frontend/src/lib/api.js frontend/src/lib/crypto.js frontend/src/index.css"
+MODULE_FILES["backend_core"]="backend/lib/config.ts backend/lib/db.ts backend/lib/cors.ts backend/lib/session.ts backend/api/ping.ts"
 
 # ── Header ─────────────────────────────────────────────────────────
 echo ""
@@ -144,19 +148,44 @@ echo "       → Se SIM: invocar skill 007 antes de qualquer código"
 echo ""
 
 # ── PASSO 6 · Build ───────────────────────────────────────────────
-echo -e "${BOLD}[6/6] Build Limpo${RESET}"
+echo -e "${BOLD}[6/6] Build Limpo (frontend + backend)${RESET}"
 if $SKIP_BUILD; then
   warn "Build ignorado (--no-build)"
 else
-  cd "$SCRIPT_DIR"
-  if npm run build --silent 2>&1 | grep -q "built in"; then
-    pass "npm run build: sucesso"
+  if [[ -d "$SCRIPT_DIR/frontend" ]]; then
+    cd "$SCRIPT_DIR/frontend"
+    if npm run build --silent > /tmp/preflight_frontend_build.log 2>&1; then
+      pass "frontend: npm run build — sucesso"
+    else
+      echo ""
+      tail -10 /tmp/preflight_frontend_build.log
+      fail "frontend: npm run build falhou — corrija antes de codificar"
+    fi
   else
-    echo ""
-    npm run build 2>&1 | tail -5
-    fail "npm run build falhou — corrija antes de codificar"
+    warn "frontend/ não encontrado — pulando build do frontend"
+  fi
+
+  if [[ -d "$SCRIPT_DIR/backend" ]]; then
+    cd "$SCRIPT_DIR/backend"
+    if npm run build --silent > /tmp/preflight_backend_build.log 2>&1; then
+      pass "backend: tsc --noEmit — sucesso"
+    else
+      echo ""
+      tail -10 /tmp/preflight_backend_build.log
+      fail "backend: tsc --noEmit falhou — corrija antes de codificar"
+    fi
+    if npm test --silent > /tmp/preflight_backend_test.log 2>&1; then
+      pass "backend: vitest — sucesso"
+    else
+      echo ""
+      tail -10 /tmp/preflight_backend_test.log
+      fail "backend: vitest falhou — corrija antes de codificar"
+    fi
+  else
+    warn "backend/ não encontrado — pulando build do backend"
   fi
 fi
+cd "$SCRIPT_DIR"
 echo ""
 
 # ── Sync Obsidian (opcional) ──────────────────────────────────────
