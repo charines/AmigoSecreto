@@ -134,7 +134,7 @@ SKILLS_FILE="$MODULES_DIR/skills_catalog.md"
 if [[ -f "$SKILLS_FILE" ]]; then
   pass "skills_catalog.md disponível"
   info "  Ativar skill adequada antes de gerar código (ver tabela no arquivo)"
-  info "  007 obrigatória para: crypto.js · reveal.php · groups_draw.php · admin_login.php"
+  info "  007 obrigatória para: crypto.js · backend/api/reveal.ts · backend/api/groups_draw.ts · backend/api/admin.ts"
 else
   warn "skills_catalog.md não encontrado em docs/modules/"
 fi
@@ -143,7 +143,7 @@ echo ""
 # ── PASSO 5 · Impacto de Segurança ───────────────────────────────
 echo -e "${BOLD}[5/6] Impacto de Segurança${RESET}"
 warn "Verifique manualmente se a task toca algum destes arquivos:"
-echo "       crypto.js · reveal.php · groups_draw.php · admin_login.php · db.php"
+echo "       crypto.js · backend/api/reveal.ts · backend/api/groups_draw.ts · backend/api/admin.ts · backend/lib/db.ts"
 echo "       → Se SIM: invocar skill 007 antes de qualquer código"
 echo ""
 

@@ -1,8 +1,8 @@
 ---
 role: Senior Platform Engineer & Software Architect
 project: AmigoSecreto
-version: 1.5.0
-last_updated: 2026-06-29
+version: 2.0.0
+last_updated: 2026-11-05
 ai_agnostic: true
 ---
 
@@ -30,22 +30,50 @@ referencia, estende e implementa.
 - Prefira edições cirúrgicas a reescritas. Blast radius mínimo.
 - Toda decisão de arquitetura nasce no `docs/arquitetura.drawio`, depois vira Mermaid em
   `docs/modules/`, depois vira código.
-- Segurança não é opcional: valide entradas na fronteira do sistema (API PHP). O frontend
-  é camada de apresentação — nunca de validação crítica.
+- Segurança não é opcional: valide entradas na fronteira do sistema (backend TS em
+  `backend/api/`). O frontend é camada de apresentação — nunca de validação crítica.
 
 ---
 
 ## 2. Stack Canônica
 
-| Camada       | Tecnologia                          | Versão  |
-|--------------|-------------------------------------|---------|
-| UI Framework | React                               | 19.x    |
-| Build        | Vite                                | 7.x     |
-| CSS          | TailwindCSS                         | 4.x     |
-| Backend      | PHP (endpoints REST individuais)    | 8.x     |
-| Banco        | MySQL                               | 8.x     |
-| Deploy FE    | Netlify / Vercel                    | —       |
-| Deploy API   | Hospedagem PHP compartilhada        | —       |
+**2026-11-05:** migração completa do backend de PHP (25 endpoints individuais em hospedagem
+compartilhada) para TypeScript/Vercel Functions (8 arquivos consolidados em `backend/api/`,
+dispatch por `?action=`). O frontend React/Vite **não mudou** nesta migração — só o consumidor
+de API (`src/lib/api.js`) passou a apontar para os novos endpoints. MySQL (HostGator) segue
+sendo o banco, agora acessado via `mysql2/promise` em vez de PDO.
+
+O projeto agora é um monorepo com **dois projetos Vercel distintos**, cada um com seu próprio
+deploy e domínio:
+
+| Projeto Vercel        | Root Directory | Conteúdo                              |
+|------------------------|-----------------|----------------------------------------|
+| `amigo-secreto`        | `frontend/`     | SPA React (build estático)             |
+| `amigo-secreto-backend.` | `backend/`    | Vercel Functions (`backend/api/*.ts`)  |
+
+| Camada       | Tecnologia                                  | Versão  |
+|--------------|----------------------------------------------|---------|
+| UI Framework | React                                        | 19.x    |
+| Build        | Vite                                          | 7.x     |
+| CSS          | TailwindCSS                                   | 4.x     |
+| Backend      | TypeScript (Vercel Functions, `@vercel/node`) | Node 24 |
+| Banco        | MySQL (`mysql2/promise`)                      | 8.x     |
+| Deploy FE    | Vercel (`amigo-secreto`)                      | —       |
+| Deploy API   | Vercel (`amigo-secreto-backend.`)             | —       |
+
+**Endpoints consolidados** (`backend/api/*.ts`, substituem os 25 `.php` antigos — mapeamento
+de compatibilidade em `backend/vercel.json`):
+
+| Arquivo                       | Ações (`?action=`)                                  |
+|--------------------------------|------------------------------------------------------|
+| `api/admin.ts`                 | `login`, `register`, `logout`, `me`, `forgot_password`, `reset_password` |
+| `api/groups.ts`                | `create`, `list`, `detail`, `delete`, `invite`, `get_public`, `join` |
+| `api/groups_draw.ts`           | (endpoint único, sem `?action=`)                     |
+| `api/participants.ts`          | `delete`, `resend_invite`, `resend_draw`              |
+| `api/invite.ts`                | GET (dados do convite) / POST (confirmação)           |
+| `api/reveal.ts`                | GET (dados do sorteio) / POST (confirmação de reveal) |
+| `api/chat.ts`                  | GET (mensagens) / POST (enviar mensagem)              |
+| `api/ping.ts`                  | healthcheck (`{ok, server, db}`)                      |
 
 **Rotas do SPA** (`App.jsx` — path-based, sem React Router):
 
@@ -57,8 +85,12 @@ referencia, estende e implementa.
 | `/join`   | JoinGroup                  | Dharma code URL   |
 | `/chat`   | ChatAnonimo                | Token `?token=`   |
 
-**Variável de ambiente obrigatória:**
-- `VITE_API_BASE_URL` — URL base da API PHP, sem trailing slash.
+**Variáveis de ambiente obrigatórias:**
+- Frontend: `VITE_API_BASE_URL` — URL base do backend Vercel, sem trailing slash.
+- Backend: `DB_HOST/NAME/USER/PASS`, `APP_ORIGIN`, `APP_BASE_URL`, `SESSION_SAMESITE/SECURE`,
+  `SMTP_HOST/PORT/USER/PASS/FROM/FROM_NAME/SECURE/TIMEOUT` — ver `backend/lib/config.ts`.
+- **CORS:** `APP_ORIGIN` precisa bater exatamente com o domínio de produção do frontend
+  (`backend/lib/cors.ts` reflete o valor literal, não usa wildcard com credentials).
 
 ---
 
@@ -155,13 +187,13 @@ Skills instaladas em `.claude/skills/`. Para instruções de invocação por fer
 | 🥈     | `cc-skill-security-review` | Checklist pré-PR         | Em cada PR que toca a camada `api/` |
 | 🥉     | `mermaid-expert`         | Diagramas `docs/modules/`  | Ao criar ou atualizar qualquer módulo Mermaid |
 | 4      | `react-best-practices`   | React 19 + Vite            | Ao criar componentes ou otimizar re-renders |
-| 5      | `php-pro`                | Endpoints PHP              | Ao criar ou refatorar arquivos em `api/` |
-| 6      | `constant-time-analysis` | Timing side-channels       | Complementa `007` em `crypto.js` · `reveal.php` · `admin_login.php` · `groups_draw.php` |
+| 5      | `constant-time-analysis` | Timing side-channels       | Complementa `007` em `crypto.js` · `api/reveal.ts` · `api/admin.ts` (login) · `api/groups_draw.ts` |
 
 **Regras de ativação (agnósticas de ferramenta):**
 
-1. `007` é **não-negociável** antes de alterar: `crypto.js` · `reveal.php` ·
-   `invite_confirm.php` · `groups_draw.php` · `admin_login.php` · `db.php`
+1. `007` é **não-negociável** antes de alterar: `crypto.js` · `backend/api/reveal.ts` ·
+   `backend/api/invite.ts` · `backend/api/groups_draw.ts` · `backend/api/admin.ts` ·
+   `backend/lib/db.ts`
 2. `mermaid-expert` sempre que um módulo em `docs/modules/` for criado ou alterado.
 3. `react-best-practices` — ignorar regras prefixadas com `server-*` (Next.js/RSC, não se
    aplica a este projeto Vite puro).
@@ -177,12 +209,17 @@ Skills instaladas em `.claude/skills/`. Para instruções de invocação por fer
 1. **Sem comentários óbvios.** Documente apenas invariantes não-óbvias e workarounds.
 2. **Sem abstrações prematuras.** Três linhas similares não justificam um helper.
 3. **Sem feature flags ou backwards-compat shims** — mude o código diretamente.
-4. **Validação apenas nas fronteiras.** PHP valida entrada; React confia no que a API retorna.
+4. **Validação apenas nas fronteiras.** O backend TS valida entrada; React confia no que a
+   API retorna.
 5. **Sem `console.log` em produção.** Use `console.error` apenas para erros reais capturados.
 6. **CSS via variáveis Neo-Brutalist.** Nunca hardcode cores — use os tokens Material 3
    (`var(--color-primary)`, `var(--color-on-surface)` etc.) ou `var(--color-nb-ink)`.
-7. **PHP API:** cada endpoint é um arquivo `.php` isolado. Use `bootstrap.php` para
-   inicialização e `cors.php` para headers CORS. Não criar controllers genéricos.
+7. **Backend TS:** um arquivo por área em `backend/api/` (dispatch por `?action=` quando há
+   múltiplas operações). Lógica de domínio fica em `backend/lib/handlers/*.ts`, nunca inline
+   no handler HTTP. CORS centralizado em `backend/lib/cors.ts`. Não criar controllers genéricos.
+   **Cuidado com `res.writeHead()` seguido de `res.setHeader()`** — o primeiro já envia os
+   headers; qualquer header adicional (ex: `Set-Cookie`) precisa ser setado via `res.setHeader`
+   *antes* de enviar a resposta (ver fix em `backend/api/admin.ts`, commit `93edb52`).
 8. **Anti-delírio técnico:** toda decisão de implementação deve citar evidência em
    formato `arquivo:linha`. Sem citação verificável, trate como hipótese e valide antes.
 
@@ -193,12 +230,14 @@ Skills instaladas em `.claude/skills/`. Para instruções de invocação por fer
 - **XSS:** React escapa JSX por padrão. Nunca usar `dangerouslySetInnerHTML` sem sanitização.
 - **CSRF:** API usa cookies de sessão — implementar token CSRF se endpoints destrutivos forem
   expostos publicamente.
-- **SQL Injection:** exclusivamente PDO com prepared statements (verificar em `db.php`).
-- **Tokens invite/reveal:** gerados no PHP, únicos por participante. Nunca gerados no frontend.
+- **SQL Injection:** exclusivamente `mysql2/promise` com queries parametrizadas (verificar em
+  `backend/lib/db.ts`).
+- **Tokens invite/reveal:** gerados no backend, únicos por participante. Nunca gerados no frontend.
 - **Crypto:** `src/lib/crypto.js` usa Web Crypto API nativa. Não substituir por libs de
   terceiros sem auditoria completa (invocar skill `007` antes).
-- **Segredos:** `VITE_*` variáveis são públicas no bundle. Credenciais de banco e SMTP
-  ficam exclusivamente em `api/.env` — nunca no `.env` do frontend.
+- **Segredos:** `VITE_*` variáveis são públicas no bundle do frontend. Credenciais de banco e
+  SMTP ficam exclusivamente em `backend/.env` (local, gitignored) ou nas env vars do projeto
+  Vercel `amigo-secreto-backend.` — nunca no `.env` do frontend.
 
 ---
 

@@ -45,12 +45,12 @@ PREFLIGHT — AmigoSecreto v1.5
 
         Arquivos por módulo:
           menu_inicial.md     → App.jsx, InvitePage.jsx, JoinGroup.jsx,
-                                AdminDashboard.jsx, api/invite.php,
-                                api/invite_confirm.php, api/groups_join.php
+                                AdminDashboard.jsx, backend/api/invite.ts (GET),
+                                backend/api/invite.ts (POST), backend/api/groups.ts (action=join)
           dependencias_react.md → qualquer arquivo em src/
-          sorteio.md (futuro) → groups_draw.php, reveal.php, crypto.js,
+          sorteio.md (futuro) → backend/api/groups_draw.ts, backend/api/reveal.ts (GET), crypto.js,
                                 secretSanta.js, RevealPage.jsx
-          chat_anonimo.md (futuro) → ChatAnonimo.jsx, chat_get.php, chat_send.php
+          chat_anonimo.md (futuro) → ChatAnonimo.jsx, backend/api/chat.ts (GET), backend/api/chat.ts (POST)
         [EXECUTAR LOCALMENTE — não incluir no prompt]
 
 [ ] 4. SKILL DE IA SELECIONADA
@@ -62,8 +62,8 @@ PREFLIGHT — AmigoSecreto v1.5
         Qual rota (App.jsx) e componente principal serão alterados?
         [NÃO INCLUIR — uso interno do dev]
 
-[ ] 6. ENDPOINT PHP IDENTIFICADO
-        Qual(is) arquivo(s) em api/*.php serão tocados?
+[ ] 6. ENDPOINT DO BACKEND IDENTIFICADO
+        Qual(is) arquivo(s) em backend/api/*.ts serão tocados?
         [NÃO INCLUIR — uso interno do dev]
 
 [ ] 7. IMPACTO DE SEGURANÇA
@@ -124,24 +124,24 @@ domínio, incluir no prompt apenas os arquivos listados naquele sub-agente.
 **Arquivos de domínio:**
 ```
 src/components/AdminAuth.jsx
-api/admin_login.php
-api/admin_logout.php
-api/admin_me.php
-api/admin_register.php
+backend/api/admin.ts (action=login)
+backend/api/admin.ts (action=logout)
+backend/api/admin.ts (action=me)
+backend/api/admin.ts (action=register)
 ```
 
 **Fluxo:**
 ```
 App.jsx resolveRoute() → route='admin'
-  → apiGet('/admin_me.php') → [cookie presente?]
+  → apiGet('/backend/api/admin.ts (action=me)') → [cookie presente?]
     ├── SIM → setAdmin() → AdminDashboard
     └── NÃO → AdminAuth → onAuth() → setAdmin
 ```
 
 **Invariantes:**
-- Sessão via cookie HTTP-only (`session_start()` no PHP).
-- `admin_me.php` chamado em todo mount do App na rota admin.
-- Logout via POST em `admin_logout.php` antes de limpar estado local.
+- Sessão via cookie HTTP-only (token opaco em `sessions` table, `backend/lib/session.ts`).
+- `backend/api/admin.ts (action=me)` chamado em todo mount do App na rota admin.
+- Logout via POST em `backend/api/admin.ts (action=logout)` antes de limpar estado local.
 
 ---
 
@@ -154,23 +154,23 @@ App.jsx resolveRoute() → route='admin'
 src/components/AdminDashboard.jsx
 src/components/InvitePage.jsx
 src/components/JoinGroup.jsx
-api/groups_create.php   api/groups_delete.php
-api/groups_detail.php   api/groups_get_public.php
-api/groups_invite.php   api/groups_join.php
-api/groups_list.php     api/invite.php
-api/invite_confirm.php  api/participants_delete.php
-api/participants_resend_invite.php  api/mailer.php
+backend/api/groups.ts (action=create)   backend/api/groups.ts (action=delete)
+backend/api/groups.ts (action=detail)   backend/api/groups.ts (action=get_public)
+backend/api/groups.ts (action=invite)   backend/api/groups.ts (action=join)
+backend/api/groups.ts (action=list)     backend/api/invite.ts (GET)
+backend/api/invite.ts (POST)  backend/api/participants.ts (action=delete)
+backend/api/participants.ts (action=resend_invite)  backend/lib/mailer.ts
 ```
 
 **Fluxos:**
 ```
 Criação:   AdminDashboard.jsx (view='create', formulário inline)
-           → POST groups_create.php
+           → POST backend/api/groups.ts (action=create)
 
-Convite:   groups_invite.php → mailer.php → email /invite?token=UUID
-           → InvitePage.jsx → invite.php → invite_confirm.php
+Convite:   backend/api/groups.ts (action=invite) → backend/lib/mailer.ts → email /invite?token=UUID
+           → InvitePage.jsx → backend/api/invite.ts (GET) → backend/api/invite.ts (POST)
 
-Adesão:    /join/<dharma_code> → JoinGroup.jsx → groups_join.php
+Adesão:    /join/<dharma_code> → JoinGroup.jsx → backend/api/groups.ts (action=join)
 ```
 
 > 2026-06-29: `EmailStep.jsx`, `MembersStep.jsx` e `ResultsStep.jsx` foram removidos do
@@ -178,7 +178,7 @@ Adesão:    /join/<dharma_code> → JoinGroup.jsx → groups_join.php
 > `AdminDashboard.jsx` desde o redesign Neo-Brutalist.
 
 **Invariantes:**
-- Tokens de convite são UUIDs gerados no PHP, em `participants.invite_token`.
+- Tokens de convite são gerados no backend TS, em `participants.invite_token`.
 - Grupo só pode ser sorteado com todos os convites `confirmed`.
 - SMTP configurado exclusivamente em `api/.env`.
 
@@ -194,16 +194,16 @@ src/utils/secretSanta.js
 src/lib/crypto.js
 src/components/RevealPage.jsx
 src/components/RevealStep.jsx
-api/draw.php              api/groups_draw.php
-api/reveal.php            api/reveal_confirm.php
-api/participants_resend_draw.php
+backend/api/groups_draw.ts              backend/api/groups_draw.ts
+backend/api/reveal.ts (GET)            backend/api/reveal.ts (POST)
+backend/api/participants.ts (action=resend_draw)
 database/schema.mysql.sql
 ```
 
 **Fluxo de sorteio:**
 ```
-AdminDashboard → groups_draw.php
-  → PHP busca participantes confirmados
+AdminDashboard → backend/api/groups_draw.ts
+  → backend busca participantes confirmados
   → Derangement server-side (espelho de secretSanta.js)
   → AES-GCM: encripta nome do sorteado (chave = token do participante)
   → Armazena encrypted_name + iv
@@ -213,9 +213,9 @@ AdminDashboard → groups_draw.php
 **Fluxo de revelação:**
 ```
 RevealPage.jsx ← ?token=
-  → GET /reveal.php → {encrypted_name, iv}
+  → GET /backend/api/reveal.ts (GET) → {encrypted_name, iv}
   → decryptName(encrypted_name, iv, token) [crypto.js]
-  → Exibe nome → POST /reveal_confirm.php
+  → Exibe nome → POST /backend/api/reveal.ts (POST)
 ```
 
 **Invariante crítica:** o servidor **jamais** envia o nome em texto claro. A chave AES
@@ -230,15 +230,15 @@ existe apenas no link enviado ao email — nunca armazenada no banco como chave 
 **Arquivos de domínio:**
 ```
 src/components/ChatAnonimo.jsx
-api/chat_get.php
-api/chat_send.php
+backend/api/chat.ts (GET)
+backend/api/chat.ts (POST)
 ```
 
 **Fluxo:**
 ```
 /chat?token= → ChatAnonimo.jsx
-  → Polling: GET /chat_get.php (mensagens do grupo)
-  → POST /chat_send.php (sem revelar identidade do remetente)
+  → Polling: GET /backend/api/chat.ts (GET) (mensagens do grupo)
+  → POST /backend/api/chat.ts (POST) (sem revelar identidade do remetente)
 ```
 
 **Invariante:** `receiver_id` em `chat_messages` permite mensagens direcionadas sem
@@ -353,7 +353,7 @@ Pipeline obrigatório para toda feature ou alteração significativa.
 **Onde:** `docs/arquitetura.drawio` via extensão `hediet.vscode-drawio` no VS Code.
 
 - Desenhe o fluxo antes de qualquer código
-- Swimlanes: Frontend (React) / Backend (PHP) / Database (MySQL)
+- Swimlanes: Frontend (React) / Backend (TypeScript, Vercel Functions) / Database (MySQL)
 - Nomes dos shapes = nomes exatos dos componentes e endpoints
 
 ### Passo 2 · Tradução para Mermaid
@@ -362,7 +362,7 @@ Pipeline obrigatório para toda feature ou alteração significativa.
 
 - Extraia o trecho do drawio referente ao módulo afetado
 - Um arquivo por domínio funcional — não misturar SA-02 com SA-03 no mesmo arquivo
-- Nomes dos nós = nomes exatos dos componentes (`InvitePage.jsx`, `invite.php`)
+- Nomes dos nós = nomes exatos dos componentes (`InvitePage.jsx`, `backend/api/invite.ts (GET)`)
 
 ### Passo 3 · Preflight + Skill + Prompt
 

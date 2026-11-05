@@ -4,10 +4,10 @@ domain: SA-02 · O Orquestrador de Grupo
 components:
   active: [AdminDashboard.jsx, InvitePage.jsx, JoinGroup.jsx]
 endpoints:
-  [groups_create.php, groups_list.php, groups_detail.php, groups_delete.php,
-   groups_invite.php, groups_get_public.php, groups_join.php,
-   participants_delete.php, participants_resend_invite.php,
-   invite.php, invite_confirm.php, mailer.php]
+  [backend/api/groups.ts (action=create), backend/api/groups.ts (action=list), backend/api/groups.ts (action=detail), backend/api/groups.ts (action=delete),
+   backend/api/groups.ts (action=invite), backend/api/groups.ts (action=get_public), backend/api/groups.ts (action=join),
+   backend/api/participants.ts (action=delete), backend/api/participants.ts (action=resend_invite),
+   backend/api/invite.ts (GET), backend/api/invite.ts (POST), backend/lib/mailer.ts]
 last_updated: 2026-06-29
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — AdminDashboard.jsx (3 views) passou a
@@ -38,7 +38,7 @@ flowchart TD
 
     subgraph CREATE["Criação de Grupo"]
         FORM["Form: título · descrição\ndraw_date · budget_limit"]
-        POST_CREATE["POST /groups_create.php"]
+        POST_CREATE["POST /backend/api/groups.ts (action=create)"]
         RES_CREATE["Grupo criado\nstatus = 'open'\ndharma_code gerado (6 chars)"]
     end
 
@@ -52,9 +52,9 @@ flowchart TD
 
     subgraph SEND_INVITE["Envio de Convites"]
         BTN_INVITE["Botão: ENVIAR CONVITES (n)"]
-        POST_INVITE["POST /groups_invite.php\n{group_id, participants[]}"]
+        POST_INVITE["POST /backend/api/groups.ts (action=invite)\n{group_id, participants[]}"]
         PHP_INSERT["INSERT participants\nstatus='invited'\ninvite_token = random_token(24)"]
-        PHP_MAIL["mailer.php → SMTP\nEmail Dharma Initiative\nLink: /invite?token=<uuid>"]
+        PHP_MAIL["backend/lib/mailer.ts → SMTP\nEmail Dharma Initiative\nLink: /invite?token=<uuid>"]
         RES_INVITE["{sent: [], failed: []}"]
         CLEAR_PENDING["setPendingParticipants([])"]
         RELOAD_DETAIL["loadGroupDetail()"]
@@ -65,14 +65,14 @@ flowchart TD
         CONFIRM_DEL{"grupo já\nsorteado?"}
         WARN_DRAWN["Alert: sorteio será\ncancelado!\nTokens invalidados."]
         WARN_OPEN["Confirm padrão"]
-        POST_DEL["POST /participants_delete.php\n{participant_id}"]
+        POST_DEL["POST /backend/api/participants.ts (action=delete)\n{participant_id}"]
     end
 
     subgraph RESEND["Reenvio"]
         BTN_RESEND_INV["REENVIAR CONVITE\n(status: invited / link_clicked)"]
         BTN_RESEND_DRW["REENVIAR SORTEIO\n(status: token_sent / revealed)"]
-        POST_RESEND_INV["POST /participants_resend_invite.php"]
-        POST_RESEND_DRW["POST /participants_resend_draw.php"]
+        POST_RESEND_INV["POST /backend/api/participants.ts (action=resend_invite)"]
+        POST_RESEND_DRW["POST /backend/api/participants.ts (action=resend_draw)"]
     end
 
     subgraph STATUS_MAP["Status dos Participantes (tabela)"]
@@ -118,8 +118,8 @@ sequenceDiagram
     participant EMAIL as Caixa de E-mail
     participant B as Browser /invite?token=UUID
     participant I as InvitePage.jsx
-    participant API_INV as invite.php
-    participant API_CONF as invite_confirm.php
+    participant API_INV as backend/api/invite.ts (GET)
+    participant API_CONF as backend/api/invite.ts (POST)
     participant DB as MySQL
 
     P->>EMAIL: Recebe e-mail Dharma Initiative
@@ -127,7 +127,7 @@ sequenceDiagram
 
     P->>B: Clica no link
     B->>I: mount(token=UUID)
-    I->>API_INV: GET /invite.php?token=UUID
+    I->>API_INV: GET /api/invite?token=UUID
     API_INV->>DB: SELECT participant, group WHERE invite_token=UUID
     DB-->>API_INV: {participant: {name, email, status}, group: {title, description}}
     API_INV-->>I: {participant, group}
@@ -137,7 +137,7 @@ sequenceDiagram
     else status = 'invited' ou 'link_clicked'
         I-->>P: Exibe dados do grupo + botão CONFIRMAR PARTICIPAÇÃO
         P->>I: Clica em CONFIRMAR PARTICIPAÇÃO
-        I->>API_CONF: POST /invite_confirm.php {token: UUID}
+        I->>API_CONF: POST /backend/api/invite.ts (POST) {token: UUID}
         API_CONF->>DB: UPDATE participants SET status='confirmed' WHERE invite_token=UUID
         DB-->>API_CONF: OK
         API_CONF-->>I: {ok: true}
@@ -159,22 +159,22 @@ sequenceDiagram
     actor U as Usuário externo
     participant B as Browser /join/<dharma_code>
     participant J as JoinGroup.jsx
-    participant API_PUB as groups_get_public.php
-    participant API_JOIN as groups_join.php
+    participant API_PUB as backend/api/groups.ts (action=get_public)
+    participant API_JOIN as backend/api/groups.ts (action=join)
     participant DB as MySQL
 
     U->>B: Acessa link público compartilhado pelo admin
     Note over B,J: getJoinCode() extrai último segmento do pathname
 
     B->>J: mount(code = <dharma_code>)
-    J->>API_PUB: GET /groups_get_public.php?code=<dharma_code>
+    J->>API_PUB: GET /api/groups?action=get_public&code=<dharma_code>
     API_PUB->>DB: SELECT group WHERE dharma_code=code AND status='open'
     DB-->>API_PUB: {group: {title, description, draw_date, budget_limit}}
     API_PUB-->>J: {group: {...}}
     J-->>U: Exibe grupo + formulário (nome + e-mail)
 
     U->>J: Preenche nome e e-mail → clica EXECUTAR PROTOCOLO DE INSCRIÇÃO
-    J->>API_JOIN: POST /groups_join.php {code, name, email}
+    J->>API_JOIN: POST /backend/api/groups.ts (action=join) {code, name, email}
     API_JOIN->>DB: INSERT participant (status='invited')\n+ dispara e-mail de convite
     DB-->>API_JOIN: OK
     API_JOIN-->>J: {ok: true}
@@ -197,11 +197,11 @@ sequenceDiagram
 
 ```mermaid
 stateDiagram-v2
-    [*] --> open : groups_create.php\ndharma_code gerado
-    open --> drawn : groups_draw.php\n(min. 2 confirmados)
-    open --> cancelled : groups_delete.php
-    drawn --> cancelled : groups_delete.php\n(invalida todos os tokens)
-    drawn --> open : participants_delete.php\n(se grupo já sorteado)
+    [*] --> open : backend/api/groups.ts (action=create)\ndharma_code gerado
+    open --> drawn : backend/api/groups_draw.ts\n(min. 2 confirmados)
+    open --> cancelled : backend/api/groups.ts (action=delete)
+    drawn --> cancelled : backend/api/groups.ts (action=delete)\n(invalida todos os tokens)
+    drawn --> open : backend/api/participants.ts (action=delete)\n(se grupo já sorteado)
 ```
 
 ---
@@ -217,7 +217,7 @@ stateDiagram-v2
 ║  Draw.io: docs/arquitetura.drawio (swimlane SA-02)   ║
 ║                                                      ║
 ║  Após qualquer alteração em:                         ║
-║  AdminDashboard.jsx · groups_*.php · invite*.php     ║
+║  AdminDashboard.jsx · backend/api/groups.ts · backend/api/invite.ts     ║
 ║                                                      ║
 ║  1. Atualizar swimlane SA-02 no drawio               ║
 ║  2. Refletir mudança neste arquivo Mermaid           ║

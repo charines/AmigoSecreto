@@ -3,14 +3,14 @@ module: juiz_sorteio
 domain: SA-03 · O Juiz
 components: [AdminDashboard.jsx, RevealPage.jsx, RevealStep.jsx]
 utils: [src/utils/secretSanta.js, src/lib/crypto.js]
-endpoints: [groups_draw.php, reveal.php, reveal_confirm.php, participants_resend_draw.php]
+endpoints: [backend/api/groups_draw.ts, backend/api/reveal.ts (GET), backend/api/reveal.ts (POST), backend/api/participants.ts (action=resend_draw)]
 last_updated: 2026-06-29
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — RevealPage.jsx e RevealStep.jsx com
   layout full-page próprio. App.jsx renderiza RevealPage diretamente. RevealStep
   mantém typewriter setInterval/36ms, DECRYPT_MSG original e setTimeout 950ms.
-  Lógica de crypto (decryptName, AES-GCM) e API calls (reveal.php,
-  reveal_confirm.php) 100% preservadas. Erros exibidos em card Neo-Brutalist
+  Lógica de crypto (decryptName, AES-GCM) e API calls (backend/api/reveal.ts (GET),
+  backend/api/reveal.ts (POST)) 100% preservadas. Erros exibidos em card Neo-Brutalist
   (bg-error-container / text-on-error-container), não mais em "vermelho CRT".
 update_note: >
   2026-06-29 · ResultsStep.jsx foi removido do projeto (zero importadores).
@@ -50,18 +50,18 @@ flowchart TD
         S_OK["SORTEIO REALIZADO COM SUCESSO!"]
     end
 
-    subgraph PHP["groups_draw.php (PHP backend)"]
-        PHP1["Valida sessão admin\nValida group_id e status='open'"]
-        PHP2["SELECT participants\nWHERE status='confirmed'"]
-        PHP3["PHP shuffle()\nCirculariza: pair[i] → pair[(i+1)%n]"]
-        PHP4["Para cada par (giver, receiver):"]
-        PHP5["token = random_token(24)\nrevealToken = random_token(24)"]
-        PHP6["AES-256-GCM\nkey = SHA-256(token)\niv = random_bytes(12)\ncipher = openssl_encrypt(name, key, iv)\npayload = ciphertext + tag_16bytes"]
-        PHP7["INSERT draw_results:\ngiver_id · encrypted_payload\niv_b64 · token_hash\ntoken_raw · receiver_id"]
-        PHP8["UPDATE participants\nSET reveal_token = revealToken\nWHERE id = giver.id"]
-        PHP9["UPDATE groups SET status='drawn'"]
-        PHP10["mailer.php → SMTP\nEnvia e-mail Dharma Initiative\nURL: /reveal?token=<revealToken>&code=<token>"]
-        PHP11["{ok, sent: [emails], failed: []}"]
+    subgraph TS["backend/api/groups_draw.ts (Vercel Function)"]
+        TS1["requireAdmin(session)\nValida group_id e status='open'"]
+        TS2["SELECT participants\nWHERE status='confirmed'"]
+        TS3["shuffle() (lib/drawAlgorithm.ts)\npairParticipants(): pair[i] → pair[(i+1)%n]"]
+        TS4["Para cada par (giver, receiver):"]
+        TS5["token = randomToken(24)\nrevealToken = randomToken(24)\n(lib/session.ts, randomBytes().toString('base64url'))"]
+        TS6["encryptName() (lib/drawCrypto.ts)\nAES-256-GCM via node:crypto\nkey = SHA-256(token)\niv = randomBytes(12)\ncreateCipheriv → payload = ciphertext + tag"]
+        TS7["INSERT draw_results:\ngiver_id · encrypted_payload\niv_b64 · token_hash\ntoken_raw · receiver_id"]
+        TS8["UPDATE participants\nSET reveal_token = revealToken\nWHERE id = giver.id"]
+        TS9["UPDATE groups SET status='drawn'"]
+        TS10["backend/lib/mailer.ts → SMTP (nodemailer)\nEnvia e-mail Dharma Initiative\nURL: /reveal?token=<revealToken>&code=<token>"]
+        TS11["{ok, sent: [emails], failed: []}"]
     end
 
     STATUS -->|"sim"| COUNT
@@ -71,10 +71,10 @@ flowchart TD
 
     BTN_DRAW -->|"Admin clica"| S0
     S0 -->|"2s interval"| S1 --> S2 --> S3
-    S0 -->|"handleDraw()\nPOST /groups_draw.php"| PHP1
-    PHP1 --> PHP2 --> PHP3 --> PHP4
-    PHP4 --> PHP5 --> PHP6 --> PHP7 --> PHP8 --> PHP9 --> PHP10 --> PHP11
-    PHP11 -->|"drawSuccess = true"| S_OK
+    S0 -->|"handleDraw()\nPOST /api/groups_draw"| TS1
+    TS1 --> TS2 --> TS3 --> TS4
+    TS4 --> TS5 --> TS6 --> TS7 --> TS8 --> TS9 --> TS10 --> TS11
+    TS11 -->|"drawSuccess = true"| S_OK
 ```
 
 ---
@@ -87,10 +87,10 @@ sequenceDiagram
     participant EMAIL as Caixa de E-mail
     participant B as Browser
     participant RP as RevealPage.jsx
-    participant API_RV as reveal.php
+    participant API_RV as backend/api/reveal.ts (GET)
     participant CRYPTO as lib/crypto.js
     participant RS as RevealStep.jsx
-    participant API_CONF as reveal_confirm.php
+    participant API_CONF as backend/api/reveal.ts (POST)
     participant DB as MySQL
 
     P->>EMAIL: Recebe e-mail com link e código
@@ -102,7 +102,7 @@ sequenceDiagram
     B->>RP: mount(token=revealToken)
     Note over RP: Extrai code=<token> de URLSearchParams\nno estado inicial do useState
 
-    RP->>API_RV: GET /reveal.php?token=<revealToken>
+    RP->>API_RV: GET /api/reveal?token=<revealToken>
     API_RV->>DB: SELECT draw_results WHERE\nreveal_token=revealToken (via participants)
     DB-->>API_RV: {encrypted_payload, iv_b64, giver.name, group.title}
     API_RV-->>RP: {payload: {encrypted, iv_b64}, giver, group}
@@ -113,7 +113,7 @@ sequenceDiagram
     Note over CRYPTO: key = SHA-256(code)\nimporta CryptoKey → AES-GCM\ndecode Base64 → Uint8Array\ncrypto.subtle.decrypt()
     CRYPTO-->>RP: revealedFriend.to = "NOME DO AMIGO SECRETO"
 
-    RP->>API_CONF: POST /reveal_confirm.php {token: revealToken}
+    RP->>API_CONF: POST /backend/api/reveal.ts (POST) {token: revealToken}
     API_CONF->>DB: UPDATE participants SET status='revealed'\nWHERE reveal_token=revealToken
     DB-->>API_CONF: OK
 
@@ -145,7 +145,7 @@ sequenceDiagram
 
 ---
 
-## Diagrama 3 — Algoritmo de Sorteio (backend PHP)
+## Diagrama 3 — Algoritmo de Sorteio (backend TypeScript)
 
 ```mermaid
 flowchart TD
@@ -154,15 +154,15 @@ flowchart TD
     end
 
     subgraph SHUFFLE["Randomização"]
-        SH1["PHP: shuffle(participants)\n(Fisher-Yates interno do PHP)"]
-        SH2["Circularização:\nfor i in 0..n-1:\n  pairs[i] = {giver: shuffled[i],\n  receiver: shuffled[(i+1) % n]}"]
+        SH1["shuffle() em backend/api/groups_draw.ts\n(Fisher-Yates)"]
+        SH2["pairParticipants() (lib/drawAlgorithm.ts):\nfor i in 0..n-1:\n  pairs[i] = {giver: shuffled[i],\n  receiver: shuffled[(i+1) % n]}"]
     end
 
     subgraph CRYPTO_LOOP["Loop de Criptografia por Par"]
-        C1["token = random_token(24)\n← chave de descriptografia do giver"]
-        C2["revealToken = random_token(24)\n← token de lookup no DB"]
+        C1["token = randomToken(24)\n← chave de descriptografia do giver"]
+        C2["revealToken = randomToken(24)\n← token de lookup no DB"]
         C3["key = SHA-256(token)\n← 32 bytes raw"]
-        C4["iv = random_bytes(12)\n← nonce GCM único"]
+        C4["iv = randomBytes(12)\n← nonce GCM único (node:crypto)"]
         C5["cipher = AES-256-GCM(\n  plaintext: receiver.name,\n  key: key, iv: iv\n)\npayload = ciphertext || tag_16bytes"]
         C6["INSERT draw_results:\n  giver_id, receiver_id\n  encrypted_payload_b64\n  iv_b64, token_hash, token_raw"]
         C7["UPDATE participants\n  SET reveal_token = revealToken\n  WHERE id = giver.id"]
@@ -170,7 +170,7 @@ flowchart TD
 
     subgraph INVARIANTS["Invariantes de Segurança"]
         INV1["O servidor armazena token_raw no DB\nmas a CHAVE nunca é devolvida via API\n→ só enviada por e-mail"]
-        INV2["reveal.php retorna apenas\nencrypted_payload + iv_b64\nNunca o nome em texto claro"]
+        INV2["backend/api/reveal.ts (GET) retorna apenas\nencrypted_payload + iv_b64\nNunca o nome em texto claro"]
         INV3["A descriptografia ocorre\nexclusivamente no browser\ndo participante (Web Crypto API)"]
     end
 
@@ -219,13 +219,13 @@ flowchart TD
     classDef crtAnim    fill:#1a1000,stroke:#f6ad55,color:#f6ad55
     classDef crtConfirm fill:#001a10,stroke:#34d399,color:#34d399
 
-    subgraph ENTRY["📥 Entrada — URL gerada pelo groups_draw.php"]
+    subgraph ENTRY["📥 Entrada — URL gerada pelo backend/api/groups_draw.ts"]
         URL(["Browser: /reveal\n?token=revealToken\n&code=chaveAES"])
         MOUNT["RevealPage.jsx monta\ntoken ← prop revealToken\ncode  ← URLSearchParams.get('code')"]
     end
 
     subgraph FETCH["🌐 Busca de Dados Criptografados"]
-        API_CALL["apiGet('/reveal.php?token=revealToken')\nlib/api.js com credentials:include"]
+        API_CALL["apiGet('/api/reveal?token=revealToken')\nlib/api.js com credentials:include"]
         API_OK["{payload:{encrypted_b64, iv_b64}\n giver:{name}\n group:{title}}"]
         API_ERR["✖ token inválido ou não encontrado\nExibe erro em card Neo-Brutalist\nNÃO renderiza RevealStep"]
     end
@@ -248,7 +248,7 @@ flowchart TD
     end
 
     subgraph CONFIRM_BOX["✅ Confirmação no Backend"]
-        POST_CONF["apiPost('/reveal_confirm.php',\n{token: revealToken})"]
+        POST_CONF["apiPost('/backend/api/reveal.ts (POST)',\n{token: revealToken})"]
         DB_UP["UPDATE participants\nSET status='revealed'"]
         SET_STATE["setRevealed({from: giver.name, to: nome})\n→ renderiza RevealStep"]
     end
@@ -297,7 +297,7 @@ flowchart TD
 ║  Draw.io: docs/arquitetura.drawio (swimlane SA-03)   ║
 ║                                                      ║
 ║  Após qualquer alteração em:                         ║
-║  groups_draw.php · reveal.php · reveal_confirm.php   ║
+║  backend/api/groups_draw.ts · backend/api/reveal.ts (GET) · backend/api/reveal.ts (POST)   ║
 ║  RevealPage.jsx · RevealStep.jsx · crypto.js         ║
 ║                                                      ║
 ║  ⚠ INVOCAR /007 antes de alterar crypto.js           ║

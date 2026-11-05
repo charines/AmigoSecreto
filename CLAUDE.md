@@ -48,10 +48,10 @@ conteúdo. Substitui o antigo `contexto.sh`/`gera_contexto.py` (preservados como
 
 ## Regras Rápidas
 
-- Stack: React 19 + Vite 7 + TailwindCSS 4 · PHP 8 REST · MySQL 8
+- Stack: React 19 + Vite 7 + TailwindCSS 4 (frontend) · TypeScript/Vercel Functions (backend) · MySQL 8
 - CSS: componentes CRT usam `var(--color-crt-*)` · Neo-Brutalist usam `var(--color-nb-*)` e classes `nb-*` — nunca cores hardcoded
-- Sorteio: `src/utils/secretSanta.js` · Crypto: `src/lib/crypto.js` (AES-GCM, não substituir)
-- PHP: um endpoint por arquivo em `api/` — sem controllers genéricos
+- Sorteio: `src/utils/secretSanta.js` (client) / `backend/lib/drawAlgorithm.ts` (server) · Crypto: `src/lib/crypto.js` (AES-GCM, não substituir)
+- Backend: um arquivo por área em `backend/api/` (dispatch por `?action=`) — sem controllers genéricos; lógica de domínio em `backend/lib/handlers/*.ts`
 - Sem código sem módulo Mermaid — se não existir, criar o módulo antes
 
 > Documentação completa: `docs/docs_for_llm.md` · Skills: `docs/modules/skills_catalog.md`
@@ -61,11 +61,11 @@ conteúdo. Substitui o antigo `contexto.sh`/`gera_contexto.py` (preservados como
 Para maximizar a eficiência e gastar o mínimo de tokens entre os modelos, siga estritamente esta divisão de tarefas:
 
 ### 1. Google Gemini (Flash / Pro) -> O "Operador de Contexto Longo"
-- **Quando usar:** Varreduras em lote, leitura de logs extensos do `preflight.sh`, ou quando precisar correlacionar o código PHP antigo (`migrate_v2.php` etc.) com o atual.
+- **Quando usar:** Varreduras em lote, leitura de logs extensos do `preflight.sh`, ou quando precisar correlacionar o código PHP legado (removido, histórico no git) com o backend TS atual (`backend/db/migrate_v*.ts` etc.).
 - **Regra de Custo:** Use a janela de contexto gigante do Gemini para analisar impactos, mas exija que ele responda em tópicos curtos.
 
 ### 2. OpenAI GPT (4o / 5) -> O "Gerador de Código Cirúrgico"
-- **Quando usar:** Criar componentes de UI Neo-Brutalist ou aplicar correções diretas nos endpoints PHP.
+- **Quando usar:** Criar componentes de UI Neo-Brutalist ou aplicar correções diretas nos endpoints do backend (`backend/api/*.ts`).
 - **Regra de Custo:** Force o GPT a responder estritamente usando blocos `diff` ou apenas a função alterada. Nunca envie o `agent.md` completo para o GPT; passe apenas o arquivo `docs/modules/<modulo>.md` relevante.
 
 ### 3. Anthropic Claude (Sonnet / Code) -> O "Arquiteto e Auditor"

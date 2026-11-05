@@ -20,21 +20,21 @@ O sistema e uma plataforma de Amigo Secreto com painel administrativo autenticad
 - `/reset-password?token=`: redefinicao de senha de admin.
 
 ## Fluxo administrativo (SA-01 + SA-02)
-- Admin autentica por sessao com cookie (`admin_login.php`, `admin_me.php`, `admin_logout.php`).
+- Admin autentica por sessao com cookie (`backend/api/admin.ts (action=login)`, `backend/api/admin.ts (action=me)`, `backend/api/admin.ts (action=logout)`).
 - Admin cria grupo, adiciona participantes e dispara convites.
 - Convites sao enviados por email com token unico por participante.
 - Dashboard exibe progresso por status: `invited`, `link_clicked`, `confirmed`, `token_sent`, `revealed`.
 
 ## Fluxo de sorteio e revelacao (SA-03)
-- Sorteio ocorre no backend (`groups_draw.php`) para participantes `confirmed`.
+- Sorteio ocorre no backend (`backend/api/groups_draw.ts`) para participantes `confirmed`.
 - O nome sorteado e criptografado com AES-256-GCM e chave derivada de token unico.
 - Participante recebe link de revelacao e codigo de acesso.
 - Frontend decripta localmente via Web Crypto (`src/lib/crypto.js`).
-- Backend confirma visualizacao (`reveal_confirm.php`) e atualiza status.
+- Backend confirma visualizacao (`backend/api/reveal.ts (POST)`) e atualiza status.
 
 ## Fluxo de chat anonimo (SA-04)
 - Participante acessa `/chat?token=`.
-- Frontend faz polling (`chat_get.php`) e envio (`chat_send.php`).
+- Frontend faz polling (`backend/api/chat.ts (GET)`) e envio (`backend/api/chat.ts (POST)`).
 - Interface exibe remetente como anonimo.
 
 ## Persistencia e infraestrutura

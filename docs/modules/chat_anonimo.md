@@ -2,7 +2,7 @@
 module: chat_anonimo
 domain: SA-04 · A Sombra
 components: [ChatAnonimo.jsx]
-endpoints: [chat_get.php, chat_send.php]
+endpoints: [backend/api/chat.ts (GET), backend/api/chat.ts (POST)]
 database: [chat_messages, draw_results, participants]
 last_updated: 2026-06-28
 redesign_note: >
@@ -74,13 +74,13 @@ flowchart TD
 sequenceDiagram
     actor P as Participante
     participant UI as ChatAnonimo.jsx
-    participant API_SEND as chat_send.php
+    participant API_SEND as backend/api/chat.ts (POST)
     participant DB as MySQL
 
     P->>UI: Digita mensagem + clica ENVIAR
     Note over UI: handleSend(e)\ne.preventDefault()\ntextToSend = inputText.trim()\nsetInputText('')
 
-    UI->>API_SEND: POST /chat_send.php\n{token, channel, texto}
+    UI->>API_SEND: POST /backend/api/chat.ts (POST)\n{token, channel, texto}
     Note over API_SEND: token = revealToken (lookup de participante)\nchannel = 'amigo' | 'admirador'\ntexto = conteúdo da mensagem
 
     API_SEND->>DB: SELECT participants\nWHERE reveal_token = token
@@ -128,14 +128,14 @@ sequenceDiagram
 sequenceDiagram
     participant TIMER as setInterval (5000ms)
     participant UI as ChatAnonimo.jsx
-    participant API_GET as chat_get.php
+    participant API_GET as backend/api/chat.ts (GET)
     participant DB as MySQL
 
     Note over UI: mount: loadMessages() imediato\n+ setInterval(loadMessages, 5000)
 
     loop A cada 5 segundos
         TIMER->>UI: dispara loadMessages()
-        UI->>API_GET: GET /chat_get.php?token=<revealToken>
+        UI->>API_GET: GET /api/chat?token=<revealToken>
         API_GET->>DB: SELECT participants WHERE reveal_token=token
         DB-->>API_GET: {participantId}
 
@@ -212,7 +212,7 @@ flowchart TD
 |---|---|---|
 | Dois canais separados por aba | `activeTab` state + dois arrays em `messages` | **Alta** — lógica central |
 | Label 'Você' para mensagens próprias | `msg.role === 'Você'` → `isMe = true` | **Alta** — identidade mascarada |
-| Sistema como primeira mensagem | Injetado em `chat_get.php` formatação | **Média** — UX de contexto |
+| Sistema como primeira mensagem | Injetado em `backend/api/chat.ts (GET)` formatação | **Média** — UX de contexto |
 | Polling 5 segundos | `setInterval(loadMessages, 5000)` | **Média** — sem WebSocket |
 | Scroll automático ao fundo | `scrollToBottom()` após `setMessages` | **Baixa** — UX |
 | Botão voltar para revelação | `window.location.href = /reveal?token=` | **Média** — navegação |
@@ -232,8 +232,8 @@ sequenceDiagram
     participant APP as App.jsx
     participant CA as ChatAnonimo.jsx
     participant API as lib/api.js
-    participant CGP as chat_get.php
-    participant CSP as chat_send.php
+    participant CGP as backend/api/chat.ts (GET)
+    participant CSP as backend/api/chat.ts (POST)
 
     %% ── Montagem direta (sem TerminalPanel) ─────────────────────
     U->>APP: Acessa /chat?token=revealToken
@@ -241,9 +241,9 @@ sequenceDiagram
     APP->>CA: render ChatAnonimo(token=revealToken)
 
     %% ── Inicialização e carga inicial ───────────────────────────
-    CA->>API: apiGet('/chat_get.php?token=revealToken')
+    CA->>API: apiGet('/api/chat?token=revealToken')
     activate CGP
-    API->>CGP: GET /chat_get.php?token=revealToken
+    API->>CGP: GET /api/chat?token=revealToken
     CGP->>CGP: SELECT participants WHERE reveal_token=token
     CGP->>CGP: Canal amigo: draw_results WHERE giver_id=participantId
     CGP->>CGP: Canal admirador: draw_results WHERE receiver_id=participantId
@@ -256,8 +256,8 @@ sequenceDiagram
 
     %% ── Polling automático ──────────────────────────────────────
     loop A cada 5 segundos — sem WebSocket
-        CA->>API: apiGet('/chat_get.php?token=revealToken')
-        API->>CGP: GET /chat_get.php
+        CA->>API: apiGet('/api/chat?token=revealToken')
+        API->>CGP: GET /backend/api/chat.ts (GET)
         CGP-->>API: messages estado atual
         API-->>CA: dados atualizados
         CA->>CA: setMessages() → scrollToBottom()
@@ -272,9 +272,9 @@ sequenceDiagram
     U->>CA: Digita mensagem + clica ENVIAR
     CA->>CA: handleSend(e) · textToSend = inputText.trim()<br/>setInputText('') imediato
 
-    CA->>API: apiPost('/chat_send.php',<br/>{token, channel:activeTab, texto})
+    CA->>API: apiPost('/backend/api/chat.ts (POST)',<br/>{token, channel:activeTab, texto})
     activate CSP
-    API->>CSP: POST /chat_send.php
+    API->>CSP: POST /backend/api/chat.ts (POST)
     CSP->>CSP: SELECT participants WHERE reveal_token=token
 
     alt channel = 'amigo' — sou o GIVER
@@ -311,7 +311,7 @@ sequenceDiagram
 ║  Draw.io: docs/arquitetura.drawio (swimlane SA-04)   ║
 ║                                                      ║
 ║  Após qualquer alteração em:                         ║
-║  ChatAnonimo.jsx · chat_get.php · chat_send.php      ║
+║  ChatAnonimo.jsx · backend/api/chat.ts (GET) · backend/api/chat.ts (POST)      ║
 ║  Tabelas: chat_messages · draw_results               ║
 ║                                                      ║
 ║  1. Atualizar swimlane SA-04 no drawio               ║

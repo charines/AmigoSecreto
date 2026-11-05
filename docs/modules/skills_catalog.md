@@ -2,7 +2,7 @@
 module: skills_catalog
 domain: Governança de IA — transversal
 ai_agnostic: true
-last_updated: 2026-06-28
+last_updated: 2026-11-05
 ---
 
 # Módulo: Catálogo de Skills de IA
@@ -18,10 +18,9 @@ last_updated: 2026-06-28
 | Domínio da task                          | Skill a ativar           |
 |------------------------------------------|--------------------------|
 | Deploy, segurança, tokens, crypto, SQL   | `007`                    |
-| Code review, PR, novo endpoint PHP       | `cc-skill-security-review` |
+| Code review, PR, novo endpoint backend   | `cc-skill-security-review` |
 | Criar ou atualizar diagrama Mermaid      | `mermaid-expert`         |
 | Novo componente React, otimização UI     | `react-best-practices`   |
-| Novo endpoint PHP, refatoração backend   | `php-pro`                |
 | Timing side-channel em comparação de tokens/crypto | `constant-time-analysis` |
 
 **Regra:** uma skill por sessão de trabalho. Skills instaladas em `.claude/skills/`.
@@ -48,32 +47,33 @@ last_updated: 2026-06-28
 ### Quando é obrigatório neste projeto
 
 ```
-crypto.js               → AES-GCM, derivação de chave SHA-256
-reveal.php              → endpoint de revelação do sorteio
-invite_confirm.php      → confirmação de participação por token
-groups_draw.php         → execução do sorteio server-side
-admin_login.php         → autenticação de administrador
-db.php                  → camada de acesso ao banco de dados
-Qualquer novo endpoint  → antes do primeiro deploy
+crypto.js                    → AES-GCM, derivação de chave SHA-256
+backend/api/reveal.ts        → endpoint de revelação do sorteio
+backend/api/invite.ts        → confirmação de participação por token
+backend/api/groups_draw.ts   → execução do sorteio server-side
+backend/api/admin.ts         → autenticação de administrador
+backend/lib/db.ts            → camada de acesso ao banco de dados
+Qualquer novo endpoint       → antes do primeiro deploy
 ```
 
 ### Modos do 007 relevantes para o projeto
 
 | Modo       | Como acionar (Claude Code) | Uso                                        |
 |------------|----------------------------|--------------------------------------------|
-| `Audit`    | `audite api/`              | Auditoria completa antes de deploy         |
-| `Approve`  | `aprove api/<endpoint>.php`| Veredito: endpoint pronto para produção?   |
+| `Audit`    | `audite backend/api/`      | Auditoria completa antes de deploy         |
+| `Approve`  | `aprove backend/api/<endpoint>.ts` | Veredito: endpoint pronto para produção? |
 | `Threat-Model` | `threat-model src/lib/crypto.js` | STRIDE na lógica AES-GCM       |
 | `Incident` | `incidente: token vazado`  | Playbook se token de reveal/invite vazar   |
-| `Checklist`| `checklist APIs`           | Checklist técnico focado em endpoints PHP  |
+| `Checklist`| `checklist APIs`           | Checklist técnico focado em endpoints TS do backend |
 
 ### Superfície de ataque crítica deste projeto
 
 - `AES-GCM` em `crypto.js` — chave derivada de token único via SHA-256
 - Tokens UUID em `participants.invite_token` e `participants.reveal_token`
-- Cookie de sessão admin cruzando domínios Netlify ↔ HostGator via CORS
-- PDO prepared statements em todos os endpoints PHP
-- SMTP credentials em `api/.env` — nunca no `.env` do frontend
+- Cookie de sessão admin cruzando domínios (frontend Vercel ↔ backend Vercel) via CORS
+- Queries parametrizadas (`mysql2/promise`) em todos os endpoints do backend
+- SMTP credentials em `backend/.env` (local) ou env vars do projeto Vercel
+  `amigo-secreto-backend.` — nunca no `.env` do frontend
 
 **Score mínimo para deploy:** 70/100 (Aprovado com ressalvas).
 
@@ -93,8 +93,8 @@ Qualquer novo endpoint  → antes do primeiro deploy
 
 ```
 [ ] Tokens nunca expostos em logs ou mensagens de erro da API
-[ ] Todo SQL novo usa PDO prepared statements — zero concatenação de string
-[ ] CORS restrito ao domínio do frontend (APP_ORIGIN em api/.env)
+[ ] Todo SQL novo usa queries parametrizadas (`mysql2/promise`) — zero concatenação de string
+[ ] CORS restrito ao domínio do frontend (`APP_ORIGIN` nas env vars do backend)
 [ ] Nenhum segredo em src/ — apenas VITE_API_BASE_URL é seguro expor
 [ ] Cookies de sessão com HttpOnly + SameSite configurados
 [ ] Mensagens de erro da API são genéricas ao usuário (sem stack trace)
@@ -113,7 +113,7 @@ Qualquer novo endpoint  → antes do primeiro deploy
 - Criar novo arquivo em `docs/modules/`
 - Atualizar diagrama após implementação de feature
 - Traduzir fluxo do `docs/arquitetura.drawio` para Mermaid
-- Gerar `sequenceDiagram` de novos endpoints PHP
+- Gerar `sequenceDiagram` de novos endpoints do backend
 
 ### Tipos de diagrama por contexto
 
@@ -126,7 +126,7 @@ Qualquer novo endpoint  → antes do primeiro deploy
 | Dependências entre componentes  | `flowchart TD`     | `dependencias_react.md`     |
 
 **Regra de nomenclatura:** usar sempre o nome exato do componente ou endpoint
-(`AdminDashboard.jsx`, `groups_draw.php`) para garantir rastreabilidade código ↔ diagrama.
+(`AdminDashboard.jsx`, `backend/api/groups_draw.ts`) para garantir rastreabilidade código ↔ diagrama.
 
 ---
 
@@ -162,35 +162,7 @@ server-after-*        → não existe em Vite
 
 ---
 
-## 5 · `php-pro` — PHP Idiomático
-
-**Arquivo:** `.claude/skills/php-pro/SKILL.md`
-**Risk level:** `unknown`
-
-### Quando usar neste projeto
-
-- Criar novo endpoint em `api/`
-- Refatorar `mailer.php` (lógica de envio em lote)
-- Otimizar queries com JOINs em `groups_detail.php`
-- Implementar features do `docs/modules/roadmap.md` que exigem lógica PHP complexa
-
-### Padrões relevantes para o projeto
-
-| Padrão                     | Aplicação                                              |
-|----------------------------|--------------------------------------------------------|
-| Generators                 | Processar listas grandes de participantes no sorteio   |
-| `SplPriorityQueue`         | Fila de reenvio de emails se implementada              |
-| `match` expression (PHP 8) | Substituir `switch` em lógica de status de grupos      |
-| Named arguments            | Melhorar legibilidade nas chamadas a `mailer.php`      |
-| PDO `FETCH_ASSOC`          | Já em uso — manter; evitar `FETCH_OBJ` sem necessidade |
-
-**Invariante:** cada endpoint é um arquivo `.php` isolado em `api/`. A skill `php-pro` não
-deve propor consolidação em controllers ou frameworks — isso viola a arquitetura definida
-em `agent.md §5`.
-
----
-
-## 6 · `constant-time-analysis` — Timing Side-Channels
+## 5 · `constant-time-analysis` — Timing Side-Channels
 
 **Arquivo:** `.claude/skills/constant-time-analysis/SKILL.md`
 **Risk level:** `unknown` | **Uso:** complementar à `007`, mesma sessão (não conta como skill separada)
@@ -198,9 +170,10 @@ em `agent.md §5`.
 ### Quando usar neste projeto
 
 - Junto com `007`, ao tocar comparação de segredos: `crypto.js` (chave derivada de token),
-  `reveal.php` / `invite_confirm.php` (comparação de `reveal_token`/`invite_token`),
-  `admin_login.php` (comparação de senha/hash).
-- Antes de qualquer refatoração em `groups_draw.php` que compare tokens ou IDs sensíveis.
+  `backend/api/reveal.ts` / `backend/api/invite.ts` (comparação de
+  `reveal_token`/`invite_token`), `backend/api/admin.ts` (comparação de senha/hash).
+- Antes de qualquer refatoração em `backend/api/groups_draw.ts` que compare tokens ou IDs
+  sensíveis.
 
 ### O que verificar
 
@@ -222,7 +195,7 @@ domínios correspondentes caem de volta à leitura de código-fonte.
 
 | Módulo a criar             | Sub-agente | Arquivos a mapear                                          |
 |----------------------------|------------|------------------------------------------------------------|
-| `sorteio.md`               | SA-03      | `groups_draw.php`, `reveal.php`, `crypto.js`, `secretSanta.js`, `RevealPage.jsx` |
-| `chat_anonimo.md`          | SA-04      | `ChatAnonimo.jsx`, `chat_get.php`, `chat_send.php`         |
-| `banco.md`                 | Todos      | `database/schema.mysql.sql`, `migrate_v*.php`, `db.php`   |
+| `sorteio.md`               | SA-03      | `backend/api/groups_draw.ts`, `backend/api/reveal.ts`, `crypto.js`, `secretSanta.js`, `RevealPage.jsx` |
+| `chat_anonimo.md`          | SA-04      | `ChatAnonimo.jsx`, `backend/api/chat.ts`                   |
+| `banco.md`                 | Todos      | `database/schema.mysql.sql`, `backend/db/migrate*.ts`, `backend/lib/db.ts` |
 | `grupo_lifecycle.md`       | SA-02/03   | Status: `draft → open → drawn → closed`                    |

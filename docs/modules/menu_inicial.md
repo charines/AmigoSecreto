@@ -2,7 +2,7 @@
 module: menu_inicial
 domain: SA-01 (Portaria) + SA-02 (Orquestrador de Grupo)
 components: [App.jsx, AdminAuth.jsx, ForgotPassword.jsx, ResetPassword.jsx, AdminDashboard.jsx, InvitePage.jsx, JoinGroup.jsx]
-endpoints: [admin_me.php, admin_login.php, admin_forgot_password.php, admin_reset_password.php, invite.php, invite_confirm.php, groups_join.php]
+endpoints: [backend/api/admin.ts (action=me), backend/api/admin.ts (action=login), backend/api/admin.ts (action=forgot_password), backend/api/admin.ts (action=reset_password), backend/api/invite.ts (GET), backend/api/invite.ts (POST), backend/api/groups.ts (action=join)]
 last_updated: 2026-06-29
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — AdminAuth, AdminDashboard e RevealPage
@@ -37,7 +37,7 @@ flowchart TD
 
     ROUTE_ADMIN --> CHECK_ENV{VITE_API_BASE_URL\nconfigurado?}
     CHECK_ENV -->|NÃO| ERR_ENV["StatusScreen (Neo-Brutalist)\nErro: API não configurada"]
-    CHECK_ENV -->|SIM| CHECK_SESSION[apiGet /admin_me.php\nverifica cookie de sessão]
+    CHECK_ENV -->|SIM| CHECK_SESSION[apiGet /backend/api/admin.ts (action=me)\nverifica cookie de sessão]
 
     CHECK_SESSION -->|checking=true| LOADING["StatusScreen (Neo-Brutalist)\nCarregando sessão..."]
     CHECK_SESSION -->|admin presente| DASHBOARD["AdminDashboard.jsx\nlayout próprio Neo-Brutalist"]
@@ -75,12 +75,12 @@ flowchart TD
 flowchart TD
     ADMIN_DASH([AdminDashboard.jsx\nAdmin autenticado]) --> CTA_MENU{Ação do Admin}
 
-    CTA_MENU -->|Criar Grupo| CREATE_GROUP["view='create'\nFormulário inline (título, descrição,\ndraw_date, budget_limit) → groups_create.php"]
-    CTA_MENU -->|Selecionar Grupo existente| GROUP_DETAIL[groups_detail.php\nCarrega participantes e status]
-    CTA_MENU -->|Enviar Convites| INVITE_FLOW[groups_invite.php\nmailer.php dispara emails]
-    CTA_MENU -->|Realizar Sorteio| DRAW_FLOW[groups_draw.php\nVer módulo juiz_sorteio.md]
-    CTA_MENU -->|Deletar Grupo| DELETE_GROUP[groups_delete.php\nConfirmação obrigatória]
-    CTA_MENU -->|Logout| LOGOUT_FLOW[apiPost /admin_logout.php\nsetAdmin null → AdminAuth]
+    CTA_MENU -->|Criar Grupo| CREATE_GROUP["view='create'\nFormulário inline (título, descrição,\ndraw_date, budget_limit) → backend/api/groups.ts (action=create)"]
+    CTA_MENU -->|Selecionar Grupo existente| GROUP_DETAIL[backend/api/groups.ts (action=detail)\nCarrega participantes e status]
+    CTA_MENU -->|Enviar Convites| INVITE_FLOW[backend/api/groups.ts (action=invite)\nbackend/lib/mailer.ts dispara emails]
+    CTA_MENU -->|Realizar Sorteio| DRAW_FLOW[backend/api/groups_draw.ts\nVer módulo juiz_sorteio.md]
+    CTA_MENU -->|Deletar Grupo| DELETE_GROUP[backend/api/groups.ts (action=delete)\nConfirmação obrigatória]
+    CTA_MENU -->|Logout| LOGOUT_FLOW[apiPost /backend/api/admin.ts (action=logout)\nsetAdmin null → AdminAuth]
 
     CREATE_GROUP --> ADD_PARTICIPANTS["view='detail'\nInput nome+email inline\naddPendingParticipant()"]
     ADD_PARTICIPANTS --> INVITE_FLOW
@@ -98,11 +98,11 @@ sequenceDiagram
     actor P as Participante
     participant B as Browser\n/invite?token=UUID
     participant I as InvitePage.jsx
-    participant API as invite.php\ninvite_confirm.php
+    participant API as backend/api/invite.ts (GET)\nbackend/api/invite.ts (POST)
 
     P->>B: Clica no link do email
     B->>I: mount com prop token=UUID
-    I->>API: GET /invite.php?token=UUID
+    I->>API: GET /api/invite?token=UUID
     API-->>I: {group: {title, description}, participant: {name, email, status}}
 
     alt status = 'confirmed'
@@ -110,7 +110,7 @@ sequenceDiagram
     else status = 'pending'
         I-->>P: Exibe dados do grupo + botão CONFIRMAR PARTICIPAÇÃO
         P->>I: Clica em CONFIRMAR PARTICIPAÇÃO
-        I->>API: POST /invite_confirm.php {token: UUID}
+        I->>API: POST /backend/api/invite.ts (POST) {token: UUID}
         API-->>I: {ok: true}
         I-->>P: Exibe "✔ Participação confirmada. Aguarde o sorteio."
     end
@@ -130,17 +130,17 @@ sequenceDiagram
     actor U as Usuário Externo
     participant B as Browser\n/join?dharma=CODE
     participant J as JoinGroup.jsx
-    participant API as groups_get_public.php\ngroups_join.php
+    participant API as backend/api/groups.ts (action=get_public)\nbackend/api/groups.ts (action=join)
 
     U->>B: Acessa link público compartilhado pelo admin
     B->>J: mount — captura dharma code da URL
-    J->>API: GET /groups_get_public.php?dharma=CODE
+    J->>API: GET /api/groups?action=get_public&code=CODE
     API-->>J: {group: {title, description, max_participants}}
 
     J-->>U: Exibe nome do grupo + formulário de adesão\n(nome + email)
 
     U->>J: Preenche nome e email → clica em ENTRAR
-    J->>API: POST /groups_join.php {dharma: CODE, name, email}
+    J->>API: POST /backend/api/groups.ts (action=join) {dharma: CODE, name, email}
 
     alt Adesão bem-sucedida
         API-->>J: {ok: true, message: 'Aguarde o convite de confirmação'}
@@ -181,7 +181,7 @@ sequenceDiagram
 | Feature desejada                         | Ponto de inserção                        |
 |------------------------------------------|------------------------------------------|
 | Nova rota pública                        | `resolveRoute()` em `App.jsx` + novo componente |
-| Novo CTA no dashboard                    | `AdminDashboard.jsx` + novo endpoint PHP |
-| Novo campo no formulário de convite      | `InvitePage.jsx` + `invite_confirm.php`  |
+| Novo CTA no dashboard                    | `AdminDashboard.jsx` + novo endpoint no backend TS |
+| Novo campo no formulário de convite      | `InvitePage.jsx` + `backend/api/invite.ts (POST)`  |
 | Nova classe utilitária Neo-Brutalist      | `src/index.css` (`@layer components`)    |
 | Página de erro personalizada             | Novo componente + tratamento em `App.jsx`|
