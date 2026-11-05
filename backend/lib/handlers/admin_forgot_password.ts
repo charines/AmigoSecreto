@@ -53,9 +53,8 @@ export async function forgotPassword(
           `Clique no link abaixo para criar uma nova senha (valido por 1 hora):\n\n${resetLink}\n\n` +
           'Se voce nao solicitou a recuperacao, ignore este e-mail.',
       });
-    } catch (err) {
-      // DEBUG TEMPORARIO: reverter apos diagnostico (nao expoe ao cliente).
-      console.error('[forgot_password] falha SMTP:', err);
+    } catch {
+      // Nao expoe falha de SMTP ao cliente.
     }
   }
 
