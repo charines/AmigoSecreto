@@ -2,8 +2,15 @@ export type ChatMessageRow = {
   id: number;
   sender_role: 'giver' | 'receiver';
   texto: string;
-  created_at: string;
+  created_at: string | Date;
 };
+
+export function toIsoUtc(value: string | Date): string {
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+  return new Date(value.replace(' ', 'T') + 'Z').toISOString();
+}
 
 export type FormattedMessage = {
   id: number;
@@ -37,7 +44,7 @@ export function formatChannelMessages(
       id: row.id,
       role,
       texto: row.texto,
-      timestamp: new Date(row.created_at.replace(' ', 'T') + 'Z').toISOString(),
+      timestamp: toIsoUtc(row.created_at),
     });
   }
 

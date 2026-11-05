@@ -3,6 +3,7 @@ import type { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { loadConfig } from '../config.js';
 import { buildCorsResponse } from '../cors.js';
 import { getPool } from '../db.js';
+import { toIsoUtc } from '../chatFormat.js';
 
 export type SendChatInput = {
   token: string;
@@ -59,7 +60,7 @@ export async function sendChatMessage(pool: Pool, input: SendChatInput): Promise
   const [rows] = await pool.query<RowDataPacket[]>('SELECT created_at FROM chat_messages WHERE id = ?', [
     insertResult.insertId,
   ]);
-  const createdAt = (rows[0] as { created_at: string }).created_at;
+  const createdAt = (rows[0] as { created_at: string | Date }).created_at;
 
   return {
     status: 200,
@@ -69,7 +70,7 @@ export async function sendChatMessage(pool: Pool, input: SendChatInput): Promise
         id: insertResult.insertId,
         role: 'Você',
         texto,
-        timestamp: new Date(createdAt.replace(' ', 'T') + 'Z').toISOString(),
+        timestamp: toIsoUtc(createdAt),
       },
     },
   };
