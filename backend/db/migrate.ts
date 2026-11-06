@@ -10,12 +10,13 @@ import { migrateV3 } from './migrate_v3.js';
 import { migrateV4 } from './migrate_v4.js';
 import { migrateV5 } from './migrate_v5.js';
 import { migrateSessions } from './migrate_sessions.js';
+import { migrateParticipantAccounts } from './migrate_participant_accounts.js';
 
 async function main() {
   const config = loadConfig(process.env);
   const pool = getPool(config);
 
-  for (const migration of [migrateV2, migrateV3, migrateV4, migrateV5, migrateSessions]) {
+  for (const migration of [migrateV2, migrateV3, migrateV4, migrateV5, migrateSessions, migrateParticipantAccounts]) {
     await migration(pool);
   }
 
