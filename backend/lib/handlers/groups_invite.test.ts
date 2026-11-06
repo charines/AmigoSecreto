@@ -83,6 +83,8 @@ describe('inviteParticipants', () => {
     expect(result.body.sent).toEqual(['ana@example.com', 'bob@example.com']);
     expect(result.body.failed).toEqual([]);
     expect(sendMail).toHaveBeenCalledTimes(2);
+    expect(sendMail.mock.calls[0][0].html).toBeTruthy();
+    expect(sendMail.mock.calls[1][0].html).toBeTruthy();
   });
 
   it('reports a failed send without blocking the others', async () => {

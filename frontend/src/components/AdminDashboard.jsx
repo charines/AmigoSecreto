@@ -663,7 +663,7 @@ export default function AdminDashboard({ admin, onLogout }) {
                   className="bg-[#25D366] text-white border-2 border-[var(--color-nb-ink)] p-3 nb-shadow hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_var(--color-nb-ink)] active:translate-y-0.5 active:shadow-[2px_2px_0px_0px_var(--color-nb-ink)] transition-all flex items-center gap-2 font-black text-sm"
                   onClick={() => {
                     const url = `${window.location.origin}/join/${selectedGroup.dharma_code}`;
-                    const text = `⚠️ PROTOCOLO DHARMA ATIVADO\n\nNAMASTÊ. VOCÊ FOI SELECIONADO PARA O EXPERIMENTO: "${selectedGroup.title.toUpperCase()}".\n\nACESSE O TERMINAL PARA CONFIRMAR SUA IDENTIDADE:\n${url}\n\n4 8 15 16 23 42`;
+                    const text = `🎁 Você foi convidado para o Amigo Secreto "${selectedGroup.title}"!\n\nBora trocar presentes (e carinho)? Clique no link para confirmar sua participação:\n${url}`;
                     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
                   }}
                 >

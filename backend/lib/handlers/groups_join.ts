@@ -67,7 +67,7 @@ export async function joinGroup(
     resend: false,
   });
 
-  await sendMail({ to: email, subject: mail.subject, text: mail.text });
+  await sendMail({ to: email, subject: mail.subject, text: mail.text, html: mail.html });
   await pool.query('UPDATE participants SET invite_sent_at = NOW() WHERE id = ?', [insertResult.insertId]);
 
   return { status: 200, body: { ok: true } };

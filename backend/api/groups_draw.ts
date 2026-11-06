@@ -10,6 +10,7 @@ import { randomToken } from '../lib/session.js';
 import { pairParticipants } from '../lib/drawAlgorithm.js';
 import { encryptName } from '../lib/drawCrypto.js';
 import { createSendMail, type MailMessage } from '../lib/mailer.js';
+import { buildDrawResultEmail } from '../lib/drawResultEmail.js';
 
 export type RunDrawResult = {
   status: number;
@@ -85,29 +86,18 @@ export async function runDraw(
     const revealLink =
       `${baseUrl.replace(/\/+$/, '')}/reveal?token=${encodeURIComponent(r.revealToken)}` +
       `&code=${encodeURIComponent(r.token)}`;
-    const subject = `[PROJETO AMIGO SECRETO] O sorteio foi realizado! Descubra quem voce tirou — ${group.title}`;
-    const text = [
-      'Ola, sobrevivente do dia a dia!',
-      '',
-      `O sorteio do grupo "${group.title}" foi finalizado com sucesso!`,
-      '',
-      'Detalhes do Protocolo:',
-      `    Participante Selecionado: ${r.name}`,
-      `    Grupo Atual: ${group.title}`,
-      `    Descricao do Projeto: ${group.description || 'N/A'}`,
-      `    Data do Evento: ${group.draw_date || 'N/A'}`,
-      '',
-      'Clique no link abaixo para revelar:',
-      '',
+    const email = buildDrawResultEmail({
+      participantName: r.name,
+      groupTitle: group.title,
+      groupDescription: group.description,
+      drawDate: group.draw_date,
       revealLink,
-      '',
-      `Codigo de acesso: ${r.token}`,
-      '',
-      'Namaste.',
-    ].join('\n');
+      accessCode: r.token,
+      resend: false,
+    });
 
     try {
-      await sendMail({ to: r.email, subject, text });
+      await sendMail({ to: r.email, subject: email.subject, text: email.text, html: email.html });
       sent.push(r.email);
       await pool.query("UPDATE participants SET status = 'token_sent', token_sent_at = NOW() WHERE id = ?", [
         r.participantId,

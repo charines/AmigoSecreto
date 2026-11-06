@@ -5,6 +5,7 @@ export type MailMessage = {
   to: string;
   subject: string;
   text: string;
+  html?: string;
 };
 
 export function buildTransportOptions(mailConfig: BackendConfig['mail']) {
@@ -26,6 +27,7 @@ export function createSendMail(mailConfig: BackendConfig['mail']) {
       to: message.to,
       subject: message.subject,
       text: message.text,
+      html: message.html,
     });
   };
 }

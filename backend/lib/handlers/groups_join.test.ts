@@ -93,5 +93,6 @@ describe('joinGroup', () => {
     expect(result).toEqual({ status: 200, body: { ok: true } });
     expect(sendMail).toHaveBeenCalledOnce();
     expect(sendMail.mock.calls[0][0].text).toContain('token=');
+    expect(sendMail.mock.calls[0][0].html).toBeTruthy();
   });
 });

@@ -1,3 +1,6 @@
+import { renderEmailLayout } from './emailLayout.js';
+import { escapeHtml } from './htmlEscape.js';
+
 export type InviteEmailInput = {
   groupTitle: string;
   groupDescription: string;
@@ -8,33 +11,48 @@ export type InviteEmailInput = {
 export type InviteEmail = {
   subject: string;
   text: string;
+  html: string;
 };
 
 export function buildInviteEmail(input: InviteEmailInput): InviteEmail {
   const suffix = input.resend ? ' (Reenvio)' : '';
-  const subject = `[PROJETO AMIGO SECRETO] Voce foi selecionado para uma nova iniciativa!${suffix}`;
+  const subject = `🎁 Você foi convidado para o Amigo Secreto "${input.groupTitle}"!${suffix}`;
+  const description = input.groupDescription || 'Sem descrição por enquanto, mas vai ser divertido!';
+
+  const resendNoteHtml = input.resend
+    ? '<p><em>Este é um reenvio do seu convite — você ainda não confirmou sua participação.</em></p>'
+    : '';
+  const resendNoteText = input.resend
+    ? 'Este é um reenvio do seu convite — você ainda não confirmou sua participação.\n'
+    : '';
 
   const text = [
-    'Ola, sobrevivente do dia a dia!',
+    'Oi! Prepare o papel de embrulho, porque você foi convidado para um Amigo Secreto! 🎉',
     '',
-    'Chegou aquela epoca do ano. Fomos convocados para fazer parte de um experimento social altamente confidencial: o Amigo Secreto.',
+    resendNoteText,
+    `Grupo: ${input.groupTitle}`,
+    `Detalhes: ${description}`,
     '',
-    'Sua missao, caso decida aceita-la, e participar dessa dinamica para fortalecer os lacos da nossa propria "estacao".',
-    '',
-    'Detalhes do Protocolo:',
-    `    O Projeto: ${input.groupTitle}`,
-    '    Status do Sistema: Ativo e aguardando sua confirmacao.',
-    `    Fase Atual: ${input.groupDescription || 'Testando data e hora do sistema.'}`,
-    '',
-    'Instrucoes para Confirmacao:',
-    'Clique no link seguro abaixo para confirmar sua participacao:',
+    'Clique no link abaixo para confirmar sua participação e entrar na brincadeira:',
     '',
     input.inviteLink,
     '',
-    'Agradecemos a sua colaboracao para o sucesso deste projeto.',
-    '',
-    'Namaste.',
+    'Bora trocar presentes (e carinho)? Te esperamos lá!',
   ].join('\n');
 
-  return { subject, text };
+  const html = renderEmailLayout({
+    previewText: `Você foi convidado para o Amigo Secreto "${escapeHtml(input.groupTitle)}"!`,
+    heading: '🎁 Você foi convidado!',
+    bodyHtml: `
+      <p>Oi! Prepare o papel de embrulho, porque você foi convidado para um Amigo Secreto! 🎉</p>
+      ${resendNoteHtml}
+      <p><strong>Grupo:</strong> ${escapeHtml(input.groupTitle)}</p>
+      <p><strong>Detalhes:</strong> ${escapeHtml(description)}</p>
+      <p>Bora trocar presentes (e carinho)? Te esperamos lá!</p>
+    `,
+    ctaLabel: 'Confirmar participação',
+    ctaUrl: input.inviteLink,
+  });
+
+  return { subject, text, html };
 }

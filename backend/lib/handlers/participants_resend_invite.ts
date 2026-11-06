@@ -60,7 +60,7 @@ export async function resendInvite(
     resend: true,
   });
 
-  await sendMail({ to: row.email, subject: email.subject, text: email.text });
+  await sendMail({ to: row.email, subject: email.subject, text: email.text, html: email.html });
   await pool.query('UPDATE participants SET invite_sent_at = NOW() WHERE id = ?', [row.id]);
 
   return { status: 200, body: { ok: true } };

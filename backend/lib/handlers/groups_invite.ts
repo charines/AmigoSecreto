@@ -76,7 +76,7 @@ export async function inviteParticipants(
     });
 
     try {
-      await sendMail({ to: p.email, subject: email.subject, text: email.text });
+      await sendMail({ to: p.email, subject: email.subject, text: email.text, html: email.html });
       sent.push(p.email);
       await pool.query('UPDATE participants SET invite_sent_at = NOW() WHERE id = ?', [p.id]);
     } catch (err) {

@@ -70,6 +70,7 @@ describe('runDraw', () => {
     expect(result.body.sent).toHaveLength(2);
     expect(result.body.failed).toEqual([]);
     expect(sendMail).toHaveBeenCalledTimes(2);
+    expect(sendMail.mock.calls[0][0].html).toBeTruthy();
 
     const insertDrawCall = pool.query.mock.calls[2];
     expect(insertDrawCall[0]).toContain('INSERT INTO draw_results');

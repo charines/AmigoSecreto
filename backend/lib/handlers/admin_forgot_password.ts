@@ -6,6 +6,8 @@ import { buildCorsResponse } from '../cors.js';
 import { getPool } from '../db.js';
 import { randomToken } from '../session.js';
 import { createSendMail, type MailMessage } from '../mailer.js';
+import { renderEmailLayout } from '../emailLayout.js';
+import { escapeHtml } from '../htmlEscape.js';
 
 export type ForgotPasswordResult = {
   status: number;
@@ -44,14 +46,27 @@ export async function forgotPassword(
     const resetLink = `${appBaseUrl.replace(/\/+$/, '')}/reset-password?token=${encodeURIComponent(rawResetToken)}`;
 
     try {
+      const html = renderEmailLayout({
+        previewText: 'Redefina sua senha do Amigo Secreto.',
+        heading: '🔒 Redefinir senha',
+        bodyHtml: `
+          <p>Oi, ${escapeHtml(admin.name)}!</p>
+          <p>Recebemos uma solicitação para redefinir a senha da sua conta no Amigo Secreto.</p>
+          <p>O link abaixo é válido por 1 hora. Se você não solicitou a recuperação, pode ignorar este e-mail com tranquilidade.</p>
+        `,
+        ctaLabel: 'Criar nova senha',
+        ctaUrl: resetLink,
+      });
+
       await send({
         to: email,
-        subject: 'Recuperacao de senha — AmigoSecreto',
+        subject: '🔒 Redefinição de senha — Amigo Secreto',
         text:
-          `Ola, ${admin.name}!\n\n` +
-          'Recebemos uma solicitacao para redefinir a senha da sua conta no AmigoSecreto.\n\n' +
-          `Clique no link abaixo para criar uma nova senha (valido por 1 hora):\n\n${resetLink}\n\n` +
-          'Se voce nao solicitou a recuperacao, ignore este e-mail.',
+          `Oi, ${admin.name}!\n\n` +
+          'Recebemos uma solicitação para redefinir a senha da sua conta no Amigo Secreto.\n\n' +
+          `O link abaixo é válido por 1 hora. Clique para criar uma nova senha:\n\n${resetLink}\n\n` +
+          'Se você não solicitou a recuperação, pode ignorar este e-mail com tranquilidade.',
+        html,
       });
     } catch {
       // Nao expoe falha de SMTP ao cliente.
