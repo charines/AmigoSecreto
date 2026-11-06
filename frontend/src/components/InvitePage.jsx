@@ -7,6 +7,11 @@ export default function InvitePage({ token }) {
   const [error, setError] = useState('');
   const [confirming, setConfirming] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [password, setPassword] = useState('');
+  const [creatingPassword, setCreatingPassword] = useState(false);
+  const [passwordCreated, setPasswordCreated] = useState(false);
+  const [passwordSkipped, setPasswordSkipped] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
 
   useEffect(() => {
     const load = async () => {
@@ -35,6 +40,20 @@ export default function InvitePage({ token }) {
       setError(err.message);
     } finally {
       setConfirming(false);
+    }
+  };
+
+  const handleCreatePassword = async (event) => {
+    event.preventDefault();
+    setCreatingPassword(true);
+    setPasswordError('');
+    try {
+      await apiPost('/api/participant?action=set_password', { token, password });
+      setPasswordCreated(true);
+    } catch (err) {
+      setPasswordError(err.message);
+    } finally {
+      setCreatingPassword(false);
     }
   };
 
@@ -118,13 +137,60 @@ export default function InvitePage({ token }) {
                 </div>
 
                 {confirmed ? (
-                  <div className="bg-secondary-container border-2 border-(--color-nb-ink) rounded-xl p-4 flex items-center gap-2 mt-2">
-                    <span className="material-symbols-outlined text-on-secondary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
-                      check_circle
-                    </span>
-                    <p className="text-on-secondary-container text-sm font-bold">
-                      Participação confirmada. Aguarde o sorteio.
-                    </p>
+                  <div className="space-y-3 mt-2">
+                    <div className="bg-secondary-container border-2 border-(--color-nb-ink) rounded-xl p-4 flex items-center gap-2">
+                      <span className="material-symbols-outlined text-on-secondary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
+                        check_circle
+                      </span>
+                      <p className="text-on-secondary-container text-sm font-bold">
+                        Participação confirmada. Aguarde o sorteio.
+                      </p>
+                    </div>
+
+                    {passwordCreated ? (
+                      <div className="bg-secondary-container border-2 border-(--color-nb-ink) rounded-xl p-4 flex items-center gap-2">
+                        <span className="material-symbols-outlined text-on-secondary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
+                          check_circle
+                        </span>
+                        <p className="text-on-secondary-container text-sm font-bold">
+                          Senha criada! Você já pode acompanhar seus grupos em /area.
+                        </p>
+                      </div>
+                    ) : passwordSkipped ? null : (
+                      <form className="space-y-2" onSubmit={handleCreatePassword}>
+                        <label className="text-xs font-extrabold text-on-surface uppercase tracking-wider">
+                          Criar senha para acompanhar seus grupos
+                        </label>
+                        <input
+                          className="nb-input w-full p-3 rounded-xl text-sm text-on-surface"
+                          type="password"
+                          placeholder="••••••••"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          autoComplete="new-password"
+                          minLength={6}
+                        />
+                        {passwordError && (
+                          <p className="text-error text-xs font-bold">✖ {passwordError}</p>
+                        )}
+                        <div className="flex gap-2">
+                          <button
+                            type="submit"
+                            className="nb-btn-primary flex-1 py-3 rounded-xl text-sm"
+                            disabled={creatingPassword || password.length < 6}
+                          >
+                            {creatingPassword ? 'CRIANDO...' : 'CRIAR SENHA'}
+                          </button>
+                          <button
+                            type="button"
+                            className="flex-1 text-xs font-extrabold text-on-surface-variant hover:text-primary transition-colors"
+                            onClick={() => setPasswordSkipped(true)}
+                          >
+                            Agora não
+                          </button>
+                        </div>
+                      </form>
+                    )}
                   </div>
                 ) : (
                   <button

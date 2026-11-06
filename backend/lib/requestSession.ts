@@ -9,3 +9,13 @@ export function readSessionToken(req: VercelRequest): string | undefined {
 
   return decodeURIComponent(match.trim().slice('session='.length));
 }
+
+export function readParticipantSessionToken(req: VercelRequest): string | undefined {
+  const cookieHeader = req.headers.cookie;
+  if (!cookieHeader) return undefined;
+
+  const match = cookieHeader.split(';').find((part) => part.trim().startsWith('participant_session='));
+  if (!match) return undefined;
+
+  return decodeURIComponent(match.trim().slice('participant_session='.length));
+}

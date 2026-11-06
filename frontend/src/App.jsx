@@ -6,6 +6,8 @@ import RevealPage from './components/RevealPage';
 import JoinGroup from './components/JoinGroup';
 import ChatAnonimo from './components/ChatAnonimo';
 import ResetPassword from './components/ResetPassword';
+import ParticipantAuth from './components/ParticipantAuth';
+import ParticipantDashboard from './components/ParticipantDashboard';
 import { apiGet, apiPost, API_BASE_URL } from './lib/api';
 
 function StatusScreen({ icon, spinning, message, isError }) {
@@ -39,6 +41,7 @@ function resolveRoute() {
   if (path.startsWith('/join'))          return 'join';
   if (path.startsWith('/chat'))          return 'chat';
   if (path.startsWith('/reset-password')) return 'reset-password';
+  if (path.startsWith('/area'))          return 'participant';
   return 'admin';
 }
 
@@ -51,6 +54,8 @@ export default function App() {
   const [route, setRoute] = useState(resolveRoute());
   const [admin, setAdmin] = useState(null);
   const [checking, setChecking] = useState(true);
+  const [participant, setParticipant] = useState(null);
+  const [checkingParticipant, setCheckingParticipant] = useState(true);
 
   const token = useMemo(() => getTokenParam(), [route]);
 
@@ -71,6 +76,22 @@ export default function App() {
         setAdmin(null);
       } finally {
         setChecking(false);
+      }
+    };
+    check();
+  }, [route]);
+
+  useEffect(() => {
+    if (route !== 'participant') return;
+    const check = async () => {
+      setCheckingParticipant(true);
+      try {
+        const data = await apiGet('/api/participant?action=me');
+        setParticipant(data.participant);
+      } catch {
+        setParticipant(null);
+      } finally {
+        setCheckingParticipant(false);
       }
     };
     check();
@@ -110,6 +131,16 @@ export default function App() {
     ) : (
       <StatusScreen icon="error" message="Token de chat ausente." isError />
     );
+  }
+
+  if (route === 'participant') {
+    if (checkingParticipant) {
+      return <StatusScreen icon="autorenew" spinning message="Carregando sessão..." />;
+    }
+    if (participant) {
+      return <ParticipantDashboard participant={participant} onLogout={() => setParticipant(null)} />;
+    }
+    return <ParticipantAuth onAuth={setParticipant} />;
   }
 
   if (checking) {
