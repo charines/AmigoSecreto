@@ -1,11 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { apiGet, apiPost } from '../lib/api';
+import { mergeChannels } from '../lib/chatMerge';
 
 export default function ChatAnonimo({ token }) {
-  const [activeTab, setActiveTab] = useState('amigo'); // 'amigo' | 'admirador'
   const [messages, setMessages] = useState({ amigo: [], admirador: [] });
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(null); // null | 'amigo' | 'admirador'
   const messagesEndRef = useRef(null);
 
   const formatTime = (isoString) => {
@@ -37,36 +38,38 @@ export default function ChatAnonimo({ token }) {
     return () => clearInterval(timer);
   }, [token]);
 
+  const unifiedMessages = useMemo(() => mergeChannels(messages), [messages]);
+
   useEffect(() => {
     scrollToBottom();
-  }, [messages, activeTab]);
+  }, [unifiedMessages]);
 
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!inputText.trim()) return;
+  const handleSend = async (channel) => {
+    if (!inputText.trim() || sending === channel) return;
 
     const textToSend = inputText.trim();
     setInputText('');
+    setSending(channel);
 
     try {
       const res = await apiPost('/api/chat', {
         token,
-        channel: activeTab,
+        channel,
         texto: textToSend
       });
 
       if (res.ok) {
         setMessages(prev => ({
           ...prev,
-          [activeTab]: [...prev[activeTab], res.message]
+          [channel]: [...prev[channel], res.message]
         }));
       }
     } catch (err) {
       console.error('Falha ao enviar mensagem', err);
+    } finally {
+      setSending(null);
     }
   };
-
-  const currentMessages = messages[activeTab];
 
   return (
     <div
@@ -88,30 +91,6 @@ export default function ChatAnonimo({ token }) {
 
       {/* Main */}
       <main className="flex-1 flex flex-col max-w-[600px] mx-auto w-full px-5 pt-6 pb-24">
-
-        {/* Seletor de tabs */}
-        <div className="flex gap-2 mb-6">
-          <button
-            className={`flex-1 py-3 px-4 text-sm font-extrabold border-2 border-(--color-nb-ink) rounded-xl transition-all ${
-              activeTab === 'amigo'
-                ? 'bg-tertiary-container text-on-tertiary-container nb-shadow nb-press'
-                : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
-            }`}
-            onClick={() => setActiveTab('amigo')}
-          >
-            Para: Meu Amigo
-          </button>
-          <button
-            className={`flex-1 py-3 px-4 text-sm font-extrabold border-2 border-(--color-nb-ink) rounded-xl transition-all ${
-              activeTab === 'admirador'
-                ? 'bg-tertiary-container text-on-tertiary-container nb-shadow nb-press'
-                : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
-            }`}
-            onClick={() => setActiveTab('admirador')}
-          >
-            De: Quem me tirou
-          </button>
-        </div>
 
         {/* Área de chat */}
         <div className="flex-1 flex flex-col bg-white border-2 border-(--color-nb-ink) rounded-xl nb-shadow overflow-hidden relative" style={{ minHeight: '400px', maxHeight: '60vh' }}>
@@ -138,20 +117,29 @@ export default function ChatAnonimo({ token }) {
               <p className="text-center text-sm font-semibold text-on-surface-variant animate-pulse">Carregando mensagens...</p>
             )}
 
-            {currentMessages.map((msg) => {
+            {unifiedMessages.map((msg) => {
               const isMe = msg.role === 'Você';
               const isSystem = msg.role === 'Sistema';
 
               if (isSystem) {
                 return (
-                  <div key={msg.id} className="text-center text-[10px] text-on-surface-variant/50 tracking-widest font-bold my-4 uppercase">
+                  <div key={msg.key} className="text-center text-[10px] text-on-surface-variant/50 tracking-widest font-bold my-4 uppercase">
                     — {msg.texto} —
                   </div>
                 );
               }
 
+              const channelLabel = msg.channel === 'amigo' ? 'Amigo Secreto' : 'Admirador Secreto';
+              const channelAccent = msg.channel === 'amigo' ? 'var(--color-primary)' : 'var(--color-secondary)';
+
               return (
-                <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[85%] ${isMe ? 'ml-auto' : ''}`}>
+                <div key={msg.key} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[85%] ${isMe ? 'ml-auto' : ''}`}>
+                  <span
+                    className="text-[9px] font-black uppercase tracking-wider mb-1 mx-1 px-2 py-0.5 rounded-full border-2"
+                    style={{ color: channelAccent, borderColor: channelAccent }}
+                  >
+                    {isMe ? `Para: ${channelLabel}` : `De: ${channelLabel}`}
+                  </span>
                   {isMe ? (
                     <div className="bg-primary text-on-primary border-2 border-(--color-nb-ink) p-4 rounded-t-2xl rounded-bl-2xl relative"
                       style={{ boxShadow: '-4px 4px 0px 0px var(--color-nb-ink)' }}>
@@ -175,7 +163,7 @@ export default function ChatAnonimo({ token }) {
               );
             })}
 
-            {currentMessages.length === 0 && !loading && (
+            {unifiedMessages.filter(m => m.role !== 'Sistema').length === 0 && !loading && (
               <div className="text-center py-8 space-y-2">
                 <span className="material-symbols-outlined text-4xl text-on-surface-variant/30" style={{ fontVariationSettings: "'FILL' 1" }}>chat_bubble</span>
                 <p className="text-sm font-bold text-on-surface-variant/50">Nenhuma mensagem ainda. Seja o primeiro!</p>
@@ -186,25 +174,35 @@ export default function ChatAnonimo({ token }) {
           </div>
 
           {/* Input de mensagem */}
-          <div className="p-4 bg-surface-container-low border-t-2 border-(--color-nb-ink)">
-            <form onSubmit={handleSend} className="flex gap-2 items-center">
-              <input
-                type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder="Escreva sua mensagem..."
-                className="nb-input flex-1 p-4 rounded-xl text-sm text-on-surface nb-shadow-sm"
-                autoComplete="off"
-              />
+          <div className="p-4 bg-surface-container-low border-t-2 border-(--color-nb-ink) flex flex-col gap-2">
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Escreva sua mensagem..."
+              className="nb-input w-full p-4 rounded-xl text-sm text-on-surface nb-shadow-sm"
+              autoComplete="off"
+            />
+            <div className="flex gap-2">
               <button
-                type="submit"
-                className="bg-primary text-on-primary border-2 border-(--color-nb-ink) p-4 rounded-xl flex items-center justify-center nb-shadow nb-press transition-all hover:bg-primary-container disabled:opacity-40"
-                disabled={!inputText.trim()}
+                type="button"
+                onClick={() => handleSend('amigo')}
+                disabled={!inputText.trim() || sending === 'amigo'}
+                className="flex-1 bg-primary text-on-primary border-2 border-(--color-nb-ink) py-3 px-3 rounded-xl flex items-center justify-center gap-2 nb-shadow nb-press transition-all hover:bg-primary-container disabled:opacity-40"
               >
-                <span className="hidden sm:inline text-sm font-black mr-2 uppercase">ENVIAR</span>
-                <span className="material-symbols-outlined">send</span>
+                <span className="material-symbols-outlined text-lg">send</span>
+                <span className="text-xs sm:text-sm font-black uppercase">Para quem eu tirei</span>
               </button>
-            </form>
+              <button
+                type="button"
+                onClick={() => handleSend('admirador')}
+                disabled={!inputText.trim() || sending === 'admirador'}
+                className="flex-1 bg-secondary-container text-on-secondary-container border-2 border-(--color-nb-ink) py-3 px-3 rounded-xl flex items-center justify-center gap-2 nb-shadow nb-press transition-all hover:bg-secondary disabled:opacity-40"
+              >
+                <span className="material-symbols-outlined text-lg">send</span>
+                <span className="text-xs sm:text-sm font-black uppercase">Para quem me tirou</span>
+              </button>
+            </div>
           </div>
         </div>
 

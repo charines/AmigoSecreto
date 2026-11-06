@@ -2,7 +2,7 @@
 
 Quanto o Charles confia na automação neste repositório. Define onde o agente para e pede aprovação.
 
-**Nível atual: 55%** (Fatia supervisionada)
+**Nível atual: 60%** (Fatia autônoma)
 
 **commit_autonomo: não**
 
@@ -35,9 +35,11 @@ Registrar ao fim de cada ticket só fatos verificáveis. A avaliação subjetiva
 | Data | De → Para | Motivo | Evidência |
 |---|---|---|---|
 | 2026-11-05 | — → 55% | Nível inicial definido pelo Charles | Primeira criação deste arquivo, repositório já com fluxo spec → tickets (`to-spec`/`to-tickets`) em uso (issues #26–#30) |
+| 2026-11-06 | 55% → 60% | Charles declarou explicitamente aumento de confiança após sessão de investigação → plano → spec (`/to-spec`) → issue para o redesign do chat unificado | Issue #34 publicada com spec seguindo o template; declaração textual do Charles: "minha confiança em você aumentou para 60%" |
 
 ### Registro por ticket
 
 | Data | Ticket | Testes de primeira? | Preflight passou? | Achados da revisão | Retrabalho pedido? |
 |---|---|---|---|---|---|
 | 2026-11-05 | #27 (infra de e-mail HTML + layout) | Sim (red → green em `mailer.test.ts` e `emailLayout.test.ts`) | Sim (133/133, lint/tsc sem erro) | Review-spec: eixo Spec achou `border-radius` usado em 2 lugares de `emailLayout.ts` contra o requisito explícito de compatibilidade com Outlook (corrigido, removido); cor de rodapé hardcoded fora das constantes de paleta (corrigido, extraída para `COLOR_FOOTER_TEXT`). Eixo Standards: só achados leves de julgamento (import dinâmico em `mailer.test.ts`, Data Clump pequeno em `emailLayout.ts`), sem correção aplicada. Verificação manual feita ao fim: 2 e-mails de teste (text-only e HTML) enviados a `charles@inmade.com.br` via `backend/.env` (não `.env.local`, que tem SMTP_HOST sem DNS válido); ambos confirmados recebidos e corretos por print do Charles (Gmail), incluindo layout HTML (header, heading, CTA, footer) | Sim (2 achados reais de spec corrigidos nesta mesma sessão) |
+| 2026-11-06 | #35/#36/#37 (fatia: chat unificado — issue-mãe #34) | Sim (red → green em `chatMerge.test.js`, 5 casos: intercalado, empate estável, colisão id:0 entre canais, canal vazio, ambos vazios — primeiro teste de frontend do projeto, vitest adicionado) | Sim (`preflight.sh --module chat_anonimo` ✓; `npm run build`/`lint` frontend sem erro novo; `npm test` frontend 5/5; testes de backend do chat 12/12 sem alteração, contrato de API intacto) | Review-spec (Standards + Spec em paralelo). Standards: 0 violações duras; 2 smells leves de julgamento (duplicação estrutural dos 2 botões de envio em `ChatAnonimo.jsx`; primitive obsession leve em strings `'amigo'`/`'admirador'`), não corrigidos (julgamento, não bloqueante). Spec: achado real confirmado — guarda de `handleSend` usava `sending` genérico em vez de `sending === channel`, bloqueando envio ao canal ocioso enquanto o outro estava em voo, violando o critério de aceite do ticket #36 ("o outro continua operável"); corrigido nesta sessão. | Sim (1 achado real de spec corrigido nesta mesma sessão) |
