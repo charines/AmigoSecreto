@@ -6,6 +6,7 @@ import { getPool } from '../db.js';
 import { requireAdmin } from '../requireAdmin.js';
 import { readSessionToken } from '../requestSession.js';
 import { createSendMail, type MailMessage } from '../mailer.js';
+import { buildDrawResultEmail } from '../drawResultEmail.js';
 
 export type ResendDrawResult = {
   status: number;
@@ -60,28 +61,17 @@ export async function resendDraw(
   const revealLink =
     `${baseUrl.replace(/\/+$/, '')}/reveal?token=${encodeURIComponent(row.reveal_token ?? '')}` +
     `&code=${encodeURIComponent(row.token_raw)}`;
-  const subject = `[PROJETO AMIGO SECRETO] Reenvio da sua chave de acesso — ${row.group_title}`;
-  const text = [
-    'Ola, sobrevivente do dia a dia!',
-    '',
-    `Reenvio do seu par do Amigo Secreto para o grupo "${row.group_title}".`,
-    '',
-    'Detalhes do Protocolo:',
-    `    Participante Selecionado: ${row.name}`,
-    `    Grupo Atual: ${row.group_title}`,
-    `    Descricao do Projeto: ${row.group_description || 'N/A'}`,
-    `    Data do Evento: ${row.group_draw_date || 'N/A'}`,
-    '',
-    'Clique no link abaixo para revelar:',
-    '',
+  const email = buildDrawResultEmail({
+    participantName: row.name,
+    groupTitle: row.group_title,
+    groupDescription: row.group_description,
+    drawDate: row.group_draw_date,
     revealLink,
-    '',
-    `Codigo de acesso: ${row.token_raw}`,
-    '',
-    'Namaste.',
-  ].join('\n');
+    accessCode: row.token_raw,
+    resend: true,
+  });
 
-  await sendMail({ to: row.email, subject, text });
+  await sendMail({ to: row.email, subject: email.subject, text: email.text, html: email.html });
   await pool.query('UPDATE participants SET token_sent_at = NOW() WHERE id = ?', [row.id]);
 
   return { status: 200, body: { ok: true } };

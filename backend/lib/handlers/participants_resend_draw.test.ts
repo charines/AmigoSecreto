@@ -63,5 +63,6 @@ describe('resendDraw', () => {
     const message = sendMail.mock.calls[0][0];
     expect(message.text).toContain('raw-code');
     expect(message.text).toContain('token=rt');
+    expect(message.html).toBeTruthy();
   });
 });
