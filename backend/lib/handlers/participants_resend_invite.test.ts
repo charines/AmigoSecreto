@@ -51,5 +51,6 @@ describe('resendInvite', () => {
     expect(sendMail).toHaveBeenCalledOnce();
     const message = sendMail.mock.calls[0][0];
     expect(message.subject).toContain('(Reenvio)');
+    expect(message.html).toBeTruthy();
   });
 });
