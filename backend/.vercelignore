@@ -1,0 +1,4 @@
+# Arquivos de teste não devem virar Serverless Functions próprias.
+# Sem isso, cada *.test.ts em api/ conta contra o limite de funções
+# por deployment (12 no plano Hobby) junto com os handlers reais.
+api/*.test.ts
