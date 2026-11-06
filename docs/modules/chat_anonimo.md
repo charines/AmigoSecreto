@@ -1,22 +1,30 @@
 ---
 module: chat_anonimo
 domain: SA-04 · A Sombra
-components: [ChatAnonimo.jsx]
+components: [ChatAnonimo.jsx, frontend/src/lib/chatMerge.js]
 endpoints: [backend/api/chat.ts (GET), backend/api/chat.ts (POST)]
 database: [chat_messages, draw_results, participants]
-last_updated: 2026-06-28
+last_updated: 2026-11-06
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — ChatAnonimo.jsx passou a ter layout
   full-page próprio (header + bottom nav Neo-Brutalist). TerminalPanel removido.
   App.jsx renderiza ChatAnonimo diretamente quando token presente.
+  2026-11-06 · Chat unificado — as duas abas ('Para: Meu Amigo' / 'De: Quem me
+  tirou') foram substituídas por uma única timeline, mesclando os dois canais
+  em ordem cronológica via frontend/src/lib/chatMerge.js. A composição de
+  mensagem passou a ter dois botões de envio (um por canal) no lugar do botão
+  único + aba ativa.
 ---
 
 # Módulo: Chat Anônimo (SA-04 · A Sombra)
 
 > **Achado crítico de redesign:** O chat possui **dois canais independentes** por participante,
 > não um único. A identidade é mascarada exclusivamente pelo campo `sender_role` na tabela
-> `chat_messages` — nenhum PII é armazenado no chat. Ao redesenhar a UI, preservar a
-> separação visual de abas e o label dinâmico ('Você' vs 'Meu Amigo Secreto').
+> `chat_messages` — nenhum PII é armazenado no chat. Desde o redesign de 2026-11-06, a UI não
+> separa mais os canais por aba: as mensagens dos dois canais aparecem numa única timeline
+> ordenada por tempo, cada uma identificada por um badge de canal + direção (`Para:`/`De:` +
+> label dinâmico 'Amigo Secreto'/'Admirador Secreto'). A cor de fundo da bolha continua
+> indicando só quem enviou ('Você' vs. o outro), não o canal.
 
 > **Tecnologia:** Polling puro a cada 5 segundos via `setInterval`. Não há WebSocket nem SSE.
 
@@ -31,9 +39,9 @@ flowchart TD
         CHAT["ChatAnonimo.jsx\nmount(token=revealToken)"]
     end
 
-    subgraph CHANNELS["Dois Canais de Chat"]
-        TAB_A["Aba: 'Para: Meu Amigo Secreto'\nactiveTab = 'amigo'"]
-        TAB_B["Aba: 'De: Quem me tirou'\nactiveTab = 'admirador'"]
+    subgraph SEND["Composição — dois botões de envio"]
+        SEND_A["Botão: 'Para quem eu tirei'\nhandleSend('amigo')"]
+        SEND_B["Botão: 'Para quem me tirou'\nhandleSend('admirador')"]
     end
 
     subgraph CANAL_AMIGO["Canal 'amigo' — Participante é o GIVER"]
@@ -52,16 +60,24 @@ flowchart TD
         B_LABEL_OTHER["Msgs recebidas → role: 'Meu Admirador Secreto'"]
     end
 
+    subgraph MERGE["Timeline unificada"]
+        MG["chatMerge.js: mergeChannels({amigo, admirador})\nmescla os 2 arrays, ordena por timestamp,\nanota channel + key (channel-id)"]
+        RENDER["Lista única renderizada\ncom badge 'Para:'/'De:' + canal por mensagem"]
+    end
+
     subgraph DB_SCHEMA["Tabela chat_messages"]
         COLS["id · group_id · draw_id\nsender_role ('giver'|'receiver')\ntexto · created_at"]
         NO_PII["⚠ Sem nome, e-mail ou ID de usuário\nIdentidade = posição no draw_results"]
     end
 
     URL --> CHAT
-    CHAT --> TAB_A
-    CHAT --> TAB_B
-    TAB_A --> CANAL_AMIGO
-    TAB_B --> CANAL_ADM
+    CHAT --> SEND_A
+    CHAT --> SEND_B
+    SEND_A --> CANAL_AMIGO
+    SEND_B --> CANAL_ADM
+    CANAL_AMIGO --> MG
+    CANAL_ADM --> MG
+    MG --> RENDER
     CANAL_AMIGO -.-> DB_SCHEMA
     CANAL_ADM -.-> DB_SCHEMA
 ```
@@ -77,8 +93,8 @@ sequenceDiagram
     participant API_SEND as backend/api/chat.ts (POST)
     participant DB as MySQL
 
-    P->>UI: Digita mensagem + clica ENVIAR
-    Note over UI: handleSend(e)\ne.preventDefault()\ntextToSend = inputText.trim()\nsetInputText('')
+    P->>UI: Digita mensagem + clica em um dos dois botões de envio\n(define o channel diretamente, sem aba prévia)
+    Note over UI: handleSend(channel)\ntextToSend = inputText.trim()\nsetInputText('')\nsetSending(channel)
 
     UI->>API_SEND: POST /backend/api/chat.ts (POST)\n{token, channel, texto}
     Note over API_SEND: token = revealToken (lookup de participante)\nchannel = 'amigo' | 'admirador'\ntexto = conteúdo da mensagem
@@ -101,9 +117,9 @@ sequenceDiagram
 
     API_SEND-->>UI: {ok: true, message: {id, role: 'Você', texto, timestamp}}
 
-    Note over UI: setMessages(prev => ({\n  ...prev,\n  [activeTab]: [...prev[activeTab], res.message]\n}))
+    Note over UI: setMessages(prev => ({\n  ...prev,\n  [channel]: [...prev[channel], res.message]\n}))\nsetSending(null)
 
-    UI-->>P: Nova mensagem aparece\nalinhada à direita (isMe=true)\ncor verde CRT · borda verde
+    UI-->>P: Nova mensagem aparece na timeline única\nalinhada à direita (isMe=true)\nbadge de canal acima da bolha (bg-primary)
 
     alt token inválido
         API_SEND-->>UI: {ok: false, error: 'Participante nao encontrado'} 404
@@ -210,8 +226,10 @@ flowchart TD
 
 | Regra | Origem no código | Criticidade |
 |---|---|---|
-| Dois canais separados por aba | `activeTab` state + dois arrays em `messages` | **Alta** — lógica central |
+| Dois canais mesclados numa timeline única, ordenada por timestamp | `frontend/src/lib/chatMerge.js` (`mergeChannels`) + dois arrays em `messages` | **Alta** — lógica central |
+| Badge de canal + direção por mensagem | `channelLabel`/`channelAccent` em `ChatAnonimo.jsx` | **Alta** — identificação visual do canal |
 | Label 'Você' para mensagens próprias | `msg.role === 'Você'` → `isMe = true` | **Alta** — identidade mascarada |
+| Dois botões de envio, um por canal | `handleSend('amigo')` / `handleSend('admirador')` | **Alta** — substitui seleção de aba |
 | Sistema como primeira mensagem | Injetado em `backend/api/chat.ts (GET)` formatação | **Média** — UX de contexto |
 | Polling 5 segundos | `setInterval(loadMessages, 5000)` | **Média** — sem WebSocket |
 | Scroll automático ao fundo | `scrollToBottom()` após `setMessages` | **Baixa** — UX |
@@ -252,7 +270,7 @@ sequenceDiagram
     deactivate CGP
     API-->>CA: messages
     CA->>CA: setMessages() → setLoading(false)<br/>scrollToBottom() via messagesEndRef
-    CA-->>U: Header Neo-Brutalist + tabs + mensagens
+    CA-->>U: Header Neo-Brutalist + timeline única mesclada (chatMerge)
 
     %% ── Polling automático ──────────────────────────────────────
     loop A cada 5 segundos — sem WebSocket
@@ -263,16 +281,15 @@ sequenceDiagram
         CA->>CA: setMessages() → scrollToBottom()
     end
 
-    %% ── Troca de canal ──────────────────────────────────────────
-    U->>CA: Clica aba "Para: Meu Amigo Secreto"
-    CA->>CA: setActiveTab('amigo')
-    Note over CA: useEffect([messages, activeTab])<br/>→ scrollToBottom() automático
+    %% ── Mesclagem para timeline única ────────────────────────────
+    CA->>CA: unifiedMessages = mergeChannels(messages)<br/>useMemo([messages])
+    Note over CA: useEffect([unifiedMessages])<br/>→ scrollToBottom() automático
 
     %% ── Envio de mensagem ───────────────────────────────────────
-    U->>CA: Digita mensagem + clica ENVIAR
-    CA->>CA: handleSend(e) · textToSend = inputText.trim()<br/>setInputText('') imediato
+    U->>CA: Digita mensagem + clica em um dos dois botões de envio
+    CA->>CA: handleSend(channel) · textToSend = inputText.trim()<br/>setInputText('') imediato · setSending(channel)
 
-    CA->>API: apiPost('/backend/api/chat.ts (POST)',<br/>{token, channel:activeTab, texto})
+    CA->>API: apiPost('/backend/api/chat.ts (POST)',<br/>{token, channel, texto})
     activate CSP
     API->>CSP: POST /backend/api/chat.ts (POST)
     CSP->>CSP: SELECT participants WHERE reveal_token=token
@@ -288,9 +305,9 @@ sequenceDiagram
     deactivate CSP
 
     API-->>CA: new message
-    CA->>CA: setMessages(prev => ({...prev,<br/>[activeTab]: [...prev[tab], msg]}))<br/>scrollToBottom()
-    CA-->>U: Msg própria: direita · bg-primary (vermelho)<br/>Msg recebida: esquerda · bg-secondary-container (amarelo)
-    Note over CA,U: Sistema: centralizado · opacidade reduzida
+    CA->>CA: setMessages(prev => ({...prev,<br/>[channel]: [...prev[channel], msg]}))<br/>setSending(null) · scrollToBottom()
+    CA-->>U: Msg própria: direita · bg-primary (vermelho)<br/>Msg recebida: esquerda · bg-secondary-container (amarelo)<br/>Badge de canal acima da bolha nos dois casos
+    Note over CA,U: Sistema: centralizado · opacidade reduzida<br/>(posição cronológica real na timeline, não fixa no topo)
 
     %% ── Saída ───────────────────────────────────────────────────
     U->>CA: Clica VOLTAR PARA REVELAÇÃO
