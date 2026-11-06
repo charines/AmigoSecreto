@@ -40,6 +40,24 @@ describe('forgotPassword', () => {
     const message = sendMail.mock.calls[0][0];
     expect(message.to).toBe('charles@example.com');
     expect(message.text).toContain('https://app.example.com/reset-password?token=');
+    expect(message.html).toBeTruthy();
+    expect(message.html).toContain('href="https://app.example.com/reset-password?token=');
+  });
+
+  it('escapes HTML-sensitive characters from the admin name', async () => {
+    const pool = {
+      query: vi
+        .fn()
+        .mockResolvedValueOnce([[{ id: 42, name: '<script>alert(1)</script>' }]])
+        .mockResolvedValueOnce([{}]),
+    };
+    const sendMail = vi.fn().mockResolvedValue(undefined);
+
+    await forgotPassword(pool as never, sendMail, 'charles@example.com', 'https://app.example.com');
+
+    const message = sendMail.mock.calls[0][0];
+    expect(message.html).not.toContain('<script>');
+    expect(message.html).toContain('&lt;script&gt;');
   });
 
   it('still returns success when sendMail throws (never exposes SMTP failure)', async () => {
