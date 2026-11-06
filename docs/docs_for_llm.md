@@ -66,6 +66,13 @@ PREFLIGHT — AmigoSecreto v1.5
         Qual(is) arquivo(s) em backend/api/*.ts serão tocados?
         [NÃO INCLUIR — uso interno do dev]
 
+        ⚠ Cada arquivo *.ts em backend/api/ (exceto *.test.ts) vira uma
+        Serverless Function própria no deploy da Vercel. Plano Hobby
+        tem teto de 12 — ao criar um endpoint novo, `./preflight.sh`
+        falha se isso estourar o limite. Nunca criar *.test.ts dentro
+        de backend/api/ (conta contra o limite); colocar testes em
+        backend/lib/handlers/ ou junto do próprio handler puro lá.
+
 [ ] 7. IMPACTO DE SEGURANÇA
         A mudança toca: tokens? sessão? criptografia? SQL?
         Se sim: skill 007 obrigatória (ver skills_catalog.md).

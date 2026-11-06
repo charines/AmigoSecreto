@@ -188,6 +188,16 @@ fi
 cd "$SCRIPT_DIR"
 echo ""
 
+# ── Limite de Serverless Functions (Vercel, plano Hobby) ──────────
+echo -e "${BOLD}[+] Limite de Serverless Functions (Vercel Hobby = 12)${RESET}"
+FN_COUNT=$(find "$SCRIPT_DIR/backend/api" -maxdepth 1 -name '*.ts' ! -name '*.test.ts' 2>/dev/null | wc -l | tr -d ' ')
+if [[ "$FN_COUNT" -gt 12 ]]; then
+  fail "backend/api tem $FN_COUNT funções (*.ts, exceto *.test.ts) — excede o limite de 12 do plano Hobby. Veja docs/modules/backend_core.md"
+else
+  pass "backend/api: $FN_COUNT/12 funções"
+fi
+echo ""
+
 # ── Sync Obsidian (opcional) ──────────────────────────────────────
 if $SYNC_OBSIDIAN; then
   echo -e "${BOLD}[+] Sync Obsidian${RESET}"
