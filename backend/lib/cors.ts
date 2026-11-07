@@ -1,3 +1,5 @@
+import type { ServerResponse } from 'node:http';
+
 export type CorsConfig = {
   origin: string;
 };
@@ -25,4 +27,18 @@ export function buildCorsResponse(config: CorsConfig, method: string): CorsRespo
   }
 
   return { headers };
+}
+
+// Usa setHeader, nunca writeHead: writeHead congela o status e o res.statusCode
+// definido depois pelo handler seria ignorado (todo erro sairia como 200).
+export function applyCors(res: ServerResponse, cors: CorsResponse): boolean {
+  for (const [key, value] of Object.entries(cors.headers)) {
+    res.setHeader(key, value);
+  }
+  if (cors.status === 204) {
+    res.statusCode = 204;
+    res.end();
+    return true;
+  }
+  return false;
 }

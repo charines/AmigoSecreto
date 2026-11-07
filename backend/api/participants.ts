@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { loadConfig } from '../lib/config.js';
-import { buildCorsResponse } from '../lib/cors.js';
+import { applyCors, buildCorsResponse } from '../lib/cors.js';
 import { getPool } from '../lib/db.js';
 import { requireAdmin } from '../lib/requireAdmin.js';
 import { readSessionToken } from '../lib/requestSession.js';
@@ -12,11 +12,7 @@ import { resendDraw } from '../lib/handlers/participants_resend_draw.js';
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const config = loadConfig(process.env);
   const cors = buildCorsResponse(config.cors, req.method ?? 'GET');
-  res.writeHead(cors.status ?? 200, cors.headers);
-  if (cors.status === 204) {
-    res.end();
-    return;
-  }
+  if (applyCors(res, cors)) return;
 
   const pool = getPool(config);
   const admin = await requireAdmin(pool, readSessionToken(req));

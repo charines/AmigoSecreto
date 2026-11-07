@@ -5,7 +5,7 @@ components: []
 endpoints: [backend/api/ping.ts]
 lib: [backend/lib/config.ts, backend/lib/db.ts, backend/lib/cors.ts, backend/lib/session.ts, backend/lib/handlers/ping_check.ts]
 database: []
-last_updated: 2026-11-06
+last_updated: 2026-11-07
 ---
 
 # Módulo: Backend Core (Vercel Functions)
@@ -24,11 +24,12 @@ flowchart TD
     REQ["Requisição HTTP"] --> API["backend/api/&lt;area&gt;.ts\nhandler(req, res)"]
     API --> CFG["lib/config.ts\nloadConfig(process.env)"]
     CFG --> CORS["lib/cors.ts\nbuildCorsResponse(config.cors, method)"]
-    CORS -->|"OPTIONS → 204"| END204["res.end()"]
-    CORS -->|"demais métodos"| DISP{"?action= / método"}
+    CORS --> APPLY["lib/cors.ts\napplyCors(res, cors) · setHeader"]
+    APPLY -->|"OPTIONS → true"| END204["204 + res.end()"]
+    APPLY -->|"false"| DISP{"?action= / método"}
     DISP --> H["lib/handlers/&lt;area&gt;_&lt;acao&gt;.ts\nfunção pura (pool, input) → resultado"]
     H --> DB["lib/db.ts\ngetPool(config) · mysql2/promise"]
-    H --> RES["res.end(JSON.stringify(resultado))"]
+    H --> RES["res.statusCode = resultado.status\nres.end(JSON.stringify(resultado.body))"]
 ```
 
 ## Diagrama 2 — Healthcheck (`/api/ping`)
@@ -51,6 +52,15 @@ sequenceDiagram
 ```
 
 ---
+
+## Status HTTP
+
+- Headers de CORS entram via `applyCors` (`lib/cors.ts`), que usa `setHeader`. Nunca
+  `res.writeHead()` em `api/`: ele congela o status e o `res.statusCode` do handler é
+  ignorado (até 2026-11-07 todo erro saía como 200 em 7 endpoints).
+- Guardrail: `lib/cors.test.ts` falha se algum `api/*.ts` voltar a usar `writeHead(`.
+- Frontend não depende do status: `frontend/src/lib/api.js` lança erro com
+  `!response.ok || data.ok === false`; todo status ≥ 400 já vinha com `ok:false`.
 
 ## Limite de Serverless Functions (Vercel Hobby = 12)
 
