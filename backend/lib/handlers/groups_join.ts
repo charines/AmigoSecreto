@@ -1,11 +1,7 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import { loadConfig } from '../config.js';
-import { buildCorsResponse } from '../cors.js';
-import { getPool } from '../db.js';
 import { randomToken } from '../session.js';
 import { buildInviteEmail } from '../inviteEmail.js';
-import { createSendMail, type MailMessage } from '../mailer.js';
+import type { MailMessage } from '../mailer.js';
 
 export type JoinGroupInput = { code: string; name: string; email: string };
 
@@ -71,28 +67,4 @@ export async function joinGroup(
   await pool.query('UPDATE participants SET invite_sent_at = NOW() WHERE id = ?', [insertResult.insertId]);
 
   return { status: 200, body: { ok: true } };
-}
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const config = loadConfig(process.env);
-  const cors = buildCorsResponse(config.cors, req.method ?? 'GET');
-  res.writeHead(cors.status ?? 200, cors.headers);
-  if (cors.status === 204) {
-    res.end();
-    return;
-  }
-
-  const result = await joinGroup(
-    getPool(config),
-    createSendMail(config.mail),
-    {
-      code: String(req.body?.code ?? ''),
-      name: String(req.body?.name ?? ''),
-      email: String(req.body?.email ?? ''),
-    },
-    config.app.baseUrl,
-  );
-
-  res.statusCode = result.status;
-  res.end(JSON.stringify(result.body));
 }

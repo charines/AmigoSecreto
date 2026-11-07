@@ -1,10 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { Pool, RowDataPacket } from 'mysql2/promise';
-import { loadConfig } from '../config.js';
-import { buildCorsResponse } from '../cors.js';
-import { getPool } from '../db.js';
-import { requireAdmin } from '../requireAdmin.js';
-import { readSessionToken } from '../requestSession.js';
 
 export type DeleteGroupResult = {
   status: number;
@@ -27,27 +21,4 @@ export async function deleteGroup(pool: Pool, adminId: number, groupId: number):
   await pool.query('DELETE FROM `groups` WHERE id = ?', [groupId]);
 
   return { status: 200, body: { ok: true } };
-}
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const config = loadConfig(process.env);
-  const cors = buildCorsResponse(config.cors, req.method ?? 'GET');
-  res.writeHead(cors.status ?? 200, cors.headers);
-  if (cors.status === 204) {
-    res.end();
-    return;
-  }
-
-  const pool = getPool(config);
-  const admin = await requireAdmin(pool, readSessionToken(req));
-  if (!admin) {
-    res.statusCode = 401;
-    res.end(JSON.stringify({ ok: false, error: 'Nao autorizado' }));
-    return;
-  }
-
-  const groupId = Number(req.body?.group_id ?? 0);
-  const result = await deleteGroup(pool, admin.id, groupId);
-  res.statusCode = result.status;
-  res.end(JSON.stringify(result.body));
 }
