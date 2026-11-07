@@ -8,7 +8,12 @@ endpoints:
    backend/api/groups.ts (action=invite), backend/api/groups.ts (action=get_public), backend/api/groups.ts (action=join),
    backend/api/participants.ts (action=delete), backend/api/participants.ts (action=resend_invite),
    backend/api/invite.ts (GET), backend/api/invite.ts (POST), backend/lib/mailer.ts]
-last_updated: 2026-06-29
+last_updated: 2026-11-07
+failed_invite_note: >
+  2026-11-07 · AdminDashboard.jsx passa a ler `failed` da resposta de
+  action=invite via frontend/src/lib/inviteResult.js: falha parcial mostra
+  erro com os e-mails e mantém o aviso de sucesso; falha total não abre o
+  overlay "CONVITES ENVIADOS!". Removido parseInviteLines (colar lista), sem uso.
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — AdminDashboard.jsx (3 views) passou a
   ter layout full-page próprio. App.jsx renderiza o componente diretamente,
@@ -56,6 +61,10 @@ flowchart TD
         PHP_INSERT["INSERT participants\nstatus='invited'\ninvite_token = random_token(24)"]
         PHP_MAIL["backend/lib/mailer.ts → SMTP\nEmail Dharma Initiative\nLink: /invite?token=<uuid>"]
         RES_INVITE["{sent: [], failed: []}"]
+        SUMMARY{"summarizeInviteResult()\nlib/inviteResult.js"}
+        OK_ALL["overlay CONVITES ENVIADOS!\n+ notice ✓"]
+        ERR_PART["overlay + setError:\nConvite não enviado para: …\n→ Reenviar convite"]
+        ERR_ALL["sem overlay\nsetError: Convite não enviado para: …"]
         CLEAR_PENDING["setPendingParticipants([])"]
         RELOAD_DETAIL["loadGroupDetail()"]
     end
@@ -95,7 +104,12 @@ flowchart TD
 
     ADD_PENDING --> BTN_INVITE --> POST_INVITE
     POST_INVITE --> PHP_INSERT --> PHP_MAIL --> RES_INVITE
-    RES_INVITE --> CLEAR_PENDING --> RELOAD_DETAIL
+    RES_INVITE --> CLEAR_PENDING --> RELOAD_DETAIL --> SUMMARY
+    SUMMARY -->|"failed = []"| OK_ALL
+    SUMMARY -->|"sent e failed"| ERR_PART
+    SUMMARY -->|"sent = []"| ERR_ALL
+    ERR_PART -.-> BTN_RESEND_INV
+    ERR_ALL -.-> BTN_RESEND_INV
 
     VIEW_DETAIL --> BTN_DEL --> CONFIRM_DEL
     CONFIRM_DEL -->|"sim (drawn)"| WARN_DRAWN --> POST_DEL

@@ -23,7 +23,7 @@ export function encryptData(data) {
 export function decryptData(code) {
     try {
         const decoded = atob(code);
-        const [salt, jsonStr] = decoded.split('|');
+        const [, jsonStr] = decoded.split('|');
         return JSON.parse(jsonStr);
     } catch (e) {
         console.error("Erro na descriptografia:", e);

@@ -1,40 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { apiGet, apiPost } from '../lib/api';
 import GroupDetailView from './GroupDetailView';
-
-function parseInviteLines(text) {
-  const lines = text.split('\n').map((line) => line.trim()).filter(Boolean);
-  const parsed = [];
-
-  for (const line of lines) {
-    let name = '';
-    let email = '';
-
-    const angle = line.match(/^(.*)<([^>]+)>$/);
-    if (angle) {
-      name = angle[1].trim().replace(/["']/g, '');
-      email = angle[2].trim();
-    } else if (line.includes(',') || line.includes(';')) {
-      const parts = line.split(/[;,]/);
-      name = (parts[0] || '').trim();
-      email = (parts[1] || '').trim();
-    } else if (line.includes('@')) {
-      const parts = line.split(/\s+/);
-      const emailPart = parts.find((part) => part.includes('@')) || '';
-      email = emailPart.trim();
-      name = parts.filter((part) => part !== emailPart).join(' ').trim();
-      if (!name) {
-        name = email.split('@')[0];
-      }
-    }
-
-    if (name && email) {
-      parsed.push({ name, email });
-    }
-  }
-
-  return parsed;
-}
+import { summarizeInviteResult } from '../lib/inviteResult';
 
 export default function AdminDashboard({ admin, onLogout }) {
   const [view, setView] = useState('list'); // 'list', 'create', 'detail'
@@ -51,7 +18,6 @@ export default function AdminDashboard({ admin, onLogout }) {
   const [pendingParticipants, setPendingParticipants] = useState([]);
   const [isSending, setIsSending] = useState(false);
   const [sendingSuccess, setSendingSuccess] = useState(false);
-  const [inviteResult, setInviteResult] = useState(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawSuccess, setDrawSuccess] = useState(false);
   const [drawStep, setDrawStep] = useState(0);
@@ -206,11 +172,16 @@ export default function AdminDashboard({ admin, onLogout }) {
         group_id: selectedGroupId,
         participants: pendingParticipants.map(({ name, email }) => ({ name, email })),
       });
-      setInviteResult(data);
+      const summary = summarizeInviteResult(data);
       setPendingParticipants([]);
       await loadGroupDetail(selectedGroupId);
+      setError(summary.error);
+      if (summary.allFailed) {
+        setIsSending(false);
+        return;
+      }
       setSendingSuccess(true);
-      setNotice('Participantes notificados! Verifique o spam de: amigo.secreto@mercadocompleto.com.br');
+      setNotice(summary.notice);
     } catch (err) {
       setError(err.message);
       setIsSending(false);

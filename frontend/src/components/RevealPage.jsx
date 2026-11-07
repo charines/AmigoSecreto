@@ -46,7 +46,7 @@ export default function RevealPage({ token }) {
       const name = await decryptName(data.payload.encrypted, data.payload.iv_b64, cleaned);
       setRevealed({ from: data.giver.name, to: name });
       await apiPost('/api/reveal', { token });
-    } catch (err) {
+    } catch {
       setError('Codigo invalido ou expirado.');
     } finally {
       setDecrypting(false);
