@@ -60,14 +60,22 @@ sequenceDiagram
   e `preflight.sh` (passo do backend). Ambos falham acima de 12.
 - Para novas operações, preferir uma nova `?action=` num arquivo existente a criar arquivo novo.
 
+## Extração de lógica de domínio (concluída)
+
+Toda função de domínio saiu de `api/` para `lib/handlers/` (agent.md §5.7). Nenhum
+`*.test.ts` resta em `api/`.
+
+| Endpoint             | Função        | Handler                          | Módulo dono        | Data       |
+|----------------------|---------------|----------------------------------|--------------------|------------|
+| `api/ping.ts`        | `checkHealth` | `lib/handlers/ping_check.ts`     | backend_core       | 2026-11-06 |
+| `api/invite.ts`      | `getInvite`   | `lib/handlers/invite_get.ts`     | orquestrador_grupo | 2026-11-07 |
+| `api/reveal.ts`      | `getReveal`   | `lib/handlers/reveal_get.ts`     | juiz_sorteio       | 2026-11-07 |
+| `api/groups_draw.ts` | `runDraw`     | `lib/handlers/groups_draw.ts`    | juiz_sorteio       | 2026-11-07 |
+
 ## Dívida conhecida
 
-Ainda com lógica de domínio inline em `api/` (violando §5.7), com teste em `api/*.test.ts`:
-
-| Arquivo              | Função inline | Módulo dono      | Observação                 |
-|----------------------|---------------|------------------|----------------------------|
-| `api/groups_draw.ts` | `runDraw`     | juiz_sorteio     | Toca crypto → skill `007`  |
-| `api/reveal.ts`      | `getReveal`   | juiz_sorteio     | Toca tokens → skill `007`  |
-| `api/invite.ts`      | `getInvite`   | orquestrador_grupo | Toca tokens → skill `007` |
-
-`checkHealth` já foi extraído para `lib/handlers/ping_check.ts` (2026-11-06).
+- **Status HTTP sempre 200 em erro** em `chat.ts`, `groups.ts`, `groups_draw.ts`, `invite.ts`,
+  `participants.ts` e `reveal.ts`: `res.writeHead(200, …)` envia o status antes de
+  `res.statusCode = result.status`. O frontend não sente (`frontend/src/lib/api.js:30` também
+  confere `data.ok`), mas logs/monitoramento da Vercel não veem 4xx. `admin.ts` e
+  `participant.ts` já usam `setHeader`. Ver `docs/audits/2026-11-07-007-extracao-handlers.md`.

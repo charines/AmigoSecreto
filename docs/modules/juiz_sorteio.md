@@ -3,8 +3,9 @@ module: juiz_sorteio
 domain: SA-03 · O Juiz
 components: [AdminDashboard.jsx, RevealPage.jsx, RevealStep.jsx]
 utils: [src/utils/secretSanta.js, src/lib/crypto.js]
+handlers: [backend/lib/handlers/groups_draw.ts (runDraw), backend/lib/handlers/reveal_get.ts (getReveal), backend/lib/handlers/reveal_confirm.ts]
 endpoints: [backend/api/groups_draw.ts, backend/api/reveal.ts (GET), backend/api/reveal.ts (POST), backend/api/participants.ts (action=resend_draw)]
-last_updated: 2026-06-29
+last_updated: 2026-11-07
 redesign_note: >
   2026-06-28 · Redesign Neo-Brutalist — RevealPage.jsx e RevealStep.jsx com
   layout full-page próprio. App.jsx renderiza RevealPage diretamente. RevealStep
@@ -50,10 +51,10 @@ flowchart TD
         S_OK["SORTEIO REALIZADO COM SUCESSO!"]
     end
 
-    subgraph TS["backend/api/groups_draw.ts (Vercel Function)"]
+    subgraph TS["backend/api/groups_draw.ts → lib/handlers/groups_draw.ts runDraw()"]
         TS1["requireAdmin(session)\nValida group_id e status='open'"]
         TS2["SELECT participants\nWHERE status='confirmed'"]
-        TS3["shuffle() (lib/drawAlgorithm.ts)\npairParticipants(): pair[i] → pair[(i+1)%n]"]
+        TS3["shuffle() (lib/handlers/groups_draw.ts)\npairParticipants(): pair[i] → pair[(i+1)%n]"]
         TS4["Para cada par (giver, receiver):"]
         TS5["token = randomToken(24)\nrevealToken = randomToken(24)\n(lib/session.ts, randomBytes().toString('base64url'))"]
         TS6["encryptName() (lib/drawCrypto.ts)\nAES-256-GCM via node:crypto\nkey = SHA-256(token)\niv = randomBytes(12)\ncreateCipheriv → payload = ciphertext + tag"]
@@ -154,7 +155,7 @@ flowchart TD
     end
 
     subgraph SHUFFLE["Randomização"]
-        SH1["shuffle() em backend/api/groups_draw.ts\n(Fisher-Yates)"]
+        SH1["shuffle() em backend/lib/handlers/groups_draw.ts\n(Fisher-Yates, Math.random)"]
         SH2["pairParticipants() (lib/drawAlgorithm.ts):\nfor i in 0..n-1:\n  pairs[i] = {giver: shuffled[i],\n  receiver: shuffled[(i+1) % n]}"]
     end
 

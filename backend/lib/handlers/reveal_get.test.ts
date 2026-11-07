@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { getReveal } from './reveal.js';
+import { getReveal } from './reveal_get.js';
 
 describe('getReveal', () => {
   it('rejects empty token', async () => {

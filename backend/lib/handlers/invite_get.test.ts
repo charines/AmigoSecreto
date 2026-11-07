@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { getInvite } from './invite.js';
+import { getInvite } from './invite_get.js';
 
 describe('getInvite', () => {
   it('rejects empty token', async () => {
