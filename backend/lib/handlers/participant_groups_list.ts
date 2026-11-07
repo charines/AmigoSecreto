@@ -1,10 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { Pool, RowDataPacket } from 'mysql2/promise';
-import { loadConfig } from '../config.js';
-import { buildCorsResponse } from '../cors.js';
-import { getPool } from '../db.js';
-import { requireParticipant } from '../requireParticipant.js';
-import { readParticipantSessionToken } from '../requestSession.js';
 
 export type ListParticipantGroupsResult = {
   status: number;
@@ -24,26 +18,4 @@ export async function listParticipantGroups(pool: Pool, email: string): Promise<
   );
 
   return { status: 200, body: { ok: true, groups } };
-}
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const config = loadConfig(process.env);
-  const cors = buildCorsResponse(config.cors, req.method ?? 'GET');
-  res.writeHead(cors.status ?? 200, cors.headers);
-  if (cors.status === 204) {
-    res.end();
-    return;
-  }
-
-  const pool = getPool(config);
-  const account = await requireParticipant(pool, readParticipantSessionToken(req));
-  if (!account) {
-    res.statusCode = 401;
-    res.end(JSON.stringify({ ok: false, error: 'Nao autorizado' }));
-    return;
-  }
-
-  const result = await listParticipantGroups(pool, account.email);
-  res.statusCode = result.status;
-  res.end(JSON.stringify(result.body));
 }

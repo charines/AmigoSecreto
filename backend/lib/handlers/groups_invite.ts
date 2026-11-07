@@ -1,13 +1,7 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import { loadConfig } from '../config.js';
-import { buildCorsResponse } from '../cors.js';
-import { getPool } from '../db.js';
-import { requireAdmin } from '../requireAdmin.js';
-import { readSessionToken } from '../requestSession.js';
 import { randomToken } from '../session.js';
 import { buildInviteEmail } from '../inviteEmail.js';
-import { createSendMail, type MailMessage } from '../mailer.js';
+import type { MailMessage } from '../mailer.js';
 
 export type ParticipantInput = { name: string; email: string };
 
@@ -85,31 +79,4 @@ export async function inviteParticipants(
   }
 
   return { status: 200, body: { ok: true, sent, failed } };
-}
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const config = loadConfig(process.env);
-  const cors = buildCorsResponse(config.cors, req.method ?? 'GET');
-  res.writeHead(cors.status ?? 200, cors.headers);
-  if (cors.status === 204) {
-    res.end();
-    return;
-  }
-
-  const pool = getPool(config);
-  const admin = await requireAdmin(pool, readSessionToken(req));
-  if (!admin) {
-    res.statusCode = 401;
-    res.end(JSON.stringify({ ok: false, error: 'Nao autorizado' }));
-    return;
-  }
-
-  const result = await inviteParticipants(pool, createSendMail(config.mail), admin.id, {
-    group_id: Number(req.body?.group_id ?? 0),
-    participants: Array.isArray(req.body?.participants) ? req.body.participants : [],
-    baseUrl: config.app.baseUrl,
-  });
-
-  res.statusCode = result.status;
-  res.end(JSON.stringify(result.body));
 }

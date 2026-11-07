@@ -1,10 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { Pool, ResultSetHeader } from 'mysql2/promise';
-import { loadConfig } from '../config.js';
-import { buildCorsResponse } from '../cors.js';
-import { getPool } from '../db.js';
-import { requireAdmin } from '../requireAdmin.js';
-import { readSessionToken } from '../requestSession.js';
 import { parseDrawDate } from '../drawDate.js';
 import { randomToken } from '../session.js';
 
@@ -74,32 +68,4 @@ export async function createGroup(pool: Pool, adminId: number, input: CreateGrou
       },
     },
   };
-}
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const config = loadConfig(process.env);
-  const cors = buildCorsResponse(config.cors, req.method ?? 'GET');
-  res.writeHead(cors.status ?? 200, cors.headers);
-  if (cors.status === 204) {
-    res.end();
-    return;
-  }
-
-  const pool = getPool(config);
-  const admin = await requireAdmin(pool, readSessionToken(req));
-  if (!admin) {
-    res.statusCode = 401;
-    res.end(JSON.stringify({ ok: false, error: 'Nao autorizado' }));
-    return;
-  }
-
-  const result = await createGroup(pool, admin.id, {
-    title: String(req.body?.title ?? ''),
-    description: String(req.body?.description ?? ''),
-    draw_date: String(req.body?.draw_date ?? ''),
-    budget_limit: String(req.body?.budget_limit ?? ''),
-  });
-
-  res.statusCode = result.status;
-  res.end(JSON.stringify(result.body));
 }

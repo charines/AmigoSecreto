@@ -14,6 +14,10 @@ last_updated: 2026-11-06
 > healthcheck. Regra de camadas (`agent.md` §5.7): o arquivo em `api/` só faz CORS,
 > dispatch e serialização; a lógica de domínio vive em `lib/handlers/*.ts`, testável
 > com um `Pool` falso.
+>
+> `lib/handlers/*.ts` exporta só funções puras (sem `export default handler`): quem fala HTTP é
+> sempre o arquivo de `api/`. Os 26 handlers HTTP duplicados que existiam ali (nunca importados)
+> foram removidos em 2026-11-07.
 
 ---
 

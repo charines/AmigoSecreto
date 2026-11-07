@@ -1,10 +1,5 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import { loadConfig } from '../config.js';
-import { buildCorsResponse } from '../cors.js';
-import { buildSessionCookieOptions } from '../session.js';
 import { createSession } from '../sessionStore.js';
-import { getPool } from '../db.js';
 import { hashPassword } from '../password.js';
 
 export type RegisterInput = {
@@ -55,33 +50,4 @@ export async function registerAdmin(pool: Pool, input: RegisterInput): Promise<R
     body: { ok: true, admin: { id: adminId, name, email } },
     sessionToken,
   };
-}
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const config = loadConfig(process.env);
-  const cors = buildCorsResponse(config.cors, req.method ?? 'GET');
-  res.writeHead(cors.status ?? 200, cors.headers);
-  if (cors.status === 204) {
-    res.end();
-    return;
-  }
-
-  const result = await registerAdmin(getPool(config), {
-    name: String(req.body?.name ?? ''),
-    email: String(req.body?.email ?? ''),
-    password: String(req.body?.password ?? ''),
-  });
-
-  if (result.sessionToken) {
-    const options = buildSessionCookieOptions(config.session);
-    res.setHeader(
-      'Set-Cookie',
-      `session=${result.sessionToken}; Path=${options.path}; HttpOnly; SameSite=${options.sameSite}${
-        options.secure ? '; Secure' : ''
-      }`,
-    );
-  }
-
-  res.statusCode = result.status;
-  res.end(JSON.stringify(result.body));
 }

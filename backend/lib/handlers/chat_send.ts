@@ -1,8 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import { loadConfig } from '../config.js';
-import { buildCorsResponse } from '../cors.js';
-import { getPool } from '../db.js';
 import { toIsoUtc } from '../chatFormat.js';
 
 export type SendChatInput = {
@@ -74,23 +70,4 @@ export async function sendChatMessage(pool: Pool, input: SendChatInput): Promise
       },
     },
   };
-}
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const config = loadConfig(process.env);
-  const cors = buildCorsResponse(config.cors, req.method ?? 'GET');
-  res.writeHead(cors.status ?? 200, cors.headers);
-  if (cors.status === 204) {
-    res.end();
-    return;
-  }
-
-  const result = await sendChatMessage(getPool(config), {
-    token: String(req.body?.token ?? ''),
-    channel: String(req.body?.channel ?? ''),
-    texto: String(req.body?.texto ?? ''),
-  });
-
-  res.statusCode = result.status;
-  res.end(JSON.stringify(result.body));
 }
