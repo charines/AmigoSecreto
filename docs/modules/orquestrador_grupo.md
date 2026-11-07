@@ -8,6 +8,7 @@ endpoints:
    backend/api/groups.ts (action=invite), backend/api/groups.ts (action=get_public), backend/api/groups.ts (action=join),
    backend/api/participants.ts (action=delete), backend/api/participants.ts (action=resend_invite),
    backend/api/invite.ts (GET), backend/api/invite.ts (POST), backend/lib/mailer.ts]
+handlers: [backend/lib/handlers/invite_get.ts (getInvite), backend/lib/handlers/invite_confirm.ts, backend/lib/handlers/groups_invite.ts]
 last_updated: 2026-11-07
 failed_invite_note: >
   2026-11-07 · AdminDashboard.jsx passa a ler `failed` da resposta de
