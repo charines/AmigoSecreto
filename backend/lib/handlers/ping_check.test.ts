@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { checkHealth } from './ping.js';
+import { checkHealth } from './ping_check.js';
 
 describe('checkHealth', () => {
   it('reports ok when the database responds', async () => {

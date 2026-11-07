@@ -51,7 +51,7 @@ MODULE_FILES["juiz_sorteio"]="frontend/src/components/RevealPage.jsx frontend/sr
 MODULE_FILES["chat_anonimo"]="frontend/src/components/ChatAnonimo.jsx api/chat_get.php api/chat_send.php backend/api/chat.ts backend/lib/handlers/chat_get.ts backend/lib/handlers/chat_send.ts backend/lib/chatFormat.ts"
 MODULE_FILES["menu_inicial"]="frontend/src/App.jsx frontend/src/components/InvitePage.jsx frontend/src/components/JoinGroup.jsx frontend/src/components/AdminDashboard.jsx"
 MODULE_FILES["dependencias_react"]="frontend/src/App.jsx frontend/src/main.jsx frontend/src/lib/api.js frontend/src/lib/crypto.js frontend/src/index.css"
-MODULE_FILES["backend_core"]="backend/lib/config.ts backend/lib/db.ts backend/lib/cors.ts backend/lib/session.ts backend/api/ping.ts"
+MODULE_FILES["backend_core"]="backend/lib/config.ts backend/lib/db.ts backend/lib/cors.ts backend/lib/session.ts backend/api/ping.ts backend/lib/handlers/ping_check.ts"
 
 # ── Header ─────────────────────────────────────────────────────────
 echo ""
